@@ -5,20 +5,22 @@ const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const mariadb = require("mariadb");
+/*const mariadb = require("mariadb");
 const pool = mariadb.createPool({
   host: "localhost",
   user: "parts_admin",
   password: "8~vlb632S",
   database: "parts_central_new",
   connectionLimit: 5,
-});
+});*/
+
+console.log("test");
 
 app.get("/", (req, res) => {
   res.send("index of app");
 });
 
-app.get("/test", async (req, res) => {
+/*app.get("/test", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -30,6 +32,6 @@ app.get("/test", async (req, res) => {
   } finally {
     if (conn) return conn.end();
   }
-});
+});*/
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
