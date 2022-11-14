@@ -21,9 +21,6 @@ router.post("/csv", upload.single("file"), async function (req, res) {
 
     rl.on("close", () => {
       console.log("data length: ", data.length);
-
-      //console.log("data:", data);
-      //console.log(data);
       let parts = createPartsList(data);
       addPartsToDatabase(parts, res);
     });
