@@ -1,12 +1,22 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+<<<<<<< HEAD
 const db = require("./db/db");
 const app = express();
 const port = 3000;
 const router = require("./router/router.js");
 const partsRouter = require("./router/partRouter.js");
 const uploadRouter = require("./router/uploadRouter.js");
+=======
+const cors = require("cors");
+const app = express();
+const port = process.env.PORT || 3000;
+const path = require("path");
+const router = require("./routes/router.js");
+>>>>>>> dd63a1f2ced3cec531ec0a101311f53267b97cc1
 
+app.use(cors());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static("public"));
@@ -27,6 +37,7 @@ app.use("/upload", uploadRouter);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
+<<<<<<< HEAD
 /*const mariadb = require("mariadb");
 const pool = mariadb.createPool({
   host: "localhost",
@@ -56,3 +67,9 @@ app.get("/test", async (req, res) => {
     if (conn) return conn.end();
   }
 });*/
+=======
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/api", router);
+app.listen(port, () => console.log(`Server running on port ${port}`));
+>>>>>>> dd63a1f2ced3cec531ec0a101311f53267b97cc1
