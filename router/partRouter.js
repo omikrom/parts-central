@@ -2,10 +2,23 @@ const express = require("express");
 const router = express.Router();
 
 const db = require("../db/db.js");
+const { route } = require("./router.js");
 
 router.get("/show", async (req, res) => {
   console.log("create");
 });
+
+router.get("/bike_models", async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      "SELECT DISTINCT bikeModel FROM parts"
+    );
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 
 router.get("/csv/upload", async (req, res) => {
   console.log("csv");

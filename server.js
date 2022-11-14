@@ -15,14 +15,14 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(express.json());
 
-app.get("/users", async (req, res) => {
+/*app.get("/users", async (req, res) => {
   try {
     const result = await db.pool.query("SELECT * FROM `user` ");
     res.send(result);
   } catch (err) {
     console.log(err);
   }
-});
+});*/
 
 app.use("/api", router);
 app.use("/parts", partsRouter);
