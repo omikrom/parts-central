@@ -4,9 +4,12 @@ const db = require("./db/db");
 const app = express();
 const port = 3000;
 const router = require("./router/router.js");
+const partsRouter = require("./router/partRouter.js");
+const uploadRouter = require("./router/uploadRouter.js");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static("public"));
 app.use(express.json());
 
 app.get("/users", async (req, res) => {
@@ -19,6 +22,8 @@ app.get("/users", async (req, res) => {
 });
 
 app.use("/api", router);
+app.use("/parts", partsRouter);
+app.use("/upload", uploadRouter);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
