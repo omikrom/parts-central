@@ -97,9 +97,7 @@ router.get("/show_all", async (req, res) => {
 });
 
 router.post("/update", async (req, res) => {
-  try {
-    const result = await db.pool.query("UPDATE `parts` SET );
-  }
+
 });
 
 module.exports = router;
