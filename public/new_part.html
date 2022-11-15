@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>My App</title>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+        <a id="login_btn" href="/login.html">Login</a>
+        <a id="register_btn" href="/register.html">Register</a>
+        <a id="user_details_btn" href="/user_details.html">User details</a>
+    </nav>
+
+    <div>
+        <h1>Add a new part</h1>
+        <form id="new_part_form">
+            <label for="itemNo">Item Number: </label>
+            <input id="itemNo" type="text" name="itemNo" placeholder="Item number"><br><br>
+            <label for="vendorNo">Vendor Number:</label>
+            <input id="vendorNo" type="text" name="vendorNo" placeholder="Vendor number"><br><br>
+            <label for="bikeProducer">Bike Manufacturer:</label>
+            <input type="text" name="bikeProducer" list="bikeProducer_options" />
+                <datalist id="bikeProducer_options">
+                    <option value=""></option>
+                </datalist>
+                <br><br>
+            <label for="bikeModel">Bike Model:</label>
+            <input type="text" name="bikeModel" list="bikeModel_options" />
+                <datalist id="bikeModel_options">
+                 <option value=""></option>
+                </datalist>
+                <br>
+            <small>Include the CC in the model name</small>
+            <br><br>
+            <label for="displayName">Display name</label>
+            <input type="text" name="displayName" placeholder="Display name">
+            <br><br>
+            <label for="date_from">Date_from</label>
+            <input id="date_from" type="number" name="date_from" placeholder="Date from" min="1885" max="2100" step="1" value="2022">
+            <label for="date_to">Date_to</label>
+            <input id="date_to" type="number" name="date_to" placeholder="Date to" min="1885" max="2100" step="1" value="2023">
+            <br><br>
+            <button id="new_part_submit" type="submit">Add new part</button>
+        </form>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="module" src="./js/auth.js"></script>
+<script type="module" src="./js/new_parts_form.js"></script>
+</html>

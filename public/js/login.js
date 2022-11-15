@@ -28,9 +28,19 @@ window.onload = function () {
     };
     axios.post("http://localhost:3000/api/login", body).then((res) => {
       console.log(res.data);
-      if (res.data.token) {
-        sessionStorage.setItem("token", res.data.token);
-        window.location.href = "http://localhost:3000/";
+      if (res.data.message === "Login successful") {
+        if (res.data.token) {
+          sessionStorage.setItem("token", res.data.token);
+          sessionStorage.setItem("role", res.data.role);
+          sessionStorage.setItem("userId", res.data.userId);
+          loginResMessage.innerHTML = "Login successful.";
+          setTimeout(() => {
+            window.location.href = "http://localhost:3000/";
+          }, 3000);
+        }
+      } else {
+        loginResMessage.style.display = "block";
+        loginResMessage.innerHTML = res.data.message;
       }
     });
   });

@@ -124,6 +124,7 @@ router.post("/login", async (req, res) => {
           message: "Login successful",
           token: token,
           role: role,
+          userId: uId,
         });
       } else {
         res.status(403).send({
