@@ -10,9 +10,7 @@ router.get("/show", async (req, res) => {
 
 router.get("/bike_models", async (req, res) => {
   try {
-    const result = await db.pool.query(
-      "SELECT DISTINCT bikeModel FROM parts"
-    );
+    const result = await db.pool.query("SELECT DISTINCT bikeModel FROM parts");
     res.send(result);
   } catch (err) {
     console.log(err);
@@ -22,7 +20,7 @@ router.get("/bike_models", async (req, res) => {
 router.get("/bike_make", async (req, res) => {
   try {
     const result = await db.pool.query(
-      "SELECT DISTINCT bikeMake FROM parts"
+      "SELECT DISTINCT bikeProducer FROM parts"
     );
     res.send(result);
   } catch (err) {
@@ -32,27 +30,26 @@ router.get("/bike_make", async (req, res) => {
 
 router.get("/cc", async (req, res) => {
   try {
-    const result = await db.pool.query(
-      "SELECT DISTINCT cc FROM parts"
-    );
+    const result = await db.pool.query("SELECT DISTINCT cc FROM parts");
     res.send(result);
   } catch (err) {
     console.log(err);
   }
 });
 
-// find models by make 
+// find models by make
 router.get("/bike_models/:bikeMake", async (req, res) => {
+  console.log(req.params.bikeMake);
   try {
     const result = await db.pool.query(
-      "SELECT DISTINCT bikeModel FROM parts WHERE bikeMake = ?",
+      "SELECT DISTINCT bikeModel FROM parts WHERE bikeProducer = ?",
       [req.params.bikeMake]
     );
     res.send(result);
   } catch (err) {
     console.log(err);
   }
-})
+});
 
 // find cc by make and model
 router.get("/cc/:bikeMake/:bikeModel", async (req, res) => {
@@ -81,32 +78,48 @@ router.get("/parts/:bikeMake/:bikeModel/:cc", async (req, res) => {
 });
 
 // find parts by make, model and cc where date_to and date_from
-router.get("/parts/:bikeMake/:bikeModel/:cc/:date_from/:date_to", async (req, res) => {
-  try {
-    const result = await db.pool.query(
-      "SELECT * FROM parts WHERE bikeMake = ? AND bikeModel = ? AND cc = ? AND date BETWEEN ? AND ?",
-      [req.params.bikeMake, req.params.bikeModel, req.params.cc, req.params.date_from, req.params.date_to]
-    );
-    res.send(result);
-  } catch (err) {
-    console.log(err);
+router.get(
+  "/parts/:bikeMake/:bikeModel/:cc/:date_from/:date_to",
+  async (req, res) => {
+    try {
+      const result = await db.pool.query(
+        "SELECT * FROM parts WHERE bikeMake = ? AND bikeModel = ? AND cc = ? AND date BETWEEN ? AND ?",
+        [
+          req.params.bikeMake,
+          req.params.bikeModel,
+          req.params.cc,
+          req.params.date_from,
+          req.params.date_to,
+        ]
+      );
+      res.send(result);
+    } catch (err) {
+      console.log(err);
+    }
   }
-});
+);
 
-router.get("/parts/:bikeMake/:bikeModel/:cc/:date_from/:date_to/:part", async (req, res) => {
-  try {
-    const result = await db.pool.query(
-      "SELECT * FROM parts WHERE bikeMake = ? AND bikeModel = ? AND cc = ? AND date BETWEEN ? AND ? AND part = ?",
-      [req.params.bikeMake, req.params.bikeModel, req.params.cc, req.params.date_from, req.params.date_to, req.params.part]
-    );
-    res.send(result);
-  } catch (err) {
-    console.log(err);
+router.get(
+  "/parts/:bikeMake/:bikeModel/:cc/:date_from/:date_to/:part",
+  async (req, res) => {
+    try {
+      const result = await db.pool.query(
+        "SELECT * FROM parts WHERE bikeMake = ? AND bikeModel = ? AND cc = ? AND date BETWEEN ? AND ? AND part = ?",
+        [
+          req.params.bikeMake,
+          req.params.bikeModel,
+          req.params.cc,
+          req.params.date_from,
+          req.params.date_to,
+          req.params.part,
+        ]
+      );
+      res.send(result);
+    } catch (err) {
+      console.log(err);
+    }
   }
-});
-
-
-
+);
 
 router.get("/csv/upload", async (req, res) => {
   console.log("csv");
@@ -197,8 +210,6 @@ router.get("/show_all", async (req, res) => {
   }
 });
 
-router.post("/update", async (req, res) => {
-
-});
+router.post("/update", async (req, res) => {});
 
 module.exports = router;

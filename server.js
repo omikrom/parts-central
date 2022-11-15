@@ -6,6 +6,9 @@ const port = process.env.PORT || 3000;
 const router = require("./router/router.js");
 const partsRouter = require("./router/partRouter.js");
 const uploadRouter = require("./router/uploadRouter.js");
+const userPartRouter = require("./router/userPartRouter.js");
+
+const auth = require("./middleware/auth.js");
 
 const cors = require("cors");
 
@@ -24,9 +27,14 @@ app.use(express.json());
   }
 });*/
 
+app.post("/welcome", auth, (req, res) => {
+  res.status(200).send("Welcome to the API");
+});
+
 app.use("/api", router);
 app.use("/parts", partsRouter);
 app.use("/upload", uploadRouter);
+app.use("/user", userPartRouter);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
 

@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+/*const jwt = require("jsonwebtoken");
 
 module.exports = {
   validateRegister: (req, res, next) => {
@@ -38,3 +38,4 @@ module.exports = {
     }
   },
 };
+*/
