@@ -3,47 +3,118 @@
 <head>
     <meta charset="utf-8">
     <title>My App</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
-        <a id="login_btn" href="/login.html">Login</a>
-        <a id="register_btn" href="/register.html">Register</a>
-        <a id="user_details_btn" href="/user_details.html">User details</a>
-    </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Parts-central</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li id="user_add_part_btn" class="nav-item">
+                <a class="nav-link" href="/new_part">Add a part</a>
+            </li>
+            <li id="user_view_part_btn" class="nav-item">
+                <a class="nav-link" href="/user_parts">View my parts</a>
+              </li>
+            <li id="admin_parts_list" class="nav-item">
+                <a class="nav-link" href="#">Global Parts List</a>
+            </li>
+            <li id="admin_mass_upload_parts">
+                <a class="nav-link" href="/upload.html">CSV upload</a>
+             </li>
+          </ul>
+          <ul class="navbar-nav mr-auto">
+            <li id="login_btn" class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li id="register_btn" class="nav-item">
+                <a class="nav-link" href="/register">Register</a>
+            </li>
+            <li id="user_details_btn" class="nav-item">
+                <a class="nav-link" href="/user_details">User Details</a>
+            </li>
+            <li id="logout_btn" class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
 
-    <div>
+    <section>
+        <div class="container-fluid"></div> 
         <h1>Add a new part</h1>
         <form id="new_part_form">
             <label for="itemNo">Item Number: </label>
-            <input id="itemNo" type="text" name="itemNo" placeholder="Item number"><br><br>
+            <input id="itemNo" type="text" name="itemNo" placeholder="Item number" aria-required="true"><br><br>
             <label for="vendorNo">Vendor Number:</label>
-            <input id="vendorNo" type="text" name="vendorNo" placeholder="Vendor number"><br><br>
+            <input id="vendorNo" type="text" name="vendorNo" placeholder="Vendor number" aria-required="true"><br><br>
+            <label for="displayName">Display name</label>
+            <input type="text" name="displayName" placeholder="Display name">
+            <br><br>
             <label for="bikeProducer">Bike Manufacturer:</label>
-            <input type="text" name="bikeProducer" list="bikeProducer_options" />
+            <input type="text" name="bikeProducer" list="bikeProducer_options" aria-required="true"/>
                 <datalist id="bikeProducer_options">
                     <option value=""></option>
                 </datalist>
                 <br><br>
             <label for="bikeModel">Bike Model:</label>
-            <input type="text" name="bikeModel" list="bikeModel_options" />
+            <input type="text" name="bikeModel" list="bikeModel_options" aria-required="true"/>
                 <datalist id="bikeModel_options">
                  <option value=""></option>
                 </datalist>
                 <br>
-            <small>Include the CC in the model name</small>
-            <br><br>
-            <label for="displayName">Display name</label>
-            <input type="text" name="displayName" placeholder="Display name">
-            <br><br>
+                <small>If the CC value is not entered into the field below, it will be extracted from the Bike model</small>
+            <br>
+                <label for="cc">CC</label>
+            <input id="cc" type="text" name="cc" placeholder="CC" aria-required="true"><br><br>
             <label for="date_from">Date_from</label>
             <input id="date_from" type="number" name="date_from" placeholder="Date from" min="1885" max="2100" step="1" value="2022">
             <label for="date_to">Date_to</label>
             <input id="date_to" type="number" name="date_to" placeholder="Date to" min="1885" max="2100" step="1" value="2023">
             <br><br>
+            <label for="date_on">Date on:</label>
+            <input type="checkbox" checked="unchecked" name="date_on" id="date_on">
+            <br><br>
             <button id="new_part_submit" type="submit">Add new part</button>
         </form>
-    </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div id="new_part_message"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div id="new_part_item" style="display:none;">
+                        <label>Item number: </label>
+                        <p id="new_item_no"></p>
+                        <label>Vendor number:</label>
+                        <p id="new_vendor_no"></p>
+                        <label>Display name:</label>
+                        <p id="new_display_name"></p>
+                        <label>Bike Manufacturer:</label>
+                        <p id="new_bike_producer"></p>
+                        <label>Bike Model:</label>
+                        <p id="new_bike_model"></p>
+                        <label>CC:</label>
+                        <p id="new_cc"></p>
+                        <label>Date from:</label>
+                        <p id="new_date_from"></p>
+                        <label>Date to:</label>
+                        <p id="new_date_to"></p>
+                        <label>Date on:</label>
+                        <p id="new_date_on"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="module" src="./js/auth.js"></script>

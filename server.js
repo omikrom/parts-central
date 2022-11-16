@@ -8,6 +8,8 @@ const partsRouter = require("./router/partRouter.js");
 const uploadRouter = require("./router/uploadRouter.js");
 const userPartRouter = require("./router/userPartRouter.js");
 
+const path = require("path");
+
 const auth = require("./middleware/auth.js");
 
 const cors = require("cors");
@@ -15,8 +17,51 @@ const cors = require("cors");
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static("public"));
 app.use(express.json());
+//app.use(express.static("public"));
+
+/* ------------------- */
+/*  Frontend Routes    */
+/* ------------------- */
+
+// include js files
+app.use("/js", express.static(path.join(__dirname, "public/js")));
+app.use(
+  "/css",
+  express.static(path.join(__dirname, "node_modules/bootstrap/dist/css"))
+);
+app.use(
+  "/js",
+  express.static(path.join(__dirname, "node_modules/bootstrap/dist/js"))
+);
+app.use(
+  "/js",
+  express.static(path.join(__dirname, "node_modules/jquery/dist"))
+);
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.use("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "login.html"));
+});
+app.use("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "register.html"));
+});
+app.use("/all_parts", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "all_parts.html"));
+});
+app.use("/new_part", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "new_part.html"));
+});
+
+app.use("/upload", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "upload.html"));
+});
+
+app.use("/user_parts", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "user_parts.html"));
+});
 
 /*app.get("/users", async (req, res) => {
   try {
@@ -26,6 +71,10 @@ app.use(express.json());
     console.log(err);
   }
 });*/
+
+/* ------------------- */
+/*  Backend Routes     */
+/* ------------------- */
 
 app.post("/welcome", auth, (req, res) => {
   res.status(200).send("Welcome to the API");

@@ -33,6 +33,7 @@ window.onload = function () {
           sessionStorage.setItem("token", res.data.token);
           sessionStorage.setItem("role", res.data.role);
           sessionStorage.setItem("userId", res.data.userId);
+          document.cookie = `x-access-token=${res.data.token}`;
           loginResMessage.innerHTML = "Login successful.";
           setTimeout(() => {
             window.location.href = "http://localhost:3000/";

@@ -58,11 +58,10 @@ router.post("/register", async (req, res) => {
       res
         .status(200)
         .send({
-          message: "User registered successfully",
+          message: "Registration successful",
           token: token,
-          user: {
-            user_id: userId,
-          },
+          role: role,
+          userId: userId,
         })
         .end();
     }
