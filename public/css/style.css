@@ -1,0 +1,150 @@
+.brand-logo {
+    padding-left:20px;
+}
+
+.navbar-btns--left {
+    padding-left:20px;
+}
+
+
+.navbar-btns--right {
+    padding-right:20px;
+}
+
+.nav-link--custom {
+    border-bottom: 2px solid #212529;
+}
+
+.nav-link--custom:hover {
+    border-bottom: 2px solid #fff;
+}
+
+
+
+.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+.index--section {
+    height: 93.8vh;
+    background-color: #44494e;
+    color:white;
+}
+
+.index--main_title {
+    height:50vh;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+.button--part {
+    margin-top:10px;
+  background: #212529;
+  border-radius: 999px;
+  box-shadow: #212529 0 10px 20px -10px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: max-content;
+  /*word-break: break-word;*/
+  overflow-wrap: normal;
+  border: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.button--part:hover {
+    background-color: #0e2d4f;
+}
+
+.button--part_alt {
+    margin-top:10px;
+    background-color: #0e2d4f;
+    border-radius: 999px;
+    box-shadow: #212529 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: max-content;
+    overflow-wrap: normal;
+    border: 0;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .button--part_alt:hover {
+    background-color: #212529;
+  }
+
+.index--welcome-ui {
+    height: 43vh;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.index--get_started_container {
+    background-color: #666f78;
+    padding-top:30px;
+    padding-bottom:30px;
+    padding-left:50px;
+    padding-right:50px;
+    border-radius: 7px;
+}
+
+@media screen and (max-width: 768px) {
+    .index--get_started_container {
+        padding-left:20px;
+        padding-right:20px;
+    }
+    .button--part {
+        margin-bottom: 10px;
+    }
+    .button--part_alt {
+        margin-bottom: 10px;
+    }
+}
+
+
+@media screen and (max-width: 990px) {
+    .navbar-btns--left {
+        padding:0;
+    }
+    .navbar-btns-right {
+        padding: 0;
+    }
+    .nav-link--custom {
+        padding-left:20px;
+    }
+    .nav-link--custom:hover {
+        border-bottom: 2px solid #212529;
+        background-color: #44494e;
+    }
+    .toggler--custom {
+        margin-right:20px;
+    }
+}

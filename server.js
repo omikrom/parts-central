@@ -7,6 +7,7 @@ const router = require("./router/router.js");
 const partsRouter = require("./router/partRouter.js");
 const uploadRouter = require("./router/uploadRouter.js");
 const userPartRouter = require("./router/userPartRouter.js");
+const partSearchRouter = require("./router/partSearchRouter.js");
 
 const path = require("path");
 
@@ -39,6 +40,13 @@ app.use(
   express.static(path.join(__dirname, "node_modules/jquery/dist"))
 );
 
+// include css files for static pages
+app.use("/css", express.static(path.join(__dirname, "public/css")));
+
+// include images
+app.use("/img", express.static(path.join(__dirname, "public/img")));
+
+// include html files
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -63,14 +71,9 @@ app.use("/user_parts", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "user_parts.html"));
 });
 
-/*app.get("/users", async (req, res) => {
-  try {
-    const result = await db.pool.query("SELECT * FROM `user` ");
-    res.send(result);
-  } catch (err) {
-    console.log(err);
-  }
-});*/
+app.use("/part_search", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "part_search.html"));
+});
 
 /* ------------------- */
 /*  Backend Routes     */
@@ -84,35 +87,6 @@ app.use("/api", router);
 app.use("/parts", partsRouter);
 app.use("/upload", uploadRouter);
 app.use("/user", userPartRouter);
+app.use("/search", partSearchRouter);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
-
-/*const mariadb = require("mariadb");
-const pool = mariadb.createPool({
-  host: "localhost",
-  port: 3307,
-  user: "parts_admin",
-  password: "8~vlb632S",
-  database: "parts_central_db",
-  connectionLimit: 5,
-});
-
-console.log("test");
-
-app.get("/", (req, res) => {
-  res.send("index of app");
-});
-
-app.get("/test", async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    //const rows = await conn.query("SELECT * FROM db.customers");
-    const rows = await conn.query("SELECT * FROM user");
-    res.send("a test query" + rows);
-  } catch (err) {
-    throw err;
-  } finally {
-    if (conn) return conn.end();
-  }
-});*/

@@ -85,6 +85,23 @@ router.get("/users", async (req, res) => {
   }
 });
 
+// get username by id
+router.get("/user/:id", async (req, res) => {
+  let id = req.params.id;
+  let responseBody = {};
+  try {
+    const result = await db.pool.query(
+      "SELECT username FROM `user` WHERE id = ?",
+      [id]
+    );
+    responseBody = result[0];
+    console.log(responseBody);
+    res.send(responseBody);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // login
 router.post("/login", async (req, res) => {
   let task = req.body;

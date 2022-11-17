@@ -4,6 +4,9 @@ window.onload = function () {
 };
 
 function init() {
+  let partsList = document.getElementById("part_list");
+  partsList.innerHTML = "";
+
   let body = {
     token: sessionStorage.getItem("token"),
     userId: parseInt(sessionStorage.getItem("userId")),
@@ -16,7 +19,18 @@ function init() {
     createTable(res.data);
   });
 
-  function createTable(data) {
+  async function createTable(data) {
+    let tableHeadings = [
+      "Item No",
+      "Vendor No",
+      "Bike Producer",
+      "Bike Model",
+      "Display name",
+      "CC",
+      "Date from",
+      "Date to",
+      "Date on",
+    ];
     let partList = document.getElementById("part_list");
     let table = document.createElement("table");
     table.classList.add("table");
@@ -33,6 +47,15 @@ function init() {
     th = document.createElement("th");
     th.scope = "col";
     th.innerHTML = "Vendor No";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.scope = "col";
+    th.innerHTML = "Display Name";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.scope = "col";
+    th.innerHTML = "Display bike id";
+    th.style.display = "none";
     tr.appendChild(th);
     th = document.createElement("th");
     th.scope = "col";
@@ -83,6 +106,15 @@ function init() {
       td = document.createElement("td");
       td.contentEditable = true;
       td.innerHTML = data[i].vendorNo;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerHTML = data[i].bike_display_name;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerHTML = data[i].display_bike_id;
+      td.style.display = "none";
       tr.appendChild(td);
       td = document.createElement("td");
       td.contentEditable = true;
@@ -142,12 +174,14 @@ function init() {
         let row = e.target.parentNode.parentNode;
         let itemNo = row.children[1].innerHTML;
         let vendorNo = row.children[2].innerHTML;
-        let bikeProducer = row.children[3].innerHTML;
-        let bikeModel = row.children[4].innerHTML;
-        let cc = row.children[5].innerHTML;
-        let date_from = row.children[6].innerHTML;
-        let date_to = row.children[7].innerHTML;
-        let date_on = row.children[8].innerHTML;
+        let displayName = row.children[3].innerHTML;
+        let displayId = row.children[4].innerHTML;
+        let bikeProducer = row.children[5].innerHTML;
+        let bikeModel = row.children[6].innerHTML;
+        let cc = row.children[7].innerHTML;
+        let date_from = row.children[8].innerHTML;
+        let date_to = row.children[9].innerHTML;
+        let date_on = row.children[10].innerHTML;
         let data = {
           id: id,
           itemNo: itemNo,
@@ -158,10 +192,14 @@ function init() {
           date_from: date_from,
           date_to: date_to,
           date_on: date_on,
+          userId: sessionStorage.getItem("userId"),
+          displayName: displayName,
+          displayId: displayId,
         };
         axios.post("/user/update_part", data).then((res) => {
           console.log("res", res);
         });
+
         console.log(data);
       });
     });
@@ -172,8 +210,11 @@ function init() {
     deleteButtons.forEach((button) => {
       button.addEventListener("click", (e) => {
         let id = e.target.value;
+        let displayBikeId =
+          e.target.parentNode.parentNode.children[4].innerHTML;
         let data = {
           id: id,
+          displayBikeId: displayBikeId,
         };
         axios
           .delete("/user/delete_part", {

@@ -104,7 +104,7 @@ router.post("/user_parts", async (req, res) => {
       [uId]
     ); */
     const result = await db.pool.query(
-      "SELECT `parts`.id, `parts`.itemNo, `parts`.vendorNo, `parts`.bikeProducer, `parts`.bikeModel, `parts`.cc, `parts`.date_from, `parts`.date_to, `parts`.date_on, `display_bikes`.bike_display_name FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ?",
+      "SELECT `parts`.id, `parts`.itemNo, `parts`.vendorNo, `parts`.bikeProducer, `parts`.bikeModel, `parts`.cc, `parts`.date_from, `parts`.date_to, `parts`.date_on, `display_bikes`.bike_display_name, `display_bikes`.id AS `display_bike_id` FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ?",
       [uId]
     );
     res.send(result);
@@ -132,69 +132,52 @@ router.post("/update_part", (req, res) => {
         partId,
       ]
     );
-    res.send(result);
+    //res.send(result);
   } catch (err) {
     throw err;
   }
+
+  try {
+    const result = db.pool.query(
+      "UPDATE `display_bikes` SET bike_display_name = ? WHERE id = ?",
+      [task.displayName, task.displayId]
+    );
+  } catch (err) {
+    throw err;
+  }
+  res.send("Part updated successfully");
 });
 
 router.delete("/delete_part", (req, res) => {
   console.log("deleting part");
-  //console.log(req);
   console.log(req.body);
   let task = req.body;
   let partId = task.id;
-  console.log(task);
-
-  let displayBikeId;
-
+  let displayBikeId = task.displayBikeId;
   try {
     const result = db.pool.query(
-      "SELECT `parts_of_bikes`.display_bike_id FROM `parts_of_bikes` WHERE `parts_of_bikes`.part_id = ?",
-      [partId]
+      "DELETE FROM `parts_of_bikes` WHERE part_id = ? AND display_bike_id = ?",
+      [partId, displayBikeId]
     );
-    displayBikeId = result;
-  } catch (err) {
-    throw err;
-  } finally {
-    testing(displayBikeId);
-  }
-
-  async function testing(data) {
-    try {
-      await console.log(data);
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  //console.log(displayBikeId);
-  /*
-  try {
-    const result = db.pool.query(
-      "DELETE FROM `parts_of_bikes` WHERE part_id = ?",
-      [partId]
-    );
-  } catch (err) {
-    throw err;
-  }
-
-  try {
-    const result = db.pool.query("DELETE FROM `display_bikes` WHERE id = ? ", [
-      displayBikeId,
-    ]);
   } catch (err) {
     throw err;
   }
 
   try {
     const result = db.pool.query("DELETE FROM `parts` WHERE id = ?", [partId]);
-    res.send({
-      message: "Part deleted successfully",
-    });
   } catch (err) {
     throw err;
-  }*/
+  }
+
+  try {
+    const result = db.pool.query("DELETE FROM `display_bikes` WHERE id = ?", [
+      displayBikeId,
+    ]);
+  } catch (err) {
+    throw err;
+  }
+
+  res.send("Part deleted");
 });
 
 function getCCfromModel(model) {
