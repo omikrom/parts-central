@@ -10,7 +10,7 @@ let logoutBtn = document.getElementById("logout_btn");
 logoutBtn.addEventListener("click", function (e) {
   e.preventDefault();
   sessionStorage.clear();
-  window.location.href = "http://localhost:3000/";
+  window.location.href = "https://partscentral.online/";
 });
 
 let loggedIn = checkSession();
