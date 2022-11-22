@@ -84,7 +84,7 @@ app.post("/welcome", auth, (req, res) => {
 });
 
 app.use("/api", router);
-app.use("/parts", partsRouter);
+app.use("/parts", partRouter);
 app.use("/upload", uploadRouter);
 app.use("/user", userPartRouter);
 app.use("/search", partSearchRouter);
