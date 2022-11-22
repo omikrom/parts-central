@@ -30,7 +30,8 @@ window.onload = function () {
       username: username.value,
       password: password.value,
     };
-    axios.post("http://localhost:3000/api/register", body).then((res) => {
+    axios.post("https://partscentral.online/api/register", body).then((res) => {
+      //axios.post("http://localhost:3000/api/register", body).then((res) => {
       console.log(res.data);
       if (res.data.message === "Registration successful") {
         if (res.data.token) {
@@ -39,7 +40,8 @@ window.onload = function () {
           sessionStorage.setItem("userId", res.data.userId);
           registerResMessage.innerHTML = "Registered successfully.";
           setTimeout(() => {
-            window.location.href = "http://localhost:3000/";
+            window.location.href = "https://partscentral.online";
+            //window.location.href = "http://localhost:3000/";
           }, 3000);
         }
       } else {

@@ -22,11 +22,13 @@ window.onload = function () {
 
   loginBtn.addEventListener("click", function (e) {
     e.preventDefault();
+    console.log("login button clicked");
     let body = {
       username: username.value,
       password: password.value,
     };
-    axios.post("http://localhost:3000/api/login", body).then((res) => {
+    //axios.post("https://localhost:3000/api/login", body).then((res) => {
+    axios.post("https://partscentral.online/api/login", body).then((res) => {
       console.log(res.data);
       if (res.data.message === "Login successful") {
         if (res.data.token) {
@@ -36,7 +38,8 @@ window.onload = function () {
           document.cookie = `x-access-token=${res.data.token}`;
           loginResMessage.innerHTML = "Login successful.";
           setTimeout(() => {
-            window.location.href = "http://localhost:3000/";
+            window.location.href = "https://partscentral.online/";
+            //window.location.href = "http://localhost:3000/";
           }, 3000);
         }
       } else {

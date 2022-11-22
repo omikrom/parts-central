@@ -17,7 +17,9 @@ window.onload = function () {
   console.log(bikeProducerDropDown);
   let newOptions = document.createElement("option");
 
-  axios.get("http://localhost:3000/parts/bike_make").then((res) => {
+  axios.get("https://partscentral.online/parts/bike_make").then((res) => {
+    console.log("getting bike makes");
+    //axios.get("http://localhost:3000/parts/bike_make").then((res) => {
     console.log(res.data);
     res.data.forEach((bikeProducer) => {
       newOptions = document.createElement("option");
@@ -27,7 +29,9 @@ window.onload = function () {
     });
   });
 
-  axios.get("http://localhost:3000/parts/bike_models").then((res) => {
+  axios.get("https://partscentral.online/parts/bike_models").then((res) => {
+    console.log("getting bike models");
+    //axios.get("http://localhost:3000/parts/bike_models").then((res) => {
     console.log(res.data);
     res.data.forEach((bikeModel) => {
       newOptions = document.createElement("option");
@@ -52,6 +56,7 @@ window.onload = function () {
   let partSubmit = document.getElementById("new_part_submit");
 
   partSubmit.addEventListener("click", function (e) {
+    console.log("creating new part");
     e.preventDefault();
     let validation = checkValidation();
     console.log(validation);
@@ -73,9 +78,10 @@ window.onload = function () {
         date_to: document.getElementsByName("date_to")[0].value,
         date_on: date_on_result,
       };
-      console.log(body);
+      console.log("part body:", body);
       axios
-        .post("http://localhost:3000/user/display_bike", body)
+        .post("https://partscentral.online/user/display_bike", body)
+        //.post("http://localhost:3000/user/display_bike", body)
         .then((res) => {
           console.log(res.data);
           if (res.data.message === "Part added successfully") {

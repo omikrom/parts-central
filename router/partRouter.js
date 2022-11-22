@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const db = require("../db/db.js");
-const { route } = require("./router.js");
 
 router.get("/show", async (req, res) => {
   console.log("create");

@@ -14,10 +14,13 @@ function init() {
 
   console.log("body", body);
 
-  axios.post("http://localhost:3000/user/user_parts", body).then((res) => {
-    console.log("res.data", res.data);
-    createTable(res.data);
-  });
+  axios
+    .post("https://partscentral.online/user/user_parts", body)
+    .then((res) => {
+      //axios.post("http://localhost:3000/user/user_parts", body).then((res) => {
+      console.log("res.data", res.data);
+      createTable(res.data);
+    });
 
   async function createTable(data) {
     let tableHeadings = [

@@ -16,7 +16,8 @@ if (loggedIn) {
 }
 
 if (loggedIn) {
-  axios.get(`http://localhost:3000/api/user/${userId}`).then((res) => {
+  axios.get(`https://partscentral.online/api/user/${userId}`).then((res) => {
+    //axios.get(`http://localhost:3000/api/user/${userId}`).then((res) => {
     console.log("res.data", res.data);
     let user = res.data;
     let usernameField = document.getElementById("index--username");
