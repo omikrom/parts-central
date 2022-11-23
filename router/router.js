@@ -3,6 +3,7 @@ const router = express.Router();
 
 const db = require("../db/db.js");
 const bcrypt = require("../middleware/bcrypt.js");
+const jwt = require("jsonwebtoken");
 
 // test body input
 router.post("/input", (req, res) => {
@@ -15,8 +16,11 @@ router.post("/input", (req, res) => {
 // register a new user
 router.post("/register", async (req, res) => {
   let task = req.body;
+  //console.log(task);
   let uname = task.username;
   let pword = task.password;
+  let company = task.company;
+  let role = 0;
   let hashedPassword = {};
   bcrypt.hashPassword(pword).then((hash) => {
     hashedPassword = hash;
@@ -33,14 +37,31 @@ router.post("/register", async (req, res) => {
       });
     } else {
       const result = await db.pool.query(
-        "INSERT INTO `user` (username, password, email) VALUES (?, ?, ?)",
-        [uname, hashedPassword, email]
+        "INSERT INTO `user` (username, password, email, company, role) VALUES (?, ?, ?, ?, ?)",
+        [uname, hashedPassword, email, company, role]
       );
-      console.log("original Hashed Pword:", hashedPassword);
+      let userId = parseInt(result.insertId);
+      console.log(userId);
+
+      //console.log("original Hashed Pword:", hashedPassword);
+      const token = jwt.sign(
+        {
+          user_id: userId,
+          email,
+        },
+        "SECRETKEY",
+        {
+          expiresIn: "2h",
+        }
+      );
+      updateDBToken(userId, token);
       res
         .status(200)
         .send({
-          message: "User registered successfully",
+          message: "Registration successful",
+          token: token,
+          role: role,
+          userId: userId,
         })
         .end();
     }
@@ -64,6 +85,24 @@ router.get("/users", async (req, res) => {
   }
 });
 
+// get username by id
+router.get("/user/:id", async (req, res) => {
+  let id = req.params.id;
+  let responseBody = {};
+  try {
+    const result = await db.pool.query(
+      "SELECT username FROM `user` WHERE id = ?",
+      [id]
+    );
+    responseBody = result[0];
+    console.log(responseBody);
+    res.send(responseBody);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// login
 router.post("/login", async (req, res) => {
   let task = req.body;
   let pword = task.password;
@@ -78,14 +117,30 @@ router.post("/login", async (req, res) => {
 
   try {
     let check = await db.pool.query(
-      "SELECT password FROM `user` WHERE username = ?",
+      "SELECT password, id, role FROM `user` WHERE username = ?",
       [task.username]
     );
+    let uId = check[0].id;
+    let role = check[0].role;
 
     await bcrypt.comparePassword(pword, check[0].password).then((result) => {
       if (result) {
+        const token = jwt.sign(
+          {
+            user_id: uId,
+            email: check[0].email,
+          },
+          "SECRETKEY",
+          {
+            expiresIn: "2h",
+          }
+        );
+        updateDBToken(uId, token);
         res.status(200).send({
           message: "Login successful",
+          token: token,
+          role: role,
+          userId: uId,
         });
       } else {
         res.status(403).send({
@@ -108,6 +163,17 @@ router.post("/login", async (req, res) => {
     throw err;
   }
 });
+
+async function updateDBToken(id, token) {
+  try {
+    let result = await db.pool.query(
+      "UPDATE `user` SET token = ? WHERE id = ?",
+      [token, id]
+    );
+  } catch (err) {
+    throw err;
+  }
+}
 
 /*     db.pool.query(
       "INSERT INTO `user` (username, password, email) VALUES (?, ?, ?)",
