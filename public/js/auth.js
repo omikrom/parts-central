@@ -39,11 +39,17 @@ if (isAdmin) {
 
 let addPartBtn = document.getElementById("user_add_part_btn");
 let viewPartBtn = document.getElementById("user_view_part_btn");
+let userMassUploadBtn = document.getElementById("user_mass_create_part_btn");
 
 if (loggedIn) {
   addPartBtn.style.display = "block";
   viewPartBtn.style.display = "block";
+  userMassUploadBtn.style.display = "block";
 } else {
   addPartBtn.style.display = "none";
   viewPartBtn.style.display = "none";
+  userMassUploadBtn.style.display = "none";
 }
+
+let userId = sessionStorage.getItem("userId");
+console.log("userId: ", userId);

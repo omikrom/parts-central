@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
-    <title>My App</title>
+    <title>Parts Central - Part management system</title>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand brand-logo" href="#">Parts-central</a>
+        <a class="navbar-brand brand-logo" href="https://partscentral.online">Parts-central</a>
         <button class="navbar-toggler toggler--custom" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -23,6 +23,9 @@
             <li id="user_view_part_btn" class="nav-item">
                 <a class="nav-link nav-link--custom" href="/user_parts">View parts</a>
             </li>
+            <li id="user_mass_create_part_btn" class="nav-item">
+                <a class="nav-link nav-link--custom" href="/mass_create">Upload part CSV</a>
+            </li>
             <li id="user_search_part_btn" class="nav-item">
                 <a class="nav-link nav-link--custom" href="/part_search">Parts search</a>
             </li>
@@ -30,7 +33,7 @@
                 <a class="nav-link nav-link--custom" href="#">Global Parts List</a>
             </li>
             <li id="admin_mass_upload_parts">
-                <a class="nav-link nav-link--custom" href="/upload.html">CSV upload</a>
+                <a class="nav-link nav-link--custom" href="/upload.html">Global CSV upload</a>
              </li>
           </ul>
           <ul class="navbar-nav mr-auto navbar-btns--right">

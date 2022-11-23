@@ -4,6 +4,106 @@ const router = express.Router();
 const db = require("../db/db.js");
 
 router.post("/display_bike", async (req, res) => {
+  let part = req.body;
+  if (!part.cc) {
+    part.cc = getCCfromModel(part.bikeModel);
+  }
+  if (!part.date_on) {
+    part.date_on = 0;
+  }
+
+  let userId = part.userId;
+  let partId = 0;
+  let displayBikeId = 0;
+
+  let addedPart = {
+    // manufacturer data
+    itemNo: part.itemNo,
+    vendorNo: part.vendorNo,
+    bikeProducer: part.bikeProducer,
+    bikeModel: part.bikeModel,
+    cc: part.cc,
+    // user specific data
+    partSKU: part.partSKU,
+    partName: part.partName,
+    displayName: part.displayName,
+    addPartNo1: part.addPartNo1,
+    addPartNo2: part.addPartNo2,
+    addPartNo3: part.addPartNo3,
+    // part fitting data
+    date_from: part.date_from,
+    date_to: part.date_to,
+    date_on: part.date_on,
+  };
+
+  try {
+    const updatePart = await db.pool.query(
+      "INSERT INTO `parts` (itemNo, vendorNo, bikeProducer, bikeModel, cc, date_from, date_to, date_on) VALUES (?,?,?,?,?,?,?,?)",
+      [
+        part.itemNo,
+        part.vendorNo,
+        part.bikeProducer,
+        part.bikeModel,
+        part.cc,
+        part.date_from,
+        part.date_to,
+        part.date_on,
+      ]
+    );
+    partId = parseInt(updatePart.insertId);
+    /*try {
+      const result = await db.pool.query(
+        "INSERT INTO `display_bikes` (user_id, bike_display_name) VALUES (?, ?)",
+        [userId, part.displayName]
+      );
+      displayBikeId = parseInt(result.insertId);
+    } catch (err) {
+      throw err;
+    }*/
+  } catch (err) {
+    throw error;
+  }
+
+  try {
+    const createDisplayBike = await db.pool.query(
+      "INSERT INTO `display_bikes` (user_id, bike_display_name, sku, part_name, alt_part_num_1, alt_part_num_2, alt_part_num_3) VALUES (?, ?, ?, ? ,?, ?, ?)",
+      [
+        part.userId,
+        part.displayName,
+        part.partSKU,
+        part.partName,
+        part.addPartNo1,
+        part.addPartNo2,
+        part.addPartNo3,
+      ]
+    );
+    displayBikeId = parseInt(createDisplayBike.insertId);
+  } catch (err) {
+    throw err;
+  }
+
+  try {
+    const result = await db.pool.query(
+      "INSERT INTO `parts_of_bikes` (display_bike_id, part_id) VALUES (?, ?)",
+      [displayBikeId, partId]
+    );
+  } catch (err) {
+    throw err;
+  }
+
+  res
+    .status(200)
+    .send({
+      message: "Part added successfully",
+      partId: partId,
+      displayBikeId: displayBikeId,
+      userId: part.userId,
+      part: addedPart,
+    })
+    .end();
+});
+
+/*router.post("/display_bike", async (req, res) => {
   let task = req.body;
   let uId = task.userId;
 
@@ -55,10 +155,15 @@ router.post("/display_bike", async (req, res) => {
     );
     partId = parseInt(result.insertId);
   } catch (err) {
-    error = err;
+    throw err;
   }
 
-  try {
+  res.send(200).json({
+    message: "Part added",
+    partId: partId,
+  });
+
+  /*try {
     const result = await db.pool.query(
       "INSERT INTO `display_bikes` (user_id, bike_display_name) VALUES (?, ?)",
       [uId, displayName]
@@ -92,7 +197,9 @@ router.post("/display_bike", async (req, res) => {
     };
     res.status(500).send(responseBody);
   }
+  
 });
+*/
 
 router.post("/user_parts", async (req, res) => {
   let task = req.body;

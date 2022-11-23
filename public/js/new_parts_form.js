@@ -1,16 +1,6 @@
 window.onload = function () {
   console.log(sessionStorage.getItem("userId"));
-  // fill bikeProducer dropdown
-  let part = {
-    userId: sessionStorage.getItem("userId"),
-    itemNo: "",
-    vendorNo: "",
-    bikeProducer: "",
-    bikeModel: "",
-    displayName: "",
-    date_from: "",
-    date_to: "",
-  };
+  // fill bikeProducer dropdowns
   let bikeProducerDropDown = document.getElementById("bikeProducer_options");
   let bikeModelDropDown = document.getElementById("bikeModel_options");
 
@@ -67,23 +57,33 @@ window.onload = function () {
         date_on_result = 1;
       }
       let body = {
+        // auth data
         token: sessionStorage.getItem("token"),
         userId: sessionStorage.getItem("userId"),
+        // manufacturer data
         itemNo: document.getElementsByName("itemNo")[0].value,
         vendorNo: document.getElementsByName("vendorNo")[0].value,
         bikeProducer: prodVal,
         bikeModel: modelVal,
+        cc: document.getElementsByName("cc")[0].value,
+        // user specific data
+        partSKU: document.getElementsByName("partSKU")[0].value,
+        partName: document.getElementsByName("partName")[0].value,
         displayName: document.getElementsByName("displayName")[0].value,
+        addPartNo1: document.getElementsByName("addPartNo1")[0].value,
+        addPartNo2: document.getElementsByName("addPartNo2")[0].value,
+        addPartNo3: document.getElementsByName("addPartNo3")[0].value,
+        //part fitting data
         date_from: document.getElementsByName("date_from")[0].value,
         date_to: document.getElementsByName("date_to")[0].value,
         date_on: date_on_result,
       };
       console.log("part body:", body);
+      //.post("http://localhost:3000/user/display_bike", body)
       axios
         .post("https://partscentral.online/user/display_bike", body)
-        //.post("http://localhost:3000/user/display_bike", body)
         .then((res) => {
-          console.log(res.data);
+          console.log("res data: ", res.data);
           if (res.data.message === "Part added successfully") {
             let newPartMessage = document.getElementById("new_part_message");
             newPartMessage.innerHTML = res.data.message;
@@ -103,6 +103,7 @@ window.onload = function () {
     let bikeProducer = document.getElementsByName("bikeProducer")[0].value;
     let bikeModel = document.getElementsByName("bikeModel")[0].value;
     let displayName = document.getElementsByName("displayName")[0].value;
+    let partSKU = document.getElementsByName("partSKU")[0].value;
 
     let validation = true;
     if (itemNo == "") {
@@ -115,6 +116,9 @@ window.onload = function () {
       validation = false;
     }
     if (bikeModel == "") {
+      validation = false;
+    }
+    if (partSKU == "") {
       validation = false;
     }
     if (displayName == "") {
@@ -132,8 +136,13 @@ window.onload = function () {
     let newVendorNo = document.getElementById("new_vendor_no");
     let newBikeProducer = document.getElementById("new_bike_producer");
     let newBikeModel = document.getElementById("new_bike_model");
-    let newDisplayName = document.getElementById("new_display_name");
     let newCC = document.getElementById("new_cc");
+    let newPartSKU = document.getElementById("new_part_sku");
+    let newPartName = document.getElementById("new_part_name");
+    let newDisplayName = document.getElementById("new_display_name");
+    let newAddPartNo1 = document.getElementById("new_add_part_no1");
+    let newAddPartNo2 = document.getElementById("new_add_part_no2");
+    let newAddPartNo3 = document.getElementById("new_add_part_no3");
     let newDateFrom = document.getElementById("new_date_from");
     let newDateTo = document.getElementById("new_date_to");
     let newDateOn = document.getElementById("new_date_on");
@@ -142,8 +151,13 @@ window.onload = function () {
     newVendorNo.innerHTML = data.vendorNo;
     newBikeProducer.innerHTML = data.bikeProducer;
     newBikeModel.innerHTML = data.bikeModel;
-    newDisplayName.innerHTML = data.displayName;
     newCC.innerHTML = data.cc;
+    newPartSKU.innerHTML = data.partSKU;
+    newPartName.innerHTML = data.partName;
+    newDisplayName.innerHTML = data.displayName;
+    newAddPartNo1.innerHTML = data.addPartNo1;
+    newAddPartNo2.innerHTML = data.addPartNo2;
+    newAddPartNo3.innerHTML = data.addPartNo3;
     newDateFrom.innerHTML = data.date_from;
     newDateTo.innerHTML = data.date_to;
     newDateOn.innerHTML = data.date_on;
@@ -154,8 +168,13 @@ window.onload = function () {
     document.getElementsByName("vendorNo")[0].value = "";
     document.getElementsByName("bikeProducer")[0].value = "";
     document.getElementsByName("bikeModel")[0].value = "";
-    document.getElementsByName("displayName")[0].value = "";
     document.getElementsByName("cc")[0].value = "";
+    document.getElementsByName("partSKU")[0].value = "";
+    document.getElementsByName("partName")[0].value = "";
+    document.getElementsByName("displayName")[0].value = "";
+    document.getElementsByName("addPartNo1")[0].value = "";
+    document.getElementsByName("addPartNo2")[0].value = "";
+    document.getElementsByName("addPartNo3")[0].value = "";
     document.getElementsByName("date_from")[0].value = "";
     document.getElementsByName("date_to")[0].value = "";
     document.getElementsByName("date_on")[0].checked = false;

@@ -40,7 +40,7 @@ window.onload = function () {
           setTimeout(() => {
             window.location.href = "https://partscentral.online/";
             //window.location.href = "http://localhost:3000/";
-          }, 3000);
+          }, 1500);
         }
       } else {
         loginResMessage.style.display = "block";

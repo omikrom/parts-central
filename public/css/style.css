@@ -116,6 +116,77 @@
     border-radius: 7px;
 }
 
+
+/*------------------*/
+/* Login Section    */
+/*------------------*/
+
+.login--section {
+    height: 93.8vh;
+    background-color: #44494e;
+    color:white;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+.login_form {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+/*------------------*/
+/* Register Section */
+/*------------------*/
+
+.register--section {
+    height: 93.8vh;
+    background-color: #44494e;
+    color:white;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+.register_form {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+/*------------------*/
+/* Add new part Section   */
+/*------------------*/
+
+.add_part--section {
+    height: auto;
+    background-color: #44494e;
+    color:white;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+.add_part_form {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+.group {
+    padding:25px;
+    margin-bottom:10px;
+    background-color: #6f747a;
+}
+
+
 @media screen and (max-width: 768px) {
     .index--get_started_container {
         padding-left:20px;

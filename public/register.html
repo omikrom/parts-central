@@ -1,75 +1,115 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
     <title>My App</title>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Parts-central</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-between" id="navbarText">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">Home</a>
-        </li>
-        <li id="user_add_part_btn" class="nav-item">
-            <a class="nav-link" href="/new_part">Add a part</a>
-        </li>
-        <li id="user_view_part_btn" class="nav-item">
-            <a class="nav-link" href="/user_parts">View my parts</a>
-          </li>
-        <li id="admin_parts_list" class="nav-item">
-            <a class="nav-link" href="#">Global Parts List</a>
-        </li>
-        <li id="admin_mass_upload_parts">
-            <a class="nav-link" href="/upload.html">CSV upload</a>
-         </li>
-      </ul>
-      <ul class="navbar-nav mr-auto">
-        <li id="login_btn" class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
-        </li>
-        <li id="register_btn" class="nav-item">
-            <a class="nav-link" href="/register">Register</a>
-        </li>
-        <li id="user_details_btn" class="nav-item">
-            <a class="nav-link" href="/user_details">User Details</a>
-        </li>
-        <li id="logout_btn" class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-      <section>
-    <div class="container-fluid">
-        <div class="col-12">
-        <h1>Register</h1>
-        <form id="register_form">
-            <label for="company">Company:</label>
-            <input id="company" type="text" name="company" placeholder="company">
-            <br><br>
-            <label for="username">Username:</label>
-            <input id="uname" type="text" name="username" placeholder="username">
-            <br><br>
-            <label for="password">Password: </label>
-            <input id="pword" type="password" name="password" placeholder="password">
-            <br><br>
-            <label for="email">Email: </label>
-            <input id="email" type="email" name="email" placeholder="email">
-            <br><br>
-            <button id="register_submit" type="submit">Register</button>
-        </form>
-        <div id="register_message">
-            <p id="register_res_message"></p>
-            <p id="register_auth"></p>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand brand-logo" href="https://partscentral.online">Parts-central</a>
+        <button class="navbar-toggler toggler--custom" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarText">
+          <ul class="navbar-nav mr-auto navbar-btns--left">
+            <li class="nav-item active">
+              <a class="nav-link nav-link--custom" href="/">Home</a>
+            </li>
+            <li id="user_add_part_btn" class="nav-item">
+                <a class="nav-link nav-link--custom" href="/new_part">Add parts</a>
+            </li>
+            <li id="user_view_part_btn" class="nav-item">
+                <a class="nav-link nav-link--custom" href="/user_parts">View parts</a>
+            </li>
+            <li id="user_mass_create_part_btn" class="nav-item">
+                <a class="nav-link nav-link--custom" href="/mass_create">Upload part CSV</a>
+            </li>
+            <li id="user_search_part_btn" class="nav-item">
+                <a class="nav-link nav-link--custom" href="/part_search">Parts search</a>
+            </li>
+            <li id="admin_parts_list" class="nav-item">
+                <a class="nav-link nav-link--custom" href="#">Global Parts List</a>
+            </li>
+            <li id="admin_mass_upload_parts">
+                <a class="nav-link nav-link--custom" href="/upload.html">Global CSV upload</a>
+             </li>
+          </ul>
+          <ul class="navbar-nav mr-auto navbar-btns--right">
+            <li id="login_btn" class="nav-item">
+                <a class="nav-link nav-link--custom" href="/login">Login</a>
+            </li>
+            <li id="register_btn" class="nav-item">
+                <a class="nav-link nav-link--custom" href="/register">Register</a>
+            </li>
+            <li id="user_details_btn" class="nav-item">
+                <a class="nav-link nav-link--custom" href="/user_details">User Details</a>
+            </li>
+            <li id="logout_btn" class="nav-item">
+                <a class="nav-link nav-link--custom" href="/logout">Logout</a>
+            </li>
+          </ul>
         </div>
-    </div>
-    </div>
+      </nav>
+      <section class="register--section">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12 text-center">
+              <h1>Register</h1>
+            </div>
+          </div>
+          <div class="row register_form">
+            <div class="col-12 col-md-6">
+              <form id="register_form">
+                <div class="form-group">
+                  <label for="company">Company:</label>
+                  <input class="form-control" id="company" type="text" name="company" placeholder="Enter Company name">
+                </div>
+                <div class="form-group">
+                  <label for="username">Username:</label>
+                  <input class="form-control" id="uname" type="text" name="username" placeholder="Enter your username" aria-describedby="userHelp">
+                  <small id="userHelp" class="form-text text-muted">Enter a memorable username as this will be used to login to the system.</small>
+                </div>
+                <div class="form-group">
+                  <label for="password">Password: </label>
+                  <input class="form-control" id="pword" type="password" name="password" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email: </label>
+                  <input class="form-control" id="email" type="email" name="email" placeholder="Enter your email address">
+                </div>
+              </form>
+              <button class="button--part text-center" id="register_submit" type="submit">Register</button>
+              <div id="register_message">
+                <p id="register_res_message"></p>
+                <p id="register_auth"></p>
+            </div>
+            </div>
+          </div>
+            <!--<div class="col-12">
+            <h1>Register</h1>
+            <form id="register_form">
+                <label for="company">Company:</label>
+                <input id="company" type="text" name="company" placeholder="company">
+                <br><br>
+                <label for="username">Username:</label>
+                <input id="uname" type="text" name="username" placeholder="username">
+                <br><br>
+                <label for="password">Password: </label>
+                <input id="pword" type="password" name="password" placeholder="password">
+                <br><br>
+                <label for="email">Email: </label>
+                <input id="email" type="email" name="email" placeholder="email">
+                <br><br>
+                <button id="register_submit" type="submit">Register</button>
+            </form>
+            <div id="register_message">
+                <p id="register_res_message"></p>
+                <p id="register_auth"></p>
+            </div>
+        </div> -->
+        </div>
     </section>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

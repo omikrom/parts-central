@@ -79,9 +79,9 @@ router.get(
     console.log(bikeModel);
     console.log(bike_cc);
     console.log(bike_year_from);
-    const result = db.pool
+    const searchDateTo = db.pool
       .query(
-        "SELECT DISTINCT `parts`.date_to FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ? AND `parts`.cc = ? AND `parts`.date_to = ?",
+        "SELECT DISTINCT `parts`.date_to FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ? AND `parts`.cc = ? AND `parts`.date_from = ?",
         [userId, bikeProducer, bikeModel, bike_cc, bike_year_from]
       )
       .then((result) => {

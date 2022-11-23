@@ -5,7 +5,7 @@ window.onload = function () {
 
 function init() {
   let userId = sessionStorage.getItem("userId");
-  userId = 1;
+  console.log("userId: " + userId);
   let manufacturerList = document.getElementById("inputGroupManufacturer");
   let modelList = document.getElementById("inputGroupModel");
   let ccList = document.getElementById("inputGroupCC");
@@ -17,7 +17,7 @@ function init() {
   let bikeProducerData = [];
   console.log("init");
   axios
-    .get(`http://localhost:3000/search/bike_producers/${userId}`)
+    .get(`https://partscentral.online/search/bike_producers/${userId}`)
     .then((res) => {
       for (let i in res.data) {
         bikeProducerData.push(res.data[i].bikeProducer);
@@ -34,7 +34,6 @@ function init() {
   manufacturerList.addEventListener("change", function (e) {
     let bikeProducer = e.target.value;
     let userId = sessionStorage.getItem("userId");
-    userId = 1;
     console.log(bikeProducer);
     modelList.removeAttribute("disabled");
     ccList.disabled = "disabled";
@@ -68,7 +67,9 @@ function init() {
     yearToList.appendChild(yearToOption);
     let bikeModelData = [];
     axios
-      .get(`http://localhost:3000/search/bike_models/${bikeProducer}/${userId}`)
+      .get(
+        `https://partscentral.online/search/bike_models/${bikeProducer}/${userId}`
+      )
       .then((res) => {
         for (let i in res.data) {
           bikeModelData.push(res.data[i].bikeModel);
@@ -111,11 +112,10 @@ function init() {
     let bikeProducer = manufacturerList.value;
     let bikeModel = e.target.value;
     let userId = sessionStorage.getItem("userId");
-    userId = 1;
 
     axios
       .get(
-        `http://localhost:3000/search/bike_cc/${bikeProducer}/${bikeModel}/${userId}`
+        `https://partscentral.online/search/bike_cc/${bikeProducer}/${bikeModel}/${userId}`
       )
       .then((res) => {
         for (let i in res.data) {
@@ -153,11 +153,10 @@ function init() {
     let bikeModel = modelList.value;
     let bikeCC = e.target.value;
     let userId = sessionStorage.getItem("userId");
-    userId = 1;
 
     axios
       .get(
-        `http://localhost:3000/search/bike_year_from/${bikeProducer}/${bikeModel}/${bikeCC}/${userId}`
+        `https://partscentral.online/search/bike_year_from/${bikeProducer}/${bikeModel}/${bikeCC}/${userId}`
       )
       .then((res) => {
         for (let i in res.data) {
@@ -175,6 +174,7 @@ function init() {
   });
 
   yearFromList.addEventListener("change", function (e) {
+    console.log("year from changed");
     console.log(e.target.value);
     yearToList.removeAttribute("disabled");
 
@@ -191,17 +191,19 @@ function init() {
     let bikeCC = ccList.value;
     let bikeYearFrom = e.target.value;
     let userId = sessionStorage.getItem("userId");
-    userId = 1;
 
+    console.log("requesting year to data");
     axios
       .get(
-        `http://localhost:3000/search/bike_year_to/${bikeProducer}/${bikeModel}/${bikeCC}/${bikeYearFrom}/${userId}`
+        `https://partscentral.online/search/bike_year_to/${bikeProducer}/${bikeModel}/${bikeCC}/${bikeYearFrom}/${userId}`
       )
       .then((res) => {
+        console.log("response recieved", res.data);
         for (let i in res.data) {
           console.log(res.data[i]);
-          bikeYearToData.push(res.data[i].date_to);
+          bikeYearToData.push(res.data[i]);
         }
+        console.log("bikeYearToData", bikeYearToData);
         let newOptions = document.createElement("option");
         bikeYearToData.forEach((year) => {
           newOptions = document.createElement("option");
@@ -223,7 +225,6 @@ function init() {
     let bikeYearFrom = yearFromList.value;
     let bikeYearTo = yearToList.value;
     let userId = sessionStorage.getItem("userId");
-    userId = 1;
 
     if (bikeProducer === "Choose...") {
       searchMessageContent.innerHTML = "Please choose a Manufacturer";
@@ -231,7 +232,9 @@ function init() {
       console.log("model");
       searchMessageContent.innerHTML = "";
       axios
-        .get(`http://localhost:3000/search/part/${bikeProducer}/${userId}`)
+        .get(
+          `https://partscentral.online/search/part/${bikeProducer}/${userId}`
+        )
         .then((res) => {
           updateSearchResults(res.data);
         });
@@ -240,7 +243,7 @@ function init() {
       searchMessageContent.innerHTML = "";
       axios
         .get(
-          `http://localhost:3000/search/part/${bikeProducer}/${bikeModel}/${userId}`
+          `https://partscentral.online/search/part/${bikeProducer}/${bikeModel}/${userId}`
         )
         .then((res) => {
           updateSearchResults(res.data);
@@ -250,7 +253,7 @@ function init() {
       searchMessageContent.innerHTML = "";
       axios
         .get(
-          `http://localhost:3000/search/part/${bikeProducer}/${bikeModel}/${bikeCC}/${userId}`
+          `https://partscentral.online/search/part/${bikeProducer}/${bikeModel}/${bikeCC}/${userId}`
         )
         .then((res) => {
           updateSearchResults(res.data);
@@ -260,7 +263,7 @@ function init() {
       searchMessageContent.innerHTML = "";
       axios
         .get(
-          `http://localhost:3000/search/part/${bikeProducer}/${bikeModel}/${bikeCC}/${bikeYearFrom}/${userId}`
+          `https://partscentral.online/search/part/${bikeProducer}/${bikeModel}/${bikeCC}/${bikeYearFrom}/${userId}`
         )
         .then((res) => {
           updateSearchResults(res.data);
@@ -270,7 +273,7 @@ function init() {
       searchMessageContent.innerHTML = "";
       axios
         .get(
-          `http://localhost:3000/search/part/${bikeProducer}/${bikeModel}/${bikeCC}/${bikeYearFrom}/${bikeYearTo}/${userId}`
+          `https://partscentral.online/search/part/${bikeProducer}/${bikeModel}/${bikeCC}/${bikeYearFrom}/${bikeYearTo}/${userId}`
         )
         .then((res) => {
           //console.log(res.data);
