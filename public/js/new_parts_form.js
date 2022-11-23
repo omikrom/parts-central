@@ -129,23 +129,38 @@ window.onload = function () {
   }
 
   function displayNewPart(data) {
-    let newPartItem = document.getElementById("new_part_item");
-    newPartItem.style.display = "block";
 
-    let newItemNo = document.getElementById("new_item_no");
-    let newVendorNo = document.getElementById("new_vendor_no");
-    let newBikeProducer = document.getElementById("new_bike_producer");
-    let newBikeModel = document.getElementById("new_bike_model");
-    let newCC = document.getElementById("new_cc");
-    let newPartSKU = document.getElementById("new_part_sku");
-    let newPartName = document.getElementById("new_part_name");
-    let newDisplayName = document.getElementById("new_display_name");
-    let newAddPartNo1 = document.getElementById("new_add_part_no1");
-    let newAddPartNo2 = document.getElementById("new_add_part_no2");
-    let newAddPartNo3 = document.getElementById("new_add_part_no3");
-    let newDateFrom = document.getElementById("new_date_from");
-    let newDateTo = document.getElementById("new_date_to");
-    let newDateOn = document.getElementById("new_date_on");
+    let newPartTable = document.getElementById("new_part_table");
+    newPartTable.style.display = "block";
+
+    let waitingCollection = document.getElementsByClassName("waiting");
+    while (waitingCollection.length > 0) {
+      waitingCollection[0].remove();
+    }
+
+    let manufacturerRow = document.getElementById("manufacturer_row");
+    let partRow = document.getElementById("part_row");
+    let fittingRow = document.getElementById("fitting_row");
+    manufacturerRow.style.display = "table-row";
+    partRow.style.display = "table-row";
+    fittingRow.style.display = "table-row";
+
+
+    let newItemNo = document.getElementById("newitemNo");
+    let newVendorNo = document.getElementById("newvendorNo");
+    let newBikeProducer = document.getElementById("newbikeProducer");
+    let newBikeModel = document.getElementById("newbikeModel");
+    let newCC = document.getElementById("newcc");
+
+    let newPartSKU = document.getElementById("newpartSKU");
+    let newPartName = document.getElementById("newpartName");
+    let newDisplayName = document.getElementById("newpartDisplayName");
+    let newAddPartNo1 = document.getElementById("newpartAlt1");
+    let newAddPartNo2 = document.getElementById("newpartAlt2");
+    let newAddPartNo3 = document.getElementById("newpartAlt3");
+    let newDateFrom = document.getElementById("newdate_from");
+    let newDateTo = document.getElementById("newdate_to");
+    let newDateOn = document.getElementById("newdate_on");
 
     newItemNo.innerHTML = data.itemNo;
     newVendorNo.innerHTML = data.vendorNo;

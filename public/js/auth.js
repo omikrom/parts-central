@@ -1,7 +1,8 @@
 import checkSession from "./session/checkSession.js";
 import checkAdmin from "./session/checkRole.js";
 
-console.log("Checking authentication");
+let footerDate = document.getElementById("footer_date");
+footerDate.innerHTML = new Date().getFullYear();
 let loginBtn = document.getElementById("login_btn");
 let registerBtn = document.getElementById("register_btn");
 let userDetailsBtn = document.getElementById("user_details_btn");

@@ -1,14 +1,37 @@
+body {
+    overflow-y: scroll;
+}
+
+footer {
+    height: 5%;
+    color: #fff;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+div {
+    transition: all 0.5s ease;
+}
+
+.footer--date {
+    padding-right: 5px;
+}
+
+
 .brand-logo {
-    padding-left:20px;
+    padding-left: 20px;
 }
 
 .navbar-btns--left {
-    padding-left:20px;
+    padding-left: 20px;
 }
 
 
 .navbar-btns--right {
-    padding-right:20px;
+    padding-right: 20px;
 }
 
 .nav-link--custom {
@@ -30,13 +53,20 @@
 }
 
 .index--section {
-    height: 93.8vh;
+    padding-top: 100px;
+    min-height: 100vh;
+    height: auto;
     background-color: #44494e;
-    color:white;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: space-between;
+    justify-content: center;
 }
 
 .index--main_title {
-    height:50vh;
+    height: auto;
     display: flex;
     align-items: center;
     align-content: center;
@@ -44,27 +74,27 @@
 }
 
 .button--part {
-    margin-top:10px;
-  background: #212529;
-  border-radius: 999px;
-  box-shadow: #212529 0 10px 20px -10px;
-  box-sizing: border-box;
-  color: #FFFFFF;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 24px;
-  opacity: 1;
-  outline: 0 solid transparent;
-  padding: 8px 18px;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: max-content;
-  /*word-break: break-word;*/
-  overflow-wrap: normal;
-  border: 0;
-  transition: all 0.2s ease-in-out;
+    margin-top: 10px;
+    background: #212529;
+    border-radius: 999px;
+    box-shadow: #212529 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: max-content;
+    /*word-break: break-word;*/
+    overflow-wrap: normal;
+    border: 0;
+    transition: all 0.2s ease-in-out;
 }
 
 .button--part:hover {
@@ -72,7 +102,7 @@
 }
 
 .button--part_alt {
-    margin-top:10px;
+    margin-top: 10px;
     background-color: #0e2d4f;
     border-radius: 999px;
     box-shadow: #212529 0 10px 20px -10px;
@@ -92,11 +122,11 @@
     overflow-wrap: normal;
     border: 0;
     transition: all 0.2s ease-in-out;
-  }
-  
-  .button--part_alt:hover {
+}
+
+.button--part_alt:hover {
     background-color: #212529;
-  }
+}
 
 .index--welcome-ui {
     height: 43vh;
@@ -109,10 +139,10 @@
 
 .index--get_started_container {
     background-color: #666f78;
-    padding-top:30px;
-    padding-bottom:30px;
-    padding-left:50px;
-    padding-right:50px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
     border-radius: 7px;
 }
 
@@ -124,7 +154,7 @@
 .login--section {
     height: 93.8vh;
     background-color: #44494e;
-    color:white;
+    color: white;
     display: flex;
     align-items: center;
     align-content: center;
@@ -145,7 +175,7 @@
 .register--section {
     height: 93.8vh;
     background-color: #44494e;
-    color:white;
+    color: white;
     display: flex;
     align-items: center;
     align-content: center;
@@ -163,14 +193,22 @@
 /* Add new part Section   */
 /*------------------*/
 
+.page-title {
+    padding: 25px 40px 0 40px;
+}
+
+
 .add_part--section {
+    min-height: 100vh;
     height: auto;
     background-color: #44494e;
-    color:white;
+    color: white;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     align-content: center;
     justify-content: center;
+    padding-bottom: 50px;
+    padding-top: 4rem;
 }
 
 .add_part_form {
@@ -180,42 +218,236 @@
     justify-content: center;
 }
 
+.button--add_part {
+    width: 100%;
+    display: flex;
+    padding: 6px 25px 25px 25px;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
 .group {
-    padding:25px;
-    margin-bottom:10px;
-    background-color: #6f747a;
+    padding: 25px 25px 0 25px;
+    margin-bottom: 10px;
+}
+
+.new_parts {
+    padding: 25px 25px 0 25px;
+    margin-bottom: 10px;
+}
+
+#new_part_table {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-items: flex-start;
+}
+
+.table--custom {
+    width: 100%;
+}
+
+.table {
+    color: white;
+}
+
+.table-title {
+    padding: 5px 25px 0 25px;
+}
+
+/*------------------*/
+/* CSV upload section  */
+/*------------------*/
+
+.full-page--container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    overflow-x: hidden;
+}
+
+.upload_progress--cont {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.upload--div {
+    padding-bottom: 10px;
+}
+
+.progress-bar--div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.progress-bar--custom {
+    width: 70%;
+    transition: all 1s ease-in-out;
+}
+
+.progress-bar--c_label {
+    width: 15%;
+}
+
+.form-group {
+    transition: all 1s ease-in-out;
+}
+
+.full-width {
+    width: 100% !important;
 }
 
 
-@media screen and (max-width: 768px) {
-    .index--get_started_container {
-        padding-left:20px;
-        padding-right:20px;
+/*------------------*/
+/* Accordion styles */
+/*------------------*/
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    background-color: #212529;
+    color: #eee;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.5s;
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active_accordion,
+.accordion:hover {
+    background-color: #2e353b;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    padding: 0 1rem;
+    background-color: #6f747a;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+/*------------------*/
+/* View all parts section  */
+/*------------------*/
+
+#user_parts_section {
+    min-height: 100vh;
+    padding-top: 50px;
+    height: auto;
+    background-color: #44494e;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.page_form--title {
+    padding-bottom: 20px;
+}
+
+.table_ui--row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 25px;
+}
+
+.table--archive {
+    background-color: #212529;
+    padding: 15px 15px 0px 15px;
+}
+
+.search--container {
+    text-align: right;
+}
+
+.main_table--container {
+    padding: 20px 30px 75px 30px;
+}
+
+
+@media screen and (max-width: 300px) {
+    .full-width {
+        width: 120px !important;
     }
+
+    .progress-bar--div {
+        justify-content: center;
+    }
+
+}
+
+
+@media screen and (max-width: 768px) and (min-width: 300px) {
+    .index--get_started_container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
     .button--part {
         margin-bottom: 10px;
     }
+
     .button--part_alt {
         margin-bottom: 10px;
+    }
+
+    .progress-bar--div {
+        justify-content: center;
+    }
+
+    .full-width {
+        width: 300px !important;
     }
 }
 
 
 @media screen and (max-width: 990px) {
     .navbar-btns--left {
-        padding:0;
+        padding: 0;
     }
+
     .navbar-btns-right {
         padding: 0;
     }
+
     .nav-link--custom {
-        padding-left:20px;
+        padding-left: 20px;
     }
+
     .nav-link--custom:hover {
         border-bottom: 2px solid #212529;
         background-color: #44494e;
     }
+
     .toggler--custom {
-        margin-right:20px;
+        margin-right: 20px;
     }
 }
