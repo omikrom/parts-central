@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Parts Central - Part management system</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand brand-logo" href="https://partscentral.online">Parts-central</a>
+        <button class="navbar-toggler toggler--custom" type="button" data-toggle="collapse" data-target="#navbarText"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarText">
+            <ul class="navbar-nav mr-auto navbar-btns--left">
+                <li class="nav-item active">
+                    <a class="nav-link nav-link--custom" href="/">Home</a>
+                </li>
+                <li id="user_add_part_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/new_part">Add parts</a>
+                </li>
+                <li id="user_view_part_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/user_parts">View parts</a>
+                </li>
+                <li id="user_mass_create_part_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/mass_create">Upload part CSV</a>
+                </li>
+                <li id="user_search_part_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/part_search">Parts search</a>
+                </li>
+                <li id="admin_parts_list" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="#">Global Parts List</a>
+                </li>
+                <li id="admin_mass_upload_parts">
+                    <a class="nav-link nav-link--custom" href="/upload.html">Global CSV upload</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mr-auto navbar-btns--right">
+                <li id="login_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/login">Login</a>
+                </li>
+                <li id="register_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/register">Register</a>
+                </li>
+                <li id="user_details_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/user_details">User Details</a>
+                </li>
+                <li id="logout_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="index--section">
+        <div class="container full-page--container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Upload parts CSV</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <form id="upload_csv_form">
+                        <div class="form-group row">
+                            <div class="mb-3">
+                                <label for="csv">Select CSV:</label>
+                                <input type="file" class="form-control" id="csv">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col upload_progress--cont">
+                                <div class="form-group col-12 col-md-3 upload--div">
+                                    <button class="button--part" type="submit">Upload</button>
+                                    <!--<button type="submit" class="btn btn-primary">Upload</button> -->
+                                </div>
+                                <div class="form-group col-12 col-md-9 progress-bar--div">
+                                    <label class="progress-bar--c_label" id="progress_bar_label"
+                                        for="progress_bar">0%</label>
+                                    <progress class="progress-bar--custom" value="100" max="100"
+                                        id="progress_bar"></progress>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12 full-width">
+                    <p>
+                    <div class="" id="message">Parts added to database</div>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+    <footer class="fixed-bottom bg-dark">
+        &copy; <em class="footer--date" id="footer_date"></em> Parts Central
+    </footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="module" src="./js/auth.js"></script>
+<script type="module" src="./js/user_upload.js"></script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+
+</html>

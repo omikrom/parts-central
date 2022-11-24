@@ -2,21 +2,18 @@ class Part {
   constructor(
     itemNo,
     vendorNo,
-    barcodeNo,
     bikeProducer,
     bikeModel,
-    country,
+    cc,
     date_from,
     date_to,
     date_on
   ) {
     this.itemNo = itemNo;
     this.vendorNo = vendorNo;
-    this.barcodeNo = barcodeNo;
     this.bikeProducer = bikeProducer;
     this.bikeModel = bikeModel;
     this.cc = this.getCCfromModel(bikeModel);
-    this.country = country;
     this.date_from = date_from;
     this.date_to = date_to;
     this.date_on = this.checkDateOn(date_on);

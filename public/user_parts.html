@@ -1,91 +1,109 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Parts Central - Part management system</title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
+
+<head>
+  <meta charset="utf-8">
+  <title>Parts Central - Part management system</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/style.css">
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand brand-logo" href="https://partscentral.online">Parts-central</a>
-        <button class="navbar-toggler toggler--custom" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarText">
-          <ul class="navbar-nav mr-auto navbar-btns--left">
-            <li class="nav-item active">
-              <a class="nav-link nav-link--custom" href="/">Home</a>
-            </li>
-            <li id="user_add_part_btn" class="nav-item">
-                <a class="nav-link nav-link--custom" href="/new_part">Add parts</a>
-            </li>
-            <li id="user_view_part_btn" class="nav-item">
-                <a class="nav-link nav-link--custom" href="/user_parts">View parts</a>
-            </li>
-            <li id="user_mass_create_part_btn" class="nav-item">
-                <a class="nav-link nav-link--custom" href="/mass_create">Upload part CSV</a>
-            </li>
-            <li id="user_search_part_btn" class="nav-item">
-                <a class="nav-link nav-link--custom" href="/part_search">Parts search</a>
-            </li>
-            <li id="admin_parts_list" class="nav-item">
-                <a class="nav-link nav-link--custom" href="#">Global Parts List</a>
-            </li>
-            <li id="admin_mass_upload_parts">
-                <a class="nav-link nav-link--custom" href="/upload.html">Global CSV upload</a>
-             </li>
-          </ul>
-          <ul class="navbar-nav mr-auto navbar-btns--right">
-            <li id="login_btn" class="nav-item">
-                <a class="nav-link nav-link--custom" href="/login">Login</a>
-            </li>
-            <li id="register_btn" class="nav-item">
-                <a class="nav-link nav-link--custom" href="/register">Register</a>
-            </li>
-            <li id="user_details_btn" class="nav-item">
-                <a class="nav-link nav-link--custom" href="/user_details">User Details</a>
-            </li>
-            <li id="logout_btn" class="nav-item">
-                <a class="nav-link nav-link--custom" href="/logout">Logout</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand brand-logo" href="https://partscentral.online">Parts-central</a>
+    <button class="navbar-toggler toggler--custom" type="button" data-toggle="collapse" data-target="#navbarText"
+      aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarText">
+      <ul class="navbar-nav mr-auto navbar-btns--left">
+        <li class="nav-item active">
+          <a class="nav-link nav-link--custom" href="/">Home</a>
+        </li>
+        <li id="user_add_part_btn" class="nav-item">
+          <a class="nav-link nav-link--custom" href="/new_part">Add parts</a>
+        </li>
+        <li id="user_view_part_btn" class="nav-item">
+          <a class="nav-link nav-link--custom" href="/user_parts">View parts</a>
+        </li>
+        <li id="user_mass_create_part_btn" class="nav-item">
+          <a class="nav-link nav-link--custom" href="/csv_upload">Upload part CSV</a>
+        </li>
+        <li id="user_search_part_btn" class="nav-item">
+          <a class="nav-link nav-link--custom" href="/part_search">Parts search</a>
+        </li>
+        <li id="admin_parts_list" class="nav-item">
+          <a class="nav-link nav-link--custom" href="#">Global Parts List</a>
+        </li>
+        <li id="admin_mass_upload_parts">
+          <a class="nav-link nav-link--custom" href="/upload.html">Global CSV upload</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav mr-auto navbar-btns--right">
+        <li id="login_btn" class="nav-item">
+          <a class="nav-link nav-link--custom" href="/login">Login</a>
+        </li>
+        <li id="register_btn" class="nav-item">
+          <a class="nav-link nav-link--custom" href="/register">Register</a>
+        </li>
+        <li id="user_details_btn" class="nav-item">
+          <a class="nav-link nav-link--custom" href="/user_details">User Details</a>
+        </li>
+        <li id="logout_btn" class="nav-item">
+          <a class="nav-link nav-link--custom" href="/logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-      <section id="user_parts_section">
-        <div class="container-fluid">
-            <div class="col-12">
-                <div id="part_list">
-                </div>
-            </div>
+  <section id="user_parts_section">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 page-title page_form--title">
+          <h1>Parts archive</h1>
         </div>
-      </section>
-      <style>
-        .table_row--headings {
-            font-weight: bold;
-            padding: 3px;
-            background-color: rgb(41, 41, 41);
-            color: white;
-            border: 1px solid black;
-            text-align: center;
-        }
-
-        .table_row--element {
-            background-color: rgb(65, 65, 65);
-            border: 1px solid black;
-            padding:3px;
-            color: rgb(193, 193, 193);
-            text-align: center;
-        }
-      </style>
+      </div>
+      <div class="row table_ui--row">
+        <div class="col">
+          <div class="show_entries">
+            <label for="show_entries">Show entries</label>
+            <select id="show_entries" name="show_entries">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+        </div>
+        <div class="col text-end">
+          <div class="search">
+            <input type="text" id="search" placeholder="Search">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid main_table--container">
+      <div class="col-12">
+        <div id="part_list" class="table-responsive table--archive">
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="fixed-bottom bg-dark">
+    &copy; <em class="footer--date" id="footer_date"></em> Parts Central
+  </footer>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="module" src="./js/user_parts.js"></script>
 <script type="module" src="./js/auth.js"></script>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+  integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
 </html>

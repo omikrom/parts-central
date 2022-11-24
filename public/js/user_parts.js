@@ -24,74 +24,44 @@ function init() {
 
   async function createTable(data) {
     let tableHeadings = [
-      "Item No",
-      "Vendor No",
-      "Bike Producer",
-      "Bike Model",
-      "Display name",
+      "#",
+      "ItemNo",
+      "VendorNo",
+      "Manufacturer",
+      "Model",
       "CC",
+      "SKU",
+      "Part name",
+      "Display name",
+      "Alt part No 1",
+      "Alt part No 2",
+      "Alt part No 3",
       "Date from",
       "Date to",
       "Date on",
+      "Edit",
+      "Delete",
     ];
+
+
+    function createTableHeader(tr, heading) {
+      let th = document.createElement("th");
+      th.scope = "col"
+      th.innerHTML = heading;
+      tr.appendChild(th);
+    }
     let partList = document.getElementById("part_list");
     let table = document.createElement("table");
     table.classList.add("table");
+    table.classList.add("table-dark");
+    table.classList.add("table-bordered");
+
     let tr = document.createElement("tr");
-    let th = document.createElement("th");
-    th.scope = "col";
     /* Create table header */
-    th.innerHTML = "id";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Item No";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Vendor No";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Display Name";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Display bike id";
-    th.style.display = "none";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Bike Producer";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Bike Model";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "CC";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Date From";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Date To";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Date On";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Update";
-    tr.appendChild(th);
-    th = document.createElement("th");
-    th.scope = "col";
-    th.innerHTML = "Delete";
-    tr.appendChild(th);
+    for (let i = 0; i < tableHeadings.length; i++) {
+      createTableHeader(tr, tableHeadings[i]);
+    }
+
     table.appendChild(tr);
     /*end of table header */
 

@@ -56,16 +56,18 @@ app.use("/login", (req, res) => {
 app.use("/register", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "register.html"));
 });
-app.use("/all_parts", (req, res) => {
+
+/*app.use("/all_parts", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "all_parts.html"));
-});
+});*/
+
 app.use("/new_part", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "new_part.html"));
 });
 
-app.use("/upload", (req, res) => {
+/*app.use("/upload", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "upload.html"));
-});
+});*/
 
 app.use("/user_parts", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "user_parts.html"));
@@ -73,6 +75,10 @@ app.use("/user_parts", (req, res) => {
 
 app.use("/part_search", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "part_search.html"));
+});
+
+app.use("/csv_upload", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "user_upload.html"));
 });
 
 /* ------------------- */
