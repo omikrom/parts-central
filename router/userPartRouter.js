@@ -23,13 +23,28 @@ router.post("/create_part_fitting", async (req, res) => {
     throw err;
   }
 
-  // 
+  //
 
-  try {
-    const addNewPartFitting = await db.pool.query(
-      "INSERT INTO `fitting` (type, manufacturer, model, cc, date_from, date_to, date_on") 
-    )
-
+  for (let i = 0; i < fitting_data.length; i++) {
+    let element = fitting_data[i];
+    let fittingId = 0;
+    try {
+      const addNewPartFitting = await db.pool.query(
+        "INSERT INTO `fitting` (type, manufacturer, model, cc, date_from, date_to, date_on",
+        [
+          element[i].type,
+          fitting_data.manufacturer,
+          fitting_data.model,
+          fitting.cc,
+          fitting.date_from,
+          fitting.date_to,
+          fitting.date_on,
+        ]
+      );
+      fittingId = parseInt(addNewPartFitting.insertId);
+    } catch (err) {
+      throw err;
+    }
   }
 
   res.status(200).send({
