@@ -2,7 +2,7 @@ import checkSession from "./session/checkSession.js";
 
 let loggedIn = checkSession();
 let userId = sessionStorage.getItem("userId");
-console.log("userId", userId);
+let supplierId = sessionStorage.getItem("supplierId");
 
 let newUserContent = document.getElementById("index--new_user");
 let existingUserContent = document.getElementById("index--logged_in_user");
@@ -16,27 +16,27 @@ if (loggedIn) {
   existingUserContent.style.display = "flex";
   addPartBtn.addEventListener("click", function (e) {
     e.preventDefault();
-    window.location.href = "https://partscentral.online/new_part";
+    window.location.href = "/new_part";
   });
   viewPartsBtn.addEventListener("click", function (e) {
     e.preventDefault();
-    window.location.href = "https://partscentral.online/user_parts";
+    window.location.href = "/user_parts";
   });
 } else {
   newUserContent.style.display = "flex";
   existingUserContent.style.display = "none";
   loginBtn.addEventListener("click", function (e) {
     e.preventDefault();
-    window.location.href = "https://partscentral.online/login";
+    window.location.href = "/login";
   });
   registerBtn.addEventListener("click", function (e) {
     e.preventDefault();
-    window.location.href = "https://partscentral.online/register";
+    window.location.href = "/register";
   });
 }
 
 if (loggedIn) {
-  axios.get(`https://partscentral.online/api/user/${userId}`).then((res) => {
+  axios.get(`/api/user/${userId}`).then((res) => {
     //axios.get(`http://localhost:3000/api/user/${userId}`).then((res) => {
     console.log("res.data", res.data);
     let user = res.data;

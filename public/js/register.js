@@ -2,7 +2,7 @@ import checkSession from "./session/checkSession.js";
 
 window.onload = function () {
   let registerForm = document.getElementById("register_form");
-  let company = document.getElementById("company");
+  let supplier = document.getElementById("supplier");
   let username = document.getElementById("uname");
   let password = document.getElementById("pword");
   let email = document.getElementById("email");
@@ -15,6 +15,8 @@ window.onload = function () {
     registerForm.style.display = "none";
     username.value = "";
     password.value = "";
+    email.value = "";
+    supplier.value = "";
     registerAuthMessage.innerHTML = "You are already logged in.";
     registerResMessage.style.display = "none";
   } else {
@@ -25,22 +27,23 @@ window.onload = function () {
   registerBtn.addEventListener("click", function (e) {
     e.preventDefault();
     let body = {
-      company: company.value,
       email: email.value,
       username: username.value,
       password: password.value,
+      supplier: supplier.value,
     };
-    axios.post("https://partscentral.online/api/register", body).then((res) => {
-      //axios.post("http://localhost:3000/api/register", body).then((res) => {
+    //axios.post("https://partscentral.online/api/register", body).then((res) => {
+    axios.post("http://localhost:3000/api/register", body).then((res) => {
       console.log(res.data);
       if (res.data.message === "Registration successful") {
         if (res.data.token) {
           sessionStorage.setItem("token", res.data.token);
           sessionStorage.setItem("role", res.data.role);
           sessionStorage.setItem("userId", res.data.userId);
+          sessionStorage.setItem("supplierId", res.data.supplierId);
           registerResMessage.innerHTML = "Registered successfully.";
           setTimeout(() => {
-            window.location.href = "https://partscentral.online";
+            window.location.href = "/";
             //window.location.href = "http://localhost:3000/";
           }, 3000);
         }

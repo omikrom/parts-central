@@ -65,6 +65,10 @@ app.use("/new_part", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "new_part.html"));
 });
 
+app.use("/create_part", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "create_part.html"));
+});
+
 /*app.use("/upload", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "upload.html"));
 });*/
@@ -79,6 +83,12 @@ app.use("/part_search", (req, res) => {
 
 app.use("/csv_upload", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "user_upload.html"));
+});
+
+/* admin views*/
+
+app.use("/new_supplier", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "new_supplier.html"));
 });
 
 /* ------------------- */

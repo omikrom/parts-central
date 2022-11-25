@@ -11,7 +11,7 @@ let logoutBtn = document.getElementById("logout_btn");
 logoutBtn.addEventListener("click", function (e) {
   e.preventDefault();
   sessionStorage.clear();
-  window.location.href = "https://partscentral.online/";
+  window.location.href = "/";
 });
 
 let loggedIn = checkSession();
@@ -51,6 +51,3 @@ if (loggedIn) {
   viewPartBtn.style.display = "none";
   userMassUploadBtn.style.display = "none";
 }
-
-let userId = sessionStorage.getItem("userId");
-console.log("userId: ", userId);

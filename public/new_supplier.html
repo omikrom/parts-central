@@ -16,7 +16,7 @@
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse justify-content-between" id="navbarText">
+    <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between" id="navbarText">
       <ul class="navbar-nav mr-auto navbar-btns--left">
         <li class="nav-item active">
           <a class="nav-link nav-link--custom" href="/">Home</a>
@@ -57,46 +57,74 @@
     </div>
   </nav>
 
-  <section id="user_parts_section">
+  <section class="new_supplier--section">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-12 page_form--title">
-          <h1>Parts archive</h1>
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center">Add a new supplier</h1>
+            </div>
         </div>
-      </div>
-      <div class="row table_ui--row">
-        <div class="col">
-          <div class="show_entries">
-            <label for="show_entries">Show entries</label>
-            <select id="show_entries" name="show_entries">
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </div>
+        <div class="row supplier_form">
+            <div class="col-12 col-md-8 col-lg-6">
+                <form id="new_supplier_form" action="/new_supplier" method="POST">
+                    <div class="form-group">
+                        <label for="supplier_name">Supplier Name</label>
+                        <input type="text" class="form-control" id="supplier_name" name="supplier_name" placeholder="Supplier Name">
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <label for="supplier_line1_addr">Address first line: </label>
+                            <input type="text" class="form-control" id="supplier_line1_addr" name="supplier_line1_addr" placeholder="First line of address">
+                        </div>
+                        <div class="col-12">
+                            <label for="supplier_line2_addr">Address second line: </label>
+                        <input type="text" class="form-control" id="supplier_line2_addr" name="supplier_line2_addr" placeholder="Second line of address">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <label for="supplier_area">Area: </label>
+                        <input type="text" class="form-control" id="supplier_area" name="supplier_area" placeholder="Area">
+                        </div>
+                        <div class="col-6">
+                            <label for="supplier_city">City: </label>
+                            <input type="text" class="form-control" id="supplier_city" name="supplier_city" placeholder="City">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="supplier_country">Country: </label>
+                        <input type="text" class="form-control" id="supplier_country" name="supplier_country" placeholder="Country:">
+                    </div>
+                    <div class="form-group">
+                        <label for="supplier_postcode">Postcode: </label>
+                        <input type="text" class="form-control" id="supplier_postcode" name="supplier_postcode" placeholder="Postcode:">
+                    </div>
+                    <div class="form-group">
+                        <label for="supplier_phone">Phone: </label>
+                        <input type="text" class="form-control" id="supplier_phone" name="supplier_phone" placeholder="Telephone number:">
+                    </div>
+                    <button class="button--part" id="supplier_submit">Create supplier</button>
+                </form>
+            </div>
         </div>
-        <div class="col text-end">
-          <div class="search">
-            <input type="text" id="search" placeholder="Search">
-          </div>
+        <div class="row">
+            <div class="col-12">
+                <p id="form_message"></p>
+            </div>
         </div>
-      </div>
     </div>
-    <div class="container-fluid main_table--container">
-      <div class="col-12">
-        <div id="part_list" class="table-responsive table--archive">
-        </div>
-      </div>
-    </div>
+
   </section>
+
+
   <footer class="fixed-bottom bg-dark">
     &copy; <em class="footer--date" id="footer_date"></em> Parts Central
   </footer>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script type="module" src="./js/user_parts.js"></script>
 <script type="module" src="./js/auth.js"></script>
+<script type="module" src="./js/create_supplier.js"></script>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

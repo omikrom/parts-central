@@ -28,17 +28,18 @@ window.onload = function () {
       password: password.value,
     };
     //axios.post("https://localhost:3000/api/login", body).then((res) => {
-    axios.post("https://partscentral.online/api/login", body).then((res) => {
+    axios.post("/api/login", body).then((res) => {
       console.log(res.data);
       if (res.data.message === "Login successful") {
         if (res.data.token) {
           sessionStorage.setItem("token", res.data.token);
           sessionStorage.setItem("role", res.data.role);
           sessionStorage.setItem("userId", res.data.userId);
+          sessionStorage.setItem("supplierId", res.data.supplierId);
           document.cookie = `x-access-token=${res.data.token}`;
           loginResMessage.innerHTML = "Login successful.";
           setTimeout(() => {
-            window.location.href = "https://partscentral.online/";
+            window.location.href = "/";
             //window.location.href = "http://localhost:3000/";
           }, 1500);
         }

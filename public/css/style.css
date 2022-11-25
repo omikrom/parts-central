@@ -12,9 +12,6 @@ footer {
 
 }
 
-div {
-    transition: all 0.5s ease;
-}
 
 .footer--date {
     padding-right: 5px;
@@ -152,7 +149,7 @@ div {
 /*------------------*/
 
 .login--section {
-    height: 93.8vh;
+    height: 100vh;
     background-color: #44494e;
     color: white;
     display: flex;
@@ -234,6 +231,68 @@ div {
 .new_parts {
     padding: 25px 25px 0 25px;
     margin-bottom: 10px;
+}
+
+.row_id--container {
+    width:2%;
+    padding-left:5px;
+}
+
+.check-column {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    width: 5%;
+}
+
+.check--custom {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: space-between;
+    padding-left: 0;
+    height:100%;
+}
+
+.checkmark {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 0 !important;
+    margin-top: 0.5rem;
+}
+
+.fitting_btn--container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: stretch;
+    flex-direction: column;
+    width:5.2%;
+}
+
+.add_fitting {
+    border: none;
+    width: 1.6rem;
+}
+
+.add_fitting_btn {
+    margin-top:0.125rem;
+}
+
+.remove_fitting_btn {
+    margin-top:0.125rem;
+}
+
+.remove_fitting {
+    border: none;
+    width:1.6rem;
 }
 
 #new_part_table {
@@ -366,6 +425,8 @@ div {
 
 .page_form--title {
     padding-bottom: 20px;
+    padding-top:50px;
+    padding-left:30px;
 }
 
 .table_ui--row {
@@ -376,7 +437,8 @@ div {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0 25px;
+    padding: 0 0;
+    --bs-gutter-x: 0 !important;
 }
 
 .table--archive {
@@ -392,6 +454,43 @@ div {
     padding: 20px 30px 75px 30px;
 }
 
+
+/* ------------------ */
+/* new supplier section */
+/* ------------------ */
+
+.new_supplier--section {
+    min-height: 100vh;
+    height: auto;
+    background-color: #44494e;
+    color: white;
+    display: flex;
+    align-items: flex-start;
+    align-content: center;
+    justify-content: center;
+    padding-bottom: 50px;
+    padding-top: 5rem;
+}
+
+.supplier_form {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+/* ------------------ */
+/* Form helpers */
+/* ------------------ */
+
+.field_error {
+    border: 1px solid red !important;
+    background-color: rgb(255, 209, 209) !important;
+}
+.field_valid {
+    border: 1px solid green !important;
+    background-color: rgb(227, 255, 209) !important;
+}
 
 @media screen and (max-width: 300px) {
     .full-width {
@@ -425,6 +524,14 @@ div {
 
     .full-width {
         width: 300px !important;
+    }
+
+    .check-column {
+        width:50%;
+        justify-content: center;
+    }
+    .fitting_btn--container {
+        width:25%;
     }
 }
 

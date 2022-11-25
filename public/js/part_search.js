@@ -1,6 +1,7 @@
 window.onload = function () {
   console.log("window.onload");
   init();
+  console.log("new search");
 };
 
 function init() {
@@ -201,13 +202,14 @@ function init() {
         console.log("response recieved", res.data);
         for (let i in res.data) {
           console.log(res.data[i]);
-          bikeYearToData.push(res.data[i]);
+          bikeYearToData.push(res.data[i].date_to);
         }
         console.log("bikeYearToData", bikeYearToData);
         let newOptions = document.createElement("option");
         bikeYearToData.forEach((year) => {
+          console.log("year", year);
           newOptions = document.createElement("option");
-          newOptions.value = year;
+          newOptions.value = year.date_to;
           newOptions.innerHTML = year;
           yearToList.appendChild(newOptions);
         });

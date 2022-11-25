@@ -16,16 +16,20 @@ router.post("/input", (req, res) => {
 // register a new user
 router.post("/register", async (req, res) => {
   let task = req.body;
-  //console.log(task);
   let uname = task.username;
   let pword = task.password;
-  let company = task.company;
+  let supplier = task.supplier;
+  let supplierId = 0;
   let role = 0;
   let hashedPassword = {};
+  let email = task.email;
+
+  console.log(supplier);
+
+  // hash password
   bcrypt.hashPassword(pword).then((hash) => {
     hashedPassword = hash;
   });
-  let email = task.email;
   try {
     const check = await db.pool.query(
       "SELECT * FROM `user` WHERE username = ?",
@@ -36,20 +40,34 @@ router.post("/register", async (req, res) => {
         message: "Username already exists",
       });
     } else {
+      // get supplier id
+      const supplierQuery = await db.pool.query(
+        "SELECT id FROM `supplier` WHERE supplier_name = ?",
+        [supplier]
+      );
+      if (supplierQuery.length > 0) {
+        console.log("supplier exists");
+        supplierId = supplierQuery[0].id;
+      } else {
+        res.status(403).send({
+          message: "Supplier does not exist",
+        });
+      }
+
+      console.log("supplierId: " + supplierId);
+
       const result = await db.pool.query(
-        "INSERT INTO `user` (username, password, email, company, role) VALUES (?, ?, ?, ?, ?)",
-        [uname, hashedPassword, email, company, role]
+        "INSERT INTO `user` (username, password, email, supplier_id, role) VALUES (?, ?, ?, ?, ?)",
+        [uname, hashedPassword, email, supplierId, role]
       );
       let userId = parseInt(result.insertId);
-      console.log(userId);
 
-      //console.log("original Hashed Pword:", hashedPassword);
       const token = jwt.sign(
         {
           user_id: userId,
           email,
         },
-        "SECRETKEY",
+        process.env.JWT_KEY || "SECRETKEY",
         {
           expiresIn: "2h",
         }
@@ -62,6 +80,7 @@ router.post("/register", async (req, res) => {
           token: token,
           role: role,
           userId: userId,
+          supplierId: supplierId,
         })
         .end();
     }
@@ -87,6 +106,7 @@ router.get("/users", async (req, res) => {
 
 // get username by id
 router.get("/user/:id", async (req, res) => {
+  console.log(req.params.id);
   let id = req.params.id;
   let responseBody = {};
   try {
