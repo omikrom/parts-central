@@ -3,6 +3,7 @@ window.onload = function () {
 };
 
 function init() {
+  let supplierId = sessionStorage.getItem("supplierId");
   let form = document.getElementById("create_part_form");
   let add_first_row = document.getElementById("add_fit");
   let fitmentContainer = document.getElementById("part_fitment");
@@ -20,14 +21,16 @@ function init() {
     let alt_sku = document.getElementById("alt_sku_number").value;
 
     let body = {
+      token: sessionStorage.getItem("token"),
+      supplierId: supplierId,
       part: {
-        part_name: "",
-        part_sku: "",
+        part_name: partName,
+        part_sku: partSku,
       },
       alt_part_numbers: {
-        alt_part_number: "",
-        alt_vendor_number: "",
-        alt_sku: "",
+        alt_part_no: alt_part_number,
+        alt_vendor_no: alt_vendor_number,
+        alt_sku_no: alt_vendor_number,
       },
       fittings: [],
     };
@@ -76,7 +79,9 @@ function init() {
       body.fittings.push(fits);
     }
 
-    console.log(body);
+    axios.post("/user/create_part_fitting", body).then((res) => {
+      console.log(res);
+    });
   });
 
   function fitting(type, make, model, cc, year_from, year_to, year_on) {

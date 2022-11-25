@@ -3,6 +3,40 @@ const router = express.Router();
 
 const db = require("../db/db.js");
 
+router.post("/create_part_fitting", async (req, res) => {
+  let data = req.body;
+
+  let part = data.part;
+  let supplierId = data.supplierId;
+  let alt_data = data.alt_part_numbers;
+  let fitting_data = data.fittings;
+  let partId = 0;
+
+  // add new part
+  try {
+    const addNewPart = await db.pool.query(
+      "INSERT INTO `part` (sku, part_name, supplier_id) VALUES (?, ?, ?)",
+      [part.part_sku, part.part_name, supplierId]
+    );
+    partId = parseInt(addNewPart.insertId);
+  } catch (err) {
+    throw err;
+  }
+
+  // 
+
+  try {
+    const addNewPartFitting = await db.pool.query(
+      "INSERT INTO `fitting` (type, manufacturer, model, cc, date_from, date_to, date_on") 
+    )
+
+  }
+
+  res.status(200).send({
+    message: "Part created",
+  });
+});
+
 router.post("/display_bike", async (req, res) => {
   let part = req.body;
   if (!part.cc) {
