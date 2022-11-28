@@ -234,13 +234,13 @@ footer {
 }
 
 .row_id--container {
-    width:2%;
-    padding-left:5px;
+    width: 2%;
+    padding-left: 5px;
 }
 
 .check-column {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: nowrap;
     align-content: center;
     justify-content: flex-start;
@@ -255,7 +255,7 @@ footer {
     justify-content: flex-start;
     align-items: space-between;
     padding-left: 0;
-    height:100%;
+    height: 100%;
 }
 
 .checkmark {
@@ -274,7 +274,7 @@ footer {
     align-items: center;
     align-content: stretch;
     flex-direction: column;
-    width:5.2%;
+    width: 5.2%;
 }
 
 .add_fitting {
@@ -283,16 +283,16 @@ footer {
 }
 
 .add_fitting_btn {
-    margin-top:0.125rem;
+    margin-top: 0.125rem;
 }
 
 .remove_fitting_btn {
-    margin-top:0.125rem;
+    margin-top: 0.125rem;
 }
 
 .remove_fitting {
     border: none;
-    width:1.6rem;
+    width: 1.6rem;
 }
 
 #new_part_table {
@@ -409,6 +409,8 @@ footer {
 /* View all parts section  */
 /*------------------*/
 
+
+
 #user_parts_section {
     min-height: 100vh;
     padding-top: 50px;
@@ -425,8 +427,8 @@ footer {
 
 .page_form--title {
     padding-bottom: 20px;
-    padding-top:50px;
-    padding-left:30px;
+    padding-top: 50px;
+    padding-left: 30px;
 }
 
 .table_ui--row {
@@ -452,6 +454,41 @@ footer {
 
 .main_table--container {
     padding: 20px 30px 75px 30px;
+}
+
+/* ----------------- */
+/* View parts fitment section */
+/* ----------------- */
+
+.fitment_display {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.fitting_section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 98vw;
+    background-color: #fff;
+}
+
+.fitment_details--container {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: flex-end;
+}
+
+.fitment_display--btns {
+    margin-bottom: 1rem;
 }
 
 
@@ -487,6 +524,7 @@ footer {
     border: 1px solid red !important;
     background-color: rgb(255, 209, 209) !important;
 }
+
 .field_valid {
     border: 1px solid green !important;
     background-color: rgb(227, 255, 209) !important;
@@ -527,11 +565,12 @@ footer {
     }
 
     .check-column {
-        width:50%;
+        width: 50%;
         justify-content: center;
     }
+
     .fitting_btn--container {
-        width:25%;
+        width: 25%;
     }
 }
 

@@ -143,6 +143,12 @@ router.post("/login", async (req, res) => {
     let uId = check[0].id;
     let role = check[0].role;
 
+    let supplierId = await db.pool.query(
+      "SELECT supplier_id FROM `user` WHERE id = ?",
+      [uId]
+    )
+    let sId = supplierId[0].supplier_id;
+
     await bcrypt.comparePassword(pword, check[0].password).then((result) => {
       if (result) {
         const token = jwt.sign(
@@ -156,11 +162,13 @@ router.post("/login", async (req, res) => {
           }
         );
         updateDBToken(uId, token);
+        //let supplierId = getSupplierId(uId);
         res.status(200).send({
           message: "Login successful",
           token: token,
           role: role,
           userId: uId,
+          supplierId: sId,
         });
       } else {
         res.status(403).send({
@@ -195,11 +203,23 @@ async function updateDBToken(id, token) {
   }
 }
 
+async function getSupplierId(id) {
+  try {
+    let result = await db.pool.query(
+      "SELECT supplier_id FROM `user` WHERE id = ?",
+      [id]);
+    console.log(result[0].supplier_id);
+    return parseInt(result[0].supplier_id);
+  } catch (err) {
+    throw err;
+  }
+}
+
 /*     db.pool.query(
       "INSERT INTO `user` (username, password, email) VALUES (?, ?, ?)",
       [req.body.username, req.body.password, req.body.email],
     );
-
+ 
     */
 
 module.exports = router;

@@ -43,6 +43,8 @@ let viewPartBtn = document.getElementById("user_view_part_btn");
 let userMassUploadBtn = document.getElementById("user_mass_create_part_btn");
 
 if (loggedIn) {
+  let supplier_id = sessionStorage.getItem("supplierId");
+  console.log(supplier_id);
   addPartBtn.style.display = "block";
   viewPartBtn.style.display = "block";
   userMassUploadBtn.style.display = "block";

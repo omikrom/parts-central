@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/dynamic_row.js"></script>
 </head>
 
 <body>
@@ -78,7 +79,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="part_number">Part (SKU):</label>
-                                    <input type="text" class="form-control" id="part_number" name="part_number" required>
+                                    <input type="text" class="form-control" id="part_number" name="part_number"
+                                        required>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
@@ -99,48 +101,62 @@
                             </div>
                         </div>
                         <h4>Part Fitting</h4>
-                        <div class="form-group row" id="part_fitment">
+                        <div class="form-group row part_fitment" id="part_fitment">
                             <div class="form-group row fitment_row" id="part_fitment--row">
                                 <div class="col-12 col-md-2">
                                     <label for="fitting_type">Type</label>
-                                    <input type="text" class="form-control" id="fitting_type" name="fitting_type">
+                                    <input type="text" class="form-control" id="fitting_type" name="fitting_type"
+                                        list="type_options" aria-required="true" required>
+                                    <datalist id="type_options">
+                                        <option value="ATV"></option>
+                                        <option value="Motorcycle"></option>
+                                        <option value="Scooter"></option>
+                                        <option value="Snowmobile"></option>
+                                        <option value="UTV"></option>
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="fitting_make">Make</label>
-                                    <input type="text" class="form-control" id="fitting_make" name="fitting_make">
+                                    <input type="text" class="form-control" id="fitting_make" name="fitting_make"
+                                        list="make_options">
+                                    <datalist name="make_options" id="make_options">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="fitting_model">Model</label>
                                     <input type="text" class="form-control" id="fitting_model" name="fitting_model">
                                 </div>
                                 <div class="col-12 col-md-2">
-                                        <label for="fitting_cc">CC:</label>
-                                        <input type="number" min="0" max="100000" step="50" class="form-control" id="fitting_cc" name="fitting_cc">
+                                    <label for="fitting_cc">CC:</label>
+                                    <input type="number" min="0" max="100000" step="50" class="form-control"
+                                        id="fitting_cc" name="fitting_cc">
                                 </div>
                                 <div class="col-12 col-md-1">
                                     <label for="fitting_year_from">from:</label>
-                                    <input type="text" class="form-control" id="fitting_year_from" name="fitting_year_from">
+                                    <input type="number" min="1850" max="3000" step="1" class="form-control"
+                                        id="fitting_year_from" name="fitting_year_from">
                                 </div>
                                 <div class="col-12 col-md-1">
                                     <label for="fitting_year_to">to:</label>
-                                    <input type="text" class="form-control" id="fitting_year_to" name="fitting_year_to">
+                                    <input type="number" min="1850" max="3000" step="1" class="form-control"
+                                        id="fitting_year_to" name="fitting_year_to">
                                 </div>
                                 <div class="col-6 col-md-1 check-column">
-                                        <label for="fitting_year_on">on:</label>
-                                        <input class="form-check-input checkmark" type="checkbox" value="" id="fitting_year_on">
+                                    <label for="fitting_year_on">on:</label>
+                                    <input class="form-check-input checkmark" type="checkbox" value=""
+                                        id="fitting_year_on">
                                 </div>
                                 <div class="col-6 col-md-1 fitting_btn--container">
                                     <label for="fitting_add_btn">Add</label>
                                     <div class="add_fitting_btn">
-                                        <button value="0" id="add_fit" class="add_fitting">+</button>
+                                        <button id="add_fit" class="add_fitting" onclick="addRow(this)">+</button>
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-1 fitting_btn--container">
                                     <label for="fitting_add_btn">Remove</label>
                                     <div class="remove_fitting_btn">
-                                        <button value="0" id="remove_fit" class="remove_fitting">-</button>
+                                        <button id="remove_fit" class="remove_fitting"
+                                            onclick="deleteRow(this)">-</button>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
                         </div>
                         <div class="col-12 text-end">
@@ -151,9 +167,9 @@
             </div>
 
 
-    <footer class="fixed-bottom bg-dark">
-        &copy; <em class="footer--date" id="footer_date"></em> Parts Central
-    </footer>
+            <footer class="fixed-bottom bg-dark">
+                &copy; <em class="footer--date" id="footer_date"></em> Parts Central
+            </footer>
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
