@@ -129,7 +129,6 @@ window.onload = function () {
   }
 
   function displayNewPart(data) {
-
     let newPartTable = document.getElementById("new_part_table");
     newPartTable.style.display = "block";
 
@@ -144,7 +143,6 @@ window.onload = function () {
     manufacturerRow.style.display = "table-row";
     partRow.style.display = "table-row";
     fittingRow.style.display = "table-row";
-
 
     let newItemNo = document.getElementById("newitemNo");
     let newVendorNo = document.getElementById("newvendorNo");

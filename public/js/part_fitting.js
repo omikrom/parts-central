@@ -1,5 +1,6 @@
 window.onload = function () {
   init();
+  console.log(sessionStorage.getItem("supplierId"));
 };
 
 function init() {
@@ -38,7 +39,6 @@ function init() {
     let fittingRow = document.querySelectorAll(".fitment_row");
     for (let i = 0; i < fittingRow.length; i++) {
       let fits = new fitting();
-      //console.log(fittingRow[i].childNodes);
       let child = fittingRow[i].childNodes;
       for (let j = 0; j < child.length; j++) {
         let grandChild = child[j].childNodes;

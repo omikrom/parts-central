@@ -3,43 +3,75 @@ const router = express.Router();
 
 const db = require("../db/db.js");
 
-router.get("/bike_producers/:userId", (req, res) => {
-  let userId = req.params.userId;
+router.get("/manufacturer/:sId", (req, res) => {
+  let sId = req.params.sId;
+  // get distinct manufacturer from fitting table where supplier Id =  sId from part has fitting table
   const result = db.pool
     .query(
-      "SELECT DISTINCT `parts`.bikeProducer FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ?",
-      [userId]
+      "SELECT DISTINCT manufacturer FROM `fitting` WHERE id IN (SELECT fitting_id FROM `part_has_fitting` WHERE part_supplier_id = ?)",
+      [sId]
     )
     .then((result) => {
       res.send(result);
     });
 });
 
-router.get("/bike_models/:bikeProducer/:userId", (req, res) => {
-  let bikeProducer = req.params.bikeProducer;
-  let userId = req.params.userId;
-  console.log(bikeProducer);
-  console.log(userId);
+router.get("/models/:manufacturer/:sId", (req, res) => {
+  let manufacturer = req.params.manufacturer;
+  let sId = req.params.sId;
+
   const result = db.pool
     .query(
-      "SELECT DISTINCT `parts`.bikeModel FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ?",
-      [userId, bikeProducer]
+      "SELECT DISTINCT model FROM `fitting` WHERE manufacturer = ? AND id IN (SELECT fitting_id FROM `part_has_fitting` WHERE part_supplier_id = ?)",
+      [manufacturer, sId]
     )
     .then((result) => {
       res.send(result);
     });
 });
 
-router.get("/bike_cc/:bikeProducer/:bikeModel/:userId", (req, res) => {
-  let bikeProducer = req.params.bikeProducer;
-  let bikeModel = req.params.bikeModel;
-  let userId = req.params.userId;
-  console.log(bikeProducer);
-  console.log(bikeModel);
+router.get("/cc/:manufacturer/:model/:sId", (req, res) => {
+  let manufacturer = req.params.manufacturer;
+  let model = req.params.model;
+  let sId = req.params.sId;
+
   const result = db.pool
     .query(
-      "SELECT DISTINCT `parts`.cc FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ?",
-      [userId, bikeProducer, bikeModel]
+      "SELECT DISTINCT cc FROM `fitting` WHERE manufacturer = ? AND model = ? AND id IN (SELECT fitting_id FROM `part_has_fitting` WHERE part_supplier_id = ?)",
+      [manufacturer, model, sId]
+    )
+    .then((result) => {
+      res.send(result);
+    });
+});
+
+router.get("/year_from/:manufacturer/:model/:cc/:sId", (req, res) => {
+  let manufacturer = req.params.manufacturer;
+  let model = req.params.model;
+  let cc = req.params.cc;
+  let sId = req.params.sId;
+
+  const result = db.pool
+    .query(
+      "SELECT DISTINCT date_from FROM `fitting` WHERE manufacturer = ? AND model = ? AND cc = ? AND id IN (SELECT fitting_id FROM `part_has_fitting` WHERE part_supplier_id = ?)",
+      [manufacturer, model, cc, sId]
+    )
+    .then((result) => {
+      res.send(result);
+    });
+});
+
+router.get("/year_to/:manufacturer/:model/:cc/:year_from/:sId", (req, res) => {
+  let manufacturer = req.params.manufacturer;
+  let model = req.params.model;
+  let cc = req.params.cc;
+  let year_from = req.params.year_from;
+  let sId = req.params.sId;
+
+  const searchDateTo = db.pool
+    .query(
+      "SELECT DISTINCT date_to FROM `fitting` WHERE manufacturer = ? AND model = ? AND cc = ? AND date_from = ? AND id IN (SELECT fitting_id FROM `part_has_fitting` WHERE part_supplier_id = ?)",
+      [manufacturer, model, cc, year_from, sId]
     )
     .then((result) => {
       res.send(result);
@@ -47,161 +79,162 @@ router.get("/bike_cc/:bikeProducer/:bikeModel/:userId", (req, res) => {
 });
 
 router.get(
-  "/bike_year_from/:bikeProducer/:bikeModel/:bike_cc/:userId",
+  "/part/:manufacturer/:model/:cc/:year_from/:year_to/:sId",
   (req, res) => {
-    let bikeProducer = req.params.bikeProducer;
-    let bikeModel = req.params.bikeModel;
-    let bike_cc = req.params.bike_cc;
-    let userId = req.params.userId;
-    console.log(bikeProducer);
-    console.log(bikeModel);
-    console.log(bike_cc);
+    let manufacturer = req.params.manufacturer;
+    let model = req.params.model;
+    let cc = req.params.cc;
+    let year_from = req.params.year_from;
+    let year_to = req.params.year_to;
+    let sId = req.params.sId;
+
+    console.log(manufacturer, model, cc, year_from, year_to, sId);
+
+    let pIds = [];
+
     const result = db.pool
       .query(
-        "SELECT DISTINCT `parts`.date_from FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ? AND `parts`.cc = ?",
-        [userId, bikeProducer, bikeModel, bike_cc]
+        "SELECT part_id FROM `part_has_fitting` WHERE fitting_id IN (SELECT id FROM `fitting` WHERE manufacturer = ? AND model = ? AND cc = ? AND date_from = ? AND date_to = ?) AND part_supplier_id = ?",
+        [manufacturer, model, cc, year_from, year_to, sId]
       )
       .then((result) => {
-        res.send(result);
+        result.forEach((element) => {
+          pIds.push(element.part_id);
+        });
+      })
+      .finally(() => {
+        console.log(pIds);
+        const result = db.pool
+          .query(
+            "SELECT part.sku, part.part_name, alt_skus.partNo, alt_skus.vendorNo, alt_skus.alt_sku FROM part LEFT JOIN alt_skus ON part.id = alt_skus.part_id WHERE part.id IN (?)",
+            [pIds]
+          )
+          .then((result) => {
+            res.send(result);
+          });
       });
   }
 );
 
-router.get(
-  "/bike_year_to/:bikeProducer/:bikeModel/:bike_cc/:bike_year_from/:userId",
-  (req, res) => {
-    let bikeProducer = req.params.bikeProducer;
-    let bikeModel = req.params.bikeModel;
-    let bike_cc = req.params.bike_cc;
-    let bike_year_from = req.params.bike_year_from;
-    let userId = req.params.userId;
-    console.log(bikeProducer);
-    console.log(bikeModel);
-    console.log(bike_cc);
-    console.log(bike_year_from);
-    const searchDateTo = db.pool
-      .query(
-        "SELECT DISTINCT `parts`.date_to FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ? AND `parts`.cc = ? AND `parts`.date_from = ?",
-        [userId, bikeProducer, bikeModel, bike_cc, bike_year_from]
-      )
-      .then((result) => {
-        res.send(result);
-      });
-  }
-);
+router.get("/part/:manufacturer/:model/:cc/:year_from/:sId", (req, res) => {
+  let manufacturer = req.params.manufacturer;
+  let model = req.params.model;
+  let cc = req.params.cc;
+  let year_from = req.params.year_from;
+  let sId = req.params.sId;
+  let pIds = [];
 
-router.get(
-  "/part/:bikeProducer/:bikeModel/:bike_cc/:bike_year_from/:bike_year_to/:userId",
-  (req, res) => {
-    let bikeProducer = req.params.bikeProducer;
-    let bikeModel = req.params.bikeModel;
-    let bike_cc = req.params.bike_cc;
-    let bike_year_from = req.params.bike_year_from;
-    let bike_year_to = req.params.bike_year_to;
-    let userId = req.params.userId;
-    console.log(bikeProducer);
-    console.log(bikeModel);
-    console.log(bike_cc);
-    console.log(bike_year_from);
-    console.log(bike_year_to);
-    const result = db.pool
-      .query(
-        "SELECT `parts`.id, `parts`.itemNo, `parts`.vendorNo, `parts`.bikeProducer, `parts`.bikeModel, `display_bikes`.bike_display_name, `parts`.cc, `parts`.date_from, `parts`.date_to FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ? AND `parts`.cc = ? AND `parts`.date_from = ? AND `parts`.date_to = ?",
-        [userId, bikeProducer, bikeModel, bike_cc, bike_year_from, bike_year_to]
-      )
-      .then((result) => {
-        res.send(result);
-      });
-  }
-);
-
-router.get("/part/:bikeProducer/:bikeModel/:bike_cc/:userId", (req, res) => {
-  let bikeProducer = req.params.bikeProducer;
-  let bikeModel = req.params.bikeModel;
-  let bike_cc = req.params.bike_cc;
-  let userId = req.params.userId;
-  console.log(bikeProducer);
-  console.log(bikeModel);
-  console.log(bike_cc);
   const result = db.pool
     .query(
-      "SELECT `parts`.id, `parts`.itemNo, `parts`.vendorNo, `parts`.bikeProducer, `parts`.bikeModel, `display_bikes`.bike_display_name, `parts`.cc, `parts`.date_from, `parts`.date_to FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ? AND `parts`.cc = ?",
-      [userId, bikeProducer, bikeModel, bike_cc]
+      "SELECT part_id FROM `part_has_fitting` WHERE fitting_id IN (SELECT id FROM `fitting` WHERE manufacturer = ? AND model = ? AND cc = ? AND date_from = ? AND id IN (SELECT fitting_id FROM `part_has_fitting` WHERE part_supplier_id = ?))",
+      [manufacturer, model, cc, year_from, sId]
     )
     .then((result) => {
-      res.send(result);
+      result.forEach((element) => {
+        pIds.push(element.part_id);
+      });
+    })
+    .finally(() => {
+      const result = db.pool
+        .query(
+          "SELECT part.sku, part.part_name, alt_skus.partNo, alt_skus.vendorNo, alt_skus.alt_sku FROM part LEFT JOIN alt_skus ON part.id = alt_skus.part_id WHERE part.id IN (?)",
+          [pIds]
+        )
+        .then((result) => {
+          res.send(result);
+        });
     });
 });
 
-router.get(
-  "/part/:bikeProducer/:bikeModel/:bike_cc/bike_year_from/:userId",
-  (req, res) => {
-    let bikeProducer = req.params.bikeProducer;
-    let bikeModel = req.params.bikeModel;
-    let bike_cc = req.params.bike_cc;
-    let bike_year_from = req.params.bike_year_from;
-    let userId = req.params.userId;
+router.get("/part/:manufacturer/:model/:cc/:sId", (req, res) => {
+  let manufacturer = req.params.manufacturer;
+  let model = req.params.model;
+  let cc = req.params.cc;
+  let sId = req.params.sId;
+  let pIds = [];
 
-    console.log(bikeProducer);
-    console.log(bikeModel);
-    console.log(bike_cc);
-    console.log(bike_year_from);
-    const result = db.pool
-      .query(
-        "SELECT `parts`.id, `parts`.itemNo, `parts`.vendorNo, `parts`.bikeProducer, `parts`.bikeModel, `display_bikes`.bike_display_name, `parts`.cc, `parts`.date_from, `parts`.date_to FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ? AND `parts`.cc = ? AND `parts`.date_from = ?",
-        [userId, bikeProducer, bikeModel, bike_cc, bike_year_from]
-      )
-      .then((result) => {
-        res.send(result);
+  const result = db.pool
+    .query(
+      "SELECT part_id FROM `part_has_fitting` WHERE fitting_id IN (SELECT id FROM `fitting` WHERE manufacturer = ? AND model = ? AND cc = ?) AND part_supplier_id = ?",
+      [manufacturer, model, cc, sId]
+    )
+    .then((result) => {
+      result.forEach((element) => {
+        pIds.push(element.part_id);
       });
-  }
-);
-
-router.get("/part/:bikeProducer/:bikeModel/:bike_cc/:userId", (req, res) => {
-  let bikeProducer = req.params.bikeProducer;
-  let bikeModel = req.params.bikeModel;
-  let bike_cc = req.params.bike_cc;
-  let userId = req.params.userId;
-  console.log(bikeProducer);
-  console.log(bikeModel);
-  console.log(bike_cc);
-  const result = db.pool
-    .query(
-      "SELECT `parts`.id, `parts`.itemNo, `parts`.vendorNo, `parts`.bikeProducer, `parts`.bikeModel, `display_bikes`.bike_display_name, `parts`.cc, `parts`.date_from, `parts`.date_to FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ? AND `parts`.cc = ?",
-      [userId, bikeProducer, bikeModel, bike_cc]
-    )
-    .then((result) => {
-      res.send(result);
+    })
+    .finally(() => {
+      const result = db.pool
+        .query(
+          "SELECT part.sku, part.part_name, alt_skus.partNo, alt_skus.vendorNo, alt_skus.alt_sku FROM part LEFT JOIN alt_skus ON part.id = alt_skus.part_id WHERE part.id IN (?)",
+          [pIds]
+        )
+        .then((result) => {
+          res.send(result);
+        });
     });
 });
 
-router.get("/part/:bikeProducer/:bikeModel/:userId", (req, res) => {
-  let bikeProducer = req.params.bikeProducer;
-  let bikeModel = req.params.bikeModel;
-  let userId = req.params.userId;
-  console.log(bikeProducer);
-  console.log(bikeModel);
+router.get("/part/:manufacturer/:model/:sId", (req, res) => {
+  let manufacturer = req.params.manufacturer;
+  let model = req.params.model;
+  let sId = req.params.sId;
+
+  let pIds = [];
+
+  //"SELECT part_id FROM `part_has_fitting` WHERE fitting_id IN (SELECT id FROM `fitting` WHERE manufacturer = ?) AND part_supplier_id = ?",
+
   const result = db.pool
     .query(
-      "SELECT `parts`.id, `parts`.itemNo, `parts`.vendorNo, `parts`.bikeProducer, `parts`.bikeModel, `display_bikes`.bike_display_name, `parts`.cc, `parts`.date_from, `parts`.date_to FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ? AND `parts`.bikeModel = ?",
-      [userId, bikeProducer, bikeModel]
+      "SELECT part_id FROM `part_has_fitting` WHERE fitting_id IN (SELECT id FROM `fitting` WHERE manufacturer = ? AND model = ?) AND part_supplier_id = ?",
+      [manufacturer, model, sId]
     )
     .then((result) => {
-      res.send(result);
+      result.forEach((element) => {
+        pIds.push(element.part_id);
+      });
+    })
+    .finally(() => {
+      console.log(pIds);
+      // find all parts from parts table where part id is in the array of part id's
+      const result = db.pool
+        // select part.sku, part.part_name, alt_skus.partNo, alt_skus.alt_partNo
+        .query(
+          "SELECT part.sku, part.part_name, alt_skus.partNo, alt_skus.vendorNo, alt_skus.alt_sku FROM part LEFT JOIN alt_skus ON part.id = alt_skus.part_id WHERE part.id IN (?)",
+          [pIds]
+        )
+        .then((result) => {
+          res.send(result);
+        });
     });
 });
 
-router.get("/part/:bikeProducer/:userId", (req, res) => {
-  let bikeProducer = req.params.bikeProducer;
-  let userId = req.params.userId;
-  console.log(bikeProducer);
+router.get("/part/:manufacturer/:sId", (req, res) => {
+  let manufacturer = req.params.manufacturer;
+  let sId = req.params.sId;
+  let pIds = [];
+
   const result = db.pool
     .query(
-      "SELECT `parts`.id, `parts`.itemNo, `parts`.vendorNo, `parts`.bikeProducer, `parts`.bikeModel, `display_bikes`.bike_display_name, `parts`.cc, `parts`.date_from, `parts`.date_to FROM `parts` JOIN `parts_of_bikes` ON `parts`.id = `parts_of_bikes`.part_id JOIN `display_bikes` ON `display_bikes`.id = `parts_of_bikes`.display_bike_id WHERE `display_bikes`.user_id = ? AND `parts`.bikeProducer = ?",
-      [userId, bikeProducer]
+      "SELECT part_id FROM `part_has_fitting` WHERE fitting_id IN (SELECT id FROM `fitting` WHERE manufacturer = ?) AND part_supplier_id = ?",
+      [manufacturer, sId]
     )
     .then((result) => {
-      res.send(result);
+      result.forEach((element) => {
+        pIds.push(element.part_id);
+      });
+    })
+    .finally(() => {
+      // find all parts from parts table where part id is in the array of part id's
+      const result = db.pool
+        // select part.sku, part.part_name, alt_skus.partNo, alt_skus.alt_partNo
+        .query(
+          "SELECT part.sku, part.part_name, alt_skus.partNo, alt_skus.vendorNo, alt_skus.alt_sku FROM `part` JOIN `alt_skus` ON part.id = alt_skus.part_id WHERE part.id IN (?)",
+          [pIds]
+        )
+        .then((result) => {
+          res.send(result);
+        });
     });
 });
 

@@ -142,6 +142,7 @@ router.post("/login", async (req, res) => {
     );
     let uId = check[0].id;
     let role = check[0].role;
+    let sId = await getSupplierId(uId);
 
     await bcrypt.comparePassword(pword, check[0].password).then((result) => {
       if (result) {
@@ -155,12 +156,15 @@ router.post("/login", async (req, res) => {
             expiresIn: "2h",
           }
         );
+
+        console.log("sId: " + sId);
         updateDBToken(uId, token);
         res.status(200).send({
           message: "Login successful",
           token: token,
           role: role,
           userId: uId,
+          supplierId: sId,
         });
       } else {
         res.status(403).send({
@@ -170,17 +174,6 @@ router.post("/login", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-  }
-
-  try {
-    /*let result = await db.pool.query(
-      "SELECT * FROM `user` WHERE username = ? AND password = ?",
-      [task.username, hashedPassword]
-    );
-    console.log(result);
-    res.status(200).send(result);*/
-  } catch (err) {
-    throw err;
   }
 });
 
@@ -195,11 +188,16 @@ async function updateDBToken(id, token) {
   }
 }
 
-/*     db.pool.query(
-      "INSERT INTO `user` (username, password, email) VALUES (?, ?, ?)",
-      [req.body.username, req.body.password, req.body.email],
+async function getSupplierId(id) {
+  try {
+    let result = await db.pool.query(
+      "SELECT supplier_id FROM `user` WHERE id = ?",
+      [id]
     );
-
-    */
+    return result[0].supplier_id;
+  } catch (err) {
+    throw err;
+  }
+}
 
 module.exports = router;

@@ -27,7 +27,7 @@ window.onload = function () {
       username: username.value,
       password: password.value,
     };
-    //axios.post("https://localhost:3000/api/login", body).then((res) => {
+
     axios.post("/api/login", body).then((res) => {
       console.log(res.data);
       if (res.data.message === "Login successful") {
@@ -40,8 +40,7 @@ window.onload = function () {
           loginResMessage.innerHTML = "Login successful.";
           setTimeout(() => {
             window.location.href = "/";
-            //window.location.href = "http://localhost:3000/";
-          }, 1500);
+          }, 5500);
         }
       } else {
         loginResMessage.style.display = "block";

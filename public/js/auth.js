@@ -38,7 +38,7 @@ if (isAdmin) {
   massUploadBtn.style.display = "none";
 }
 
-let addPartBtn = document.getElementById("user_add_part_btn");
+let addPartBtn = document.getElementById("user_create_part_btn");
 let viewPartBtn = document.getElementById("user_view_part_btn");
 let userMassUploadBtn = document.getElementById("user_mass_create_part_btn");
 
