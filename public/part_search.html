@@ -60,60 +60,52 @@
     </div>
   </nav>
 
-      <section>
-        <div class="container-fluid">
+      <section id="part_search--section">
+        <div class="container-fluid part_search_options--cont">
           <div class="row mt-3">
             <div class="col-12">
-                <h1>Search for parts</h1>
+                <h1 class="text-light">Search for parts</h1>
             </div>
           </div>
           <div class="row">
-            <div class="col-12">
-                <label for="Manufacturer">Manufacturer</label>
+            <div class="col-6 col-md-2">
+                <label class="text-light" for="Manufacturer">Manufacturer</label>
                 <br>
                 <select name="Manufacturer" class="custom-select" id="inputGroupManufacturer">
                     <option selected>Choose...</option>
                   </select>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-                <label for="Model">Model</label>
-                <br>
-                <select name="Model" disabled="true" class="custom-select" id="inputGroupModel">
-                    <option selected>Choose...</option>
-                </select>
+            <div class="col-6 col-md-2">
+              <label class="text-light" for="Model">Model</label>
+              <br>
+              <select name="Model" disabled="true" class="custom-select" id="inputGroupModel">
+                  <option selected>Choose...</option>
+              </select>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-                <label for="CC">CC</label>
-                <br>
-                <select name="CC" disabled="true" class="custom-select" id="inputGroupCC">
-                    <option selected>Choose...</option>
-                </select>
+            <div class="col-6 col-md-2">
+              <label class="text-light" for="CC">CC</label>
+              <br>
+              <select name="CC" disabled="true" class="custom-select" id="inputGroupCC">
+                  <option selected>Choose...</option>
+              </select>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-                <label for="YearFrom">Year From</label>
-                <br>
-                <select name="YearFrom" disabled="true" class="custom-select" id="inputGroupYearFrom">
-                    <option selected>Choose...</option>
-                </select>
+            <div class="col-6 col-md-2">
+              <label class="text-light" for="YearFrom">Year From</label>
+              <br>
+              <select name="YearFrom" disabled="true" class="custom-select" id="inputGroupYearFrom">
+                  <option selected>Choose...</option>
+              </select>
             </div>
+            <div class="col-6 col-md-2">
+              <label class="text-light" for="YearTo">Year To</label>
+              <br>
+              <select name="YearTo" disabled="true" class="custom-select" id="inputGroupYearTo">
+                  <option selected>Choose...</option>
+              </select>
+          </div>
           </div>
           <div class="row">
-            <div class="col-12">
-                <label for="YearTo">Year To</label>
-                <br>
-                <select name="YearTo" disabled="true" class="custom-select" id="inputGroupYearTo">
-                    <option selected>Choose...</option>
-                </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
+            <div class="col-12 mt-3 text-center">
                 <button class="button--part" id="search_submit">Search</button>
             </div>
           </div>
@@ -123,10 +115,6 @@
                 </div>
             </div>
         </div>
-        </div>
-    </section>
-
-      <section>
         <div class="container-fluid">
           <div class="row mt-3">
             <div class="col-12">
@@ -135,7 +123,8 @@
           </div>
           <div class="row">
             <div class="col-12">
-                <table class="table table-striped">
+              <div class="table-responsive">
+                <table class="table table-striped table-dark table-hover">
                     <thead>
                       <tr>
                         <th scope="col">SKU</th>
@@ -148,9 +137,11 @@
                     <tbody id="search_results">
                     </tbody>
                   </table>
+              </div>
             </div>
           </div>
         </div>
+    
       </section>
       <footer class="fixed-bottom bg-dark">
         &copy; <em class="footer--date" id="footer_date"></em> Parts Central

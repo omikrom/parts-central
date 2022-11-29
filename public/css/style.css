@@ -480,6 +480,24 @@ footer {
 }
 
 /* ------------------ */
+/* Part search section */
+/* ------------------ */
+
+#part_search--section {
+    height:100vh;
+    background-color: #44494e;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.part_search_options--cont {
+    padding-top:100px;
+}
+
+/* ------------------ */
 /* Form helpers */
 /* ------------------ */
 
