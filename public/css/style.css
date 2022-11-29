@@ -170,7 +170,7 @@ footer {
 /*------------------*/
 
 .register--section {
-    height: 93.8vh;
+    height: 100vh;
     background-color: #44494e;
     color: white;
     display: flex;
@@ -495,6 +495,10 @@ footer {
 
 .part_search_options--cont {
     padding-top:100px;
+}
+
+.custom-select {
+    width: 100%;
 }
 
 /* ------------------ */

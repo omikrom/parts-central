@@ -41,13 +41,16 @@ if (isAdmin) {
 let addPartBtn = document.getElementById("user_create_part_btn");
 let viewPartBtn = document.getElementById("user_view_part_btn");
 let userMassUploadBtn = document.getElementById("user_mass_create_part_btn");
+let userPartSearchBtn = document.getElementById("user_search_part_btn");
 
 if (loggedIn) {
   addPartBtn.style.display = "block";
   viewPartBtn.style.display = "block";
   userMassUploadBtn.style.display = "block";
+  userPartSearchBtn.style.display = "block";
 } else {
   addPartBtn.style.display = "none";
   viewPartBtn.style.display = "none";
   userMassUploadBtn.style.display = "none";
+  userPartSearchBtn.style.display = "none";
 }

@@ -40,7 +40,7 @@ window.onload = function () {
           loginResMessage.innerHTML = "Login successful.";
           setTimeout(() => {
             window.location.href = "/";
-          }, 5500);
+          }, 1000);
         }
       } else {
         loginResMessage.style.display = "block";
