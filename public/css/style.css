@@ -560,11 +560,12 @@ footer {
 
 @media screen and (max-width: 990px) {
     .navbar-btns--left {
-        padding: 0;
+        padding-right:20px;
+        margin-left:20px;
     }
 
-    .navbar-btns-right {
-        padding: 0;
+    .navbar-btns--right {
+        margin-left:20px;
     }
 
     .nav-link--custom {
