@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>My App</title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
+
+<head>
+  <meta charset="utf-8">
+  <title>Parts Central - Part management system</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <a class="navbar-brand brand-logo" href="/">Parts-central</a>
@@ -13,14 +16,16 @@
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between" id="navbarText">
+    
+    <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between"
+      id="navbarText">
       <ul class="navbar-nav mr-auto navbar-btns--left">
         <li class="nav-item active">
           <a class="nav-link nav-link--custom" href="/">Home</a>
         </li>
-        <!--<li id="user_add_part_btn" class="nav-item">
+        <li id="user_add_part_btn" class="nav-item">
           <a class="nav-link nav-link--custom" href="/new_part">Add parts</a>
-        </li>-->
+        </li>
         <li id="user_create_part_btn" class="nav-item">
           <a class="nav-link nav-link--custom" href="/create_part">Create new part</a>
         </li>
@@ -56,54 +61,62 @@
       </ul>
     </div>
   </nav>
+  <section class="register--section">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h1>Register</h1>
+        </div>
+      </div>
+      <div class="row register_form">
+        <div class="col-12 col-md-6">
+          <form id="register_form">
+            <div class="form-group">
+              <label for="supplier">Supplier:</label>
+              <input class="form-control" id="supplier" type="text" name="supplier"
+                placeholder="Enter your organisations name">
 
-      <section class="register--section">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-12 text-center">
-              <h1>Register</h1>
             </div>
-          </div>
-          <div class="row register_form">
-            <div class="col-12 col-md-6">
-              <form id="register_form">
-                <div class="form-group">
-                  <label for="supplier">Supplier:</label>
-                  <input class="form-control" id="supplier" type="text" name="supplier" placeholder="Enter your organisations name">
-                </div>
-                <div class="form-group">
-                  <label for="username">Username:</label>
-                  <input class="form-control" id="uname" type="text" name="username" placeholder="Enter your username" aria-describedby="userHelp">
-                  <small id="userHelp" class="form-text text-muted">Enter a memorable username as this will be used to login to the system.</small>
-                </div>
-                <div class="form-group">
-                  <label for="password">Password: </label>
-                  <input class="form-control" id="pword" type="password" name="password" placeholder="Password">
-                </div>
-                <div class="form-group">
-                  <label for="email">Email: </label>
-                  <input class="form-control" id="email" type="email" name="email" placeholder="Enter your email address">
-                </div>
-              </form>
-              <button class="button--part text-center" id="register_submit" type="submit">Register</button>
-              <div id="register_message">
-                <p id="register_res_message"></p>
-                <p id="register_auth"></p>
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input class="form-control" id="uname" type="text" name="username" placeholder="Enter your username"
+                aria-describedby="userHelp">
+              <small id="userHelp" class="form-text text-muted">Enter a memorable username as this will be used to login
+                to the system.</small>
             </div>
+            <div class="form-group">
+              <label for="password">Password: </label>
+              <input class="form-control" id="pword" type="password" name="password" placeholder="Password">
             </div>
+            <div class="form-group">
+              <label for="email">Email: </label>
+              <input class="form-control" id="email" type="email" name="email" placeholder="Enter your email address">
+            </div>
+          </form>
+          <button class="button--part text-center" id="register_submit" type="submit">Register</button>
+          <div id="register_message">
+            <p id="register_res_message"></p>
+            <p id="register_auth"></p>
           </div>
         </div>
-    </section>
-    <footer class="fixed-bottom bg-dark">
-      &copy; <em class="footer--date" id="footer_date"></em> Parts Central
-    </footer>
+      </div>
+    </div>
+  </section>
+  <footer class="fixed-bottom bg-dark">
+    &copy; <em class="footer--date" id="footer_date"></em> Parts Central
+  </footer>
+
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="module" src="./js/register.js"></script>
 <script type="module" src="./js/auth.js"></script>
 <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+  integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
 </html>
