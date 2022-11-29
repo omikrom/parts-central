@@ -148,7 +148,7 @@ router.post("/login", async (req, res) => {
       "SELECT supplier_id FROM `user` WHERE id = ?",
       [uId]
     )
-    let sId = supplierId[0].supplier_id;
+    sId = supplierId[0].supplier_id;
 
     await bcrypt.comparePassword(pword, check[0].password).then((result) => {
       if (result) {

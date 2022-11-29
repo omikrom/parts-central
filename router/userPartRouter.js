@@ -5,7 +5,6 @@ const db = require("../db/db.js");
 
 router.post("/create_part_fitting", async (req, res) => {
   let data = req.body;
-
   let part = data.part;
   let supplierId = data.supplierId;
   let alt_data = data.alt_part_numbers;
@@ -77,6 +76,7 @@ router.post("/create_part_fitting", async (req, res) => {
     } catch (err) {
       throw err;
     }
+  }
 
 
   res.status(200).send({
