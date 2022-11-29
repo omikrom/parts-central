@@ -5,37 +5,32 @@ window.onload = function () {
 };
 
 function init() {
-  let userId = sessionStorage.getItem("userId");
-  console.log("userId: " + userId);
+  let sId = sessionStorage.getItem("supplierId");
   let manufacturerList = document.getElementById("inputGroupManufacturer");
   let modelList = document.getElementById("inputGroupModel");
   let ccList = document.getElementById("inputGroupCC");
   let yearFromList = document.getElementById("inputGroupYearFrom");
   let yearToList = document.getElementById("inputGroupYearTo");
-
   let searchSubmit = document.getElementById("search_submit");
 
-  let bikeProducerData = [];
+  let manufacturerData = [];
   console.log("init");
-  axios
-    .get(`https://partscentral.online/search/bike_producers/${userId}`)
-    .then((res) => {
-      for (let i in res.data) {
-        bikeProducerData.push(res.data[i].bikeProducer);
-      }
-      let newOptions = document.createElement("option");
-      bikeProducerData.forEach((manufacturer) => {
-        newOptions = document.createElement("option");
-        newOptions.value = manufacturer;
-        newOptions.innerHTML = manufacturer;
-        manufacturerList.appendChild(newOptions);
-      });
+  axios.get(`/search/manufacturer/${sId}`).then((res) => {
+    for (let i in res.data) {
+      manufacturerData.push(res.data[i].manufacturer);
+    }
+    let newOptions = document.createElement("option");
+    manufacturerData.forEach((manufacturer) => {
+      newOptions = document.createElement("option");
+      newOptions.value = manufacturer;
+      newOptions.innerHTML = manufacturer;
+      manufacturerList.appendChild(newOptions);
     });
+  });
 
   manufacturerList.addEventListener("change", function (e) {
-    let bikeProducer = e.target.value;
-    let userId = sessionStorage.getItem("userId");
-    console.log(bikeProducer);
+    let manufacturer = e.target.value;
+    console.log(manufacturer);
     modelList.removeAttribute("disabled");
     ccList.disabled = "disabled";
     yearFromList.disabled = "disabled";
@@ -66,23 +61,19 @@ function init() {
     let yearToOption = document.createElement("option");
     yearToOption.innerHTML = "Choose...";
     yearToList.appendChild(yearToOption);
-    let bikeModelData = [];
-    axios
-      .get(
-        `https://partscentral.online/search/bike_models/${bikeProducer}/${userId}`
-      )
-      .then((res) => {
-        for (let i in res.data) {
-          bikeModelData.push(res.data[i].bikeModel);
-        }
-        let newOptions = document.createElement("option");
-        bikeModelData.forEach((model) => {
-          newOptions = document.createElement("option");
-          newOptions.value = model;
-          newOptions.innerHTML = model;
-          modelList.appendChild(newOptions);
-        });
+    let ModelData = [];
+    axios.get(`/search/models/${manufacturer}/${sId}`).then((res) => {
+      for (let i in res.data) {
+        ModelData.push(res.data[i].model);
+      }
+      let newOptions = document.createElement("option");
+      ModelData.forEach((model) => {
+        newOptions = document.createElement("option");
+        newOptions.value = model;
+        newOptions.innerHTML = model;
+        modelList.appendChild(newOptions);
       });
+    });
   });
 
   modelList.addEventListener("change", function (e) {
@@ -109,27 +100,23 @@ function init() {
     yearToOption.innerHTML = "Choose...";
     yearToList.appendChild(yearToOption);
 
-    let bikeCCData = [];
-    let bikeProducer = manufacturerList.value;
-    let bikeModel = e.target.value;
-    let userId = sessionStorage.getItem("userId");
+    let cCData = [];
+    let manufacturer = manufacturerList.value;
+    let model = e.target.value;
+    console.log(manufacturer);
 
-    axios
-      .get(
-        `https://partscentral.online/search/bike_cc/${bikeProducer}/${bikeModel}/${userId}`
-      )
-      .then((res) => {
-        for (let i in res.data) {
-          bikeCCData.push(res.data[i].cc);
-        }
-        let newOptions = document.createElement("option");
-        bikeCCData.forEach((cc) => {
-          newOptions = document.createElement("option");
-          newOptions.value = cc;
-          newOptions.innerHTML = cc;
-          ccList.appendChild(newOptions);
-        });
+    axios.get(`/search/cc/${manufacturer}/${model}/${sId}`).then((res) => {
+      for (let i in res.data) {
+        cCData.push(res.data[i].cc);
+      }
+      let newOptions = document.createElement("option");
+      cCData.forEach((cc) => {
+        newOptions = document.createElement("option");
+        newOptions.value = cc;
+        newOptions.innerHTML = cc;
+        ccList.appendChild(newOptions);
       });
+    });
   });
 
   ccList.addEventListener("change", function (e) {
@@ -149,23 +136,19 @@ function init() {
     yearToOption.innerHTML = "Choose...";
     yearToList.appendChild(yearToOption);
 
-    let bikeYearFromData = [];
-    let bikeProducer = manufacturerList.value;
-    let bikeModel = modelList.value;
-    let bikeCC = e.target.value;
-    let userId = sessionStorage.getItem("userId");
-
+    let yearFromData = [];
+    let manufacturer = manufacturerList.value;
+    let model = modelList.value;
+    let cC = e.target.value;
     axios
-      .get(
-        `https://partscentral.online/search/bike_year_from/${bikeProducer}/${bikeModel}/${bikeCC}/${userId}`
-      )
+      .get(`/search/year_from/${manufacturer}/${model}/${cC}/${sId}`)
       .then((res) => {
         for (let i in res.data) {
           console.log(res.data[i]);
-          bikeYearFromData.push(res.data[i].date_from);
+          yearFromData.push(res.data[i].date_from);
         }
         let newOptions = document.createElement("option");
-        bikeYearFromData.forEach((year) => {
+        yearFromData.forEach((year) => {
           newOptions = document.createElement("option");
           newOptions.value = year;
           newOptions.innerHTML = year;
@@ -186,27 +169,24 @@ function init() {
     yearToOption.innerHTML = "Choose...";
     yearToList.appendChild(yearToOption);
 
-    let bikeYearToData = [];
-    let bikeProducer = manufacturerList.value;
-    let bikeModel = modelList.value;
-    let bikeCC = ccList.value;
-    let bikeYearFrom = e.target.value;
-    let userId = sessionStorage.getItem("userId");
+    let yearToData = [];
+    let manufacturer = manufacturerList.value;
+    let model = modelList.value;
+    let cC = ccList.value;
+    let yearFrom = e.target.value;
 
     console.log("requesting year to data");
     axios
-      .get(
-        `https://partscentral.online/search/bike_year_to/${bikeProducer}/${bikeModel}/${bikeCC}/${bikeYearFrom}/${userId}`
-      )
+      .get(`/search/year_to/${manufacturer}/${model}/${cC}/${yearFrom}/${sId}`)
       .then((res) => {
         console.log("response recieved", res.data);
         for (let i in res.data) {
           console.log(res.data[i]);
-          bikeYearToData.push(res.data[i].date_to);
+          yearToData.push(res.data[i].date_to);
         }
-        console.log("bikeYearToData", bikeYearToData);
+
         let newOptions = document.createElement("option");
-        bikeYearToData.forEach((year) => {
+        yearToData.forEach((year) => {
           console.log("year", year);
           newOptions = document.createElement("option");
           newOptions.value = year.date_to;
@@ -221,52 +201,41 @@ function init() {
     let searchMessageContent = document.getElementById(
       "search_message_content"
     );
-    let bikeProducer = manufacturerList.value;
-    let bikeModel = modelList.value;
-    let bikeCC = ccList.value;
-    let bikeYearFrom = yearFromList.value;
-    let bikeYearTo = yearToList.value;
-    let userId = sessionStorage.getItem("userId");
+    let manufacturer = manufacturerList.value;
+    let model = modelList.value;
+    let cC = ccList.value;
+    let yearFrom = yearFromList.value;
+    let yearTo = yearToList.children[yearToList.selectedIndex].innerHTML;
 
-    if (bikeProducer === "Choose...") {
+    console.log("year to", yearTo);
+
+    if (manufacturer === "Choose...") {
       searchMessageContent.innerHTML = "Please choose a Manufacturer";
-    } else if (bikeModel === "Choose...") {
+    } else if (model === "Choose...") {
       console.log("model");
       searchMessageContent.innerHTML = "";
-      axios
-        .get(
-          `https://partscentral.online/search/part/${bikeProducer}/${userId}`
-        )
-        .then((res) => {
-          updateSearchResults(res.data);
-        });
-    } else if (bikeCC === "Choose...") {
+      axios.get(`/search/part/${manufacturer}/${sId}`).then((res) => {
+        updateSearchResults(res.data);
+      });
+    } else if (cC === "Choose...") {
       console.log("cc");
       searchMessageContent.innerHTML = "";
-      axios
-        .get(
-          `https://partscentral.online/search/part/${bikeProducer}/${bikeModel}/${userId}`
-        )
-        .then((res) => {
-          updateSearchResults(res.data);
-        });
-    } else if (bikeYearFrom === "Choose...") {
+      axios.get(`/search/part/${manufacturer}/${model}/${sId}`).then((res) => {
+        updateSearchResults(res.data);
+      });
+    } else if (yearFrom === "Choose...") {
       console.log("year from");
       searchMessageContent.innerHTML = "";
       axios
-        .get(
-          `https://partscentral.online/search/part/${bikeProducer}/${bikeModel}/${bikeCC}/${userId}`
-        )
+        .get(`/search/part/${manufacturer}/${model}/${cC}/${sId}`)
         .then((res) => {
           updateSearchResults(res.data);
         });
-    } else if (bikeYearTo === "Choose...") {
+    } else if (yearTo === "Choose...") {
       console.log("year to");
       searchMessageContent.innerHTML = "";
       axios
-        .get(
-          `https://partscentral.online/search/part/${bikeProducer}/${bikeModel}/${bikeCC}/${bikeYearFrom}/${userId}`
-        )
+        .get(`/search/part/${manufacturer}/${model}/${cC}/${yearFrom}/${sId}`)
         .then((res) => {
           updateSearchResults(res.data);
         });
@@ -275,7 +244,7 @@ function init() {
       searchMessageContent.innerHTML = "";
       axios
         .get(
-          `https://partscentral.online/search/part/${bikeProducer}/${bikeModel}/${bikeCC}/${bikeYearFrom}/${bikeYearTo}/${userId}`
+          `/search/part/${manufacturer}/${model}/${cC}/${yearFrom}/${yearTo}/${sId}`
         )
         .then((res) => {
           //console.log(res.data);
@@ -292,28 +261,23 @@ function updateSearchResults(data) {
   while (tableRef.firstChild) {
     tableRef.removeChild(tableRef.firstChild);
   }
+  console.log(data);
   for (let i = 0; i < data.length; i++) {
     let newTr = document.createElement("tr");
     let newTd = document.createElement("td");
-    newTd.innerHTML = data[i].itemNo;
+    newTd.innerHTML = data[i].sku;
     newTr.appendChild(newTd);
     newTd = document.createElement("td");
-    newTd.innerHTML = data[i].bikeProducer;
+    newTd.innerHTML = data[i].part_name;
     newTr.appendChild(newTd);
     newTd = document.createElement("td");
-    newTd.innerHTML = data[i].bikeModel;
+    newTd.innerHTML = data[i].partNo;
     newTr.appendChild(newTd);
     newTd = document.createElement("td");
-    newTd.innerHTML = data[i].bike_display_name;
+    newTd.innerHTML = data[i].vendorNo;
     newTr.appendChild(newTd);
     newTd = document.createElement("td");
-    newTd.innerHTML = data[i].cc;
-    newTr.appendChild(newTd);
-    newTd = document.createElement("td");
-    newTd.innerHTML = data[i].date_from;
-    newTr.appendChild(newTd);
-    newTd = document.createElement("td");
-    newTd.innerHTML = data[i].date_to;
+    newTd.innerHTML = data[i].alt_sku;
     newTr.appendChild(newTd);
     tableRef.appendChild(newTr);
   }

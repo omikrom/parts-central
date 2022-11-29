@@ -170,7 +170,7 @@ footer {
 /*------------------*/
 
 .register--section {
-    height: 93.8vh;
+    height: 100vh;
     background-color: #44494e;
     color: white;
     display: flex;
@@ -517,6 +517,28 @@ footer {
 }
 
 /* ------------------ */
+/* Part search section */
+/* ------------------ */
+
+#part_search--section {
+    height:100vh;
+    background-color: #44494e;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.part_search_options--cont {
+    padding-top:100px;
+}
+
+.custom-select {
+    width: 100%;
+}
+
+/* ------------------ */
 /* Form helpers */
 /* ------------------ */
 
@@ -577,11 +599,12 @@ footer {
 
 @media screen and (max-width: 990px) {
     .navbar-btns--left {
-        padding: 0;
+        padding-right:20px;
+        margin-left:20px;
     }
 
-    .navbar-btns-right {
-        padding: 0;
+    .navbar-btns--right {
+        margin-left:20px;
     }
 
     .nav-link--custom {

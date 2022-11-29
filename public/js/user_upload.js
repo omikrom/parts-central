@@ -12,27 +12,31 @@ function init() {
   let barLabel = document.getElementById("progress_bar_label");
 
   form.addEventListener("submit", (e) => {
-    console.log('clicked');
+    console.log("clicked");
     e.preventDefault();
     const file = document.getElementById("csv").files[0];
-    let userId = sessionStorage.getItem("userId");
+    let token = sessionStorage.getItem("token");
+    let supplierId = sessionStorage.getItem("supplierId");
+
     const formData = new FormData();
     formData.append("file", file);
 
     const config = {
       onUploadProgress: function (progressEvent) {
-        const percentComplete = Math.round((progressEvent.loaded / progressEvent.total
-        ) * 100);
+        const percentComplete = Math.round(
+          (progressEvent.loaded / progressEvent.total) * 100
+        );
         bar.value = percentComplete;
-        barLabel.innerHTML = percentComplete + '%';
+        barLabel.innerHTML = percentComplete + "%";
         if (percentComplete === 100) {
           message.innerHTML = "File uploaded successfully";
         }
-      }
-    }
+      },
+    };
 
     try {
-      axios.post(`/upload/user_csv/${userId}`, formData, config)
+      axios
+        .post(`/upload/user_csv/${supplierId}`, formData, config, token)
         .then((res) => {
           message.innerHTML = res.data.message;
         });

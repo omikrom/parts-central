@@ -10,51 +10,54 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand brand-logo" href="https://partscentral.online">Parts-central</a>
+        <a class="navbar-brand brand-logo" href="/">Parts-central</a>
         <button class="navbar-toggler toggler--custom" type="button" data-toggle="collapse" data-target="#navbarText"
-            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+          aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarText">
-            <ul class="navbar-nav mr-auto navbar-btns--left">
-                <li class="nav-item active">
-                    <a class="nav-link nav-link--custom" href="/">Home</a>
-                </li>
-                <li id="user_add_part_btn" class="nav-item">
-                    <a class="nav-link nav-link--custom" href="/new_part">Add parts</a>
-                </li>
-                <li id="user_view_part_btn" class="nav-item">
-                    <a class="nav-link nav-link--custom" href="/user_parts">View parts</a>
-                </li>
-                <li id="user_mass_create_part_btn" class="nav-item">
-                    <a class="nav-link nav-link--custom" href="/mass_create">Upload part CSV</a>
-                </li>
-                <li id="user_search_part_btn" class="nav-item">
-                    <a class="nav-link nav-link--custom" href="/part_search">Parts search</a>
-                </li>
-                <li id="admin_parts_list" class="nav-item">
-                    <a class="nav-link nav-link--custom" href="#">Global Parts List</a>
-                </li>
-                <li id="admin_mass_upload_parts">
-                    <a class="nav-link nav-link--custom" href="/upload.html">Global CSV upload</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav mr-auto navbar-btns--right">
-                <li id="login_btn" class="nav-item">
-                    <a class="nav-link nav-link--custom" href="/login">Login</a>
-                </li>
-                <li id="register_btn" class="nav-item">
-                    <a class="nav-link nav-link--custom" href="/register">Register</a>
-                </li>
-                <li id="user_details_btn" class="nav-item">
-                    <a class="nav-link nav-link--custom" href="/user_details">User Details</a>
-                </li>
-                <li id="logout_btn" class="nav-item">
-                    <a class="nav-link nav-link--custom" href="/logout">Logout</a>
-                </li>
-            </ul>
+        <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between" id="navbarText">
+          <ul class="navbar-nav mr-auto navbar-btns--left">
+            <li class="nav-item active">
+              <a class="nav-link nav-link--custom" href="/">Home</a>
+            </li>
+            <!--<li id="user_add_part_btn" class="nav-item">
+              <a class="nav-link nav-link--custom" href="/new_part">Add parts</a>
+            </li>-->
+            <li id="user_create_part_btn" class="nav-item">
+              <a class="nav-link nav-link--custom" href="/create_part">Create new part</a>
+            </li>
+            <li id="user_view_part_btn" class="nav-item">
+              <a class="nav-link nav-link--custom" href="/user_parts">View parts</a>
+            </li>
+            <li id="user_mass_create_part_btn" class="nav-item">
+              <a class="nav-link nav-link--custom" href="/csv_upload">Upload part CSV</a>
+            </li>
+            <li id="user_search_part_btn" class="nav-item">
+              <a class="nav-link nav-link--custom" href="/part_search">Parts search</a>
+            </li>
+            <li id="admin_parts_list" class="nav-item">
+              <a class="nav-link nav-link--custom" href="#">Global Parts List</a>
+            </li>
+            <li id="admin_mass_upload_parts">
+              <a class="nav-link nav-link--custom" href="/upload.html">Global CSV upload</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav mr-auto navbar-btns--right">
+            <li id="login_btn" class="nav-item">
+              <a class="nav-link nav-link--custom" href="/login">Login</a>
+            </li>
+            <li id="register_btn" class="nav-item">
+              <a class="nav-link nav-link--custom" href="/register">Register</a>
+            </li>
+            <li id="user_details_btn" class="nav-item">
+              <a class="nav-link nav-link--custom" href="/user_details">User Details</a>
+            </li>
+            <li id="logout_btn" class="nav-item">
+              <a class="nav-link nav-link--custom" href="/logout">Logout</a>
+            </li>
+          </ul>
         </div>
-    </nav>
+      </nav>
 
     <section class="index--section">
         <div class="container full-page--container">
@@ -77,7 +80,6 @@
                             <div class="col upload_progress--cont">
                                 <div class="form-group col-12 col-md-3 upload--div">
                                     <button class="button--part" type="submit">Upload</button>
-                                    <!--<button type="submit" class="btn btn-primary">Upload</button> -->
                                 </div>
                                 <div class="form-group col-12 col-md-9 progress-bar--div">
                                     <label class="progress-bar--c_label" id="progress_bar_label"

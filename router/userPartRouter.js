@@ -78,7 +78,6 @@ router.post("/create_part_fitting", async (req, res) => {
       throw err;
     }
 
-  }
 
   res.status(200).send({
     message: "Part created",

@@ -1,5 +1,6 @@
 window.onload = function () {
   init();
+  console.log(sessionStorage.getItem("supplierId"));
 };
 
 function init() {

@@ -142,6 +142,7 @@ router.post("/login", async (req, res) => {
     );
     let uId = check[0].id;
     let role = check[0].role;
+    let sId = await getSupplierId(uId);
 
     let supplierId = await db.pool.query(
       "SELECT supplier_id FROM `user` WHERE id = ?",
@@ -161,6 +162,8 @@ router.post("/login", async (req, res) => {
             expiresIn: "2h",
           }
         );
+
+        console.log("sId: " + sId);
         updateDBToken(uId, token);
         //let supplierId = getSupplierId(uId);
         res.status(200).send({
@@ -178,17 +181,6 @@ router.post("/login", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-  }
-
-  try {
-    /*let result = await db.pool.query(
-      "SELECT * FROM `user` WHERE username = ? AND password = ?",
-      [task.username, hashedPassword]
-    );
-    console.log(result);
-    res.status(200).send(result);*/
-  } catch (err) {
-    throw err;
   }
 });
 
@@ -215,11 +207,6 @@ async function getSupplierId(id) {
   }
 }
 
-/*     db.pool.query(
-      "INSERT INTO `user` (username, password, email) VALUES (?, ?, ?)",
-      [req.body.username, req.body.password, req.body.email],
-    );
- 
-    */
+
 
 module.exports = router;

@@ -16,7 +16,7 @@ if (loggedIn) {
   existingUserContent.style.display = "flex";
   addPartBtn.addEventListener("click", function (e) {
     e.preventDefault();
-    window.location.href = "/new_part";
+    window.location.href = "/create_part";
   });
   viewPartsBtn.addEventListener("click", function (e) {
     e.preventDefault();
