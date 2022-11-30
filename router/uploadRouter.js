@@ -39,7 +39,6 @@ router.post(
         console.log(err);
       })
       .on("end", () => {
-        //console.log(partsList[0]);
         populateDatabase(partsList, res);
       });
   }
@@ -56,8 +55,6 @@ async function deleteFile(path) {
 }
 
 async function populateDatabase(partsList, res) {
-  // WHILE LOCAL ASSIGN USER ID TO 1
-
   for (let i = 0; i < partsList.length; i++) {
     let fittingId = 0;
     let partId = 0;
@@ -85,14 +82,14 @@ async function populateDatabase(partsList, res) {
             ]
           );
         } catch (err) {
-          throw err;
+          res.status(500).send({ message: err.message });
         }
       } else {
         partId = parseInt(checkIfPartExists[0].id);
         console.log("Part already exists", partId);
       }
     } catch (error) {
-      console.log(error);
+      res.status(500).send({ message: err.message });
     } finally {
       // add part fitment
       try {
@@ -138,7 +135,7 @@ async function populateDatabase(partsList, res) {
           console.log("fitting already exists");
         }
       } catch (error) {
-        console.log(error);
+        res.status(500).send({ message: err.message });
       }
     }
   }
@@ -162,7 +159,7 @@ async function createFitting(data) {
     );
     fittingId = parseInt(addFitting.insertId);
   } catch (error) {
-    throw err;
+    res.status(500).send({ message: err.message });
   } finally {
     return fittingId;
   }
@@ -194,6 +191,7 @@ function createPartFitment(data, sId) {
       manufacturer: "",
       model: "",
       cc: "",
+      display_name: "",
       date_from: "",
       date_to: "",
       date_on: "",
@@ -220,6 +218,8 @@ function createPartFitment(data, sId) {
       part.fitting.model = data[key];
     } else if (key == "cc") {
       part.fitting.cc = data[key];
+    } else if (key == "display_name") {
+      part.fitting.display_name = data[key];
     } else if (key == "date_from") {
       part.fitting.date_from = data[key];
     } else if (key == "date_to") {

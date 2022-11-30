@@ -77,39 +77,39 @@
                                 <h3>Part Details</h3>
                                 <div class="form-group">
                                     <label for="part_name">Part Name:</label>
-                                    <input type="text" class="form-control" id="part_name" name="part_name"
+                                    <input type="text" class="form-control bg-dark text-light" id="part_name" name="part_name"
                                         placeholder="Part Name">
                                 </div>
                                 <div class="form-group">
                                     <label for="part_number">Part (SKU):</label>
-                                    <input type="text" class="form-control" id="part_number" name="part_number"
-                                        required>
+                                    <input type="text" class="form-control bg-dark text-light" id="part_number" name="part_number"
+                                        required placeholder="Enter the part SKU">
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <h4>Alternate part details</h4>
                                 <div class="form-group">
                                     <label for="alt_part_number">Alt Part Number:</label>
-                                    <input type="text" class="form-control" id="alt_part_number" name="alt_part_number">
+                                    <input type="text" class="form-control bg-dark text-light" id="alt_part_number" name="alt_part_number" placeholder="Alternate part number">
                                 </div>
                                 <div class="form-group">
                                     <label for="alt_vendor_number">Alt Vendor Number:</label>
-                                    <input type="text" class="form-control" id="alt_vendor_number"
-                                        name="alt_vendor_number">
+                                    <input type="text" class="form-control bg-dark text-light" id="alt_vendor_number"
+                                        name="alt_vendor_number" placeholder="alternate vendor number">
                                 </div>
                                 <div class="form-group">
                                     <label for="alt_sku_number">Alt SKU:</label>
-                                    <input type="text" class="form-control" id="alt_sku_number" name="alt_sku_number">
+                                    <input type="text" class="form-control bg-dark text-light" id="alt_sku_number" name="alt_sku_number" placeholder="Alternate SKU">
                                 </div>
                             </div>
                         </div>
                         <h4>Part Fitting</h4>
                         <div class="form-group row part_fitment" id="part_fitment">
                             <div class="form-group row fitment_row" id="part_fitment--row">
-                                <div class="col-12 col-md-2">
+                                <div class="col-12 col-md-1">
                                     <label for="fitting_type">Type</label>
-                                    <input type="text" class="form-control" id="fitting_type" name="fitting_type"
-                                        list="type_options" aria-required="true" required>
+                                    <input type="text" class="form-control bg-dark text-light" id="fitting_type" name="fitting_type"
+                                        list="type_options" aria-required="true" required placeholder="Vehicle type">
                                     <datalist id="type_options">
                                         <option value="ATV"></option>
                                         <option value="Motorcycle"></option>
@@ -119,44 +119,48 @@
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="fitting_make">Make</label>
-                                    <input type="text" class="form-control" id="fitting_make" name="fitting_make"
-                                        list="make_options">
+                                    <input type="text" class="form-control bg-dark text-light" id="fitting_make" name="fitting_make"
+                                        list="make_options" aria-required="true" required placeholder="Vehicle manufacturer">
                                     <datalist name="make_options" id="make_options">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="fitting_model">Model</label>
-                                    <input type="text" class="form-control" id="fitting_model" name="fitting_model">
+                                    <input type="text" class="form-control bg-dark text-light" id="fitting_model" name="fitting_model" aria-required="true" required placeholder="Vehicle model">
                                 </div>
                                 <div class="col-12 col-md-2">
+                                    <label for="fitting_model">Display name</label>
+                                    <input type="text" class="form-control bg-dark text-light" id="fitting_display_name" name="fitting_display_name" placeholder="Display name">
+                                </div>
+                                <div class="col-12 col-md-1">
                                     <label for="fitting_cc">CC:</label>
-                                    <input type="number" min="0" max="100000" step="50" class="form-control"
-                                        id="fitting_cc" name="fitting_cc">
+                                    <input type="number" min="0" max="100000" step="5" class="form-control bg-dark text-light"
+                                        id="fitting_cc" name="fitting_cc" aria-required="true" required placeholder="Size">
                                 </div>
                                 <div class="col-12 col-md-1">
                                     <label for="fitting_year_from">from:</label>
-                                    <input type="number" min="1850" max="3000" step="1" class="form-control"
-                                        id="fitting_year_from" name="fitting_year_from">
+                                    <input type="number" min="1850" max="3000" step="1" class="form-control bg-dark text-light"
+                                        id="fitting_year_from" name="fitting_year_from" aria-required="true" required placeholder="2020" value="2020">
                                 </div>
                                 <div class="col-12 col-md-1">
                                     <label for="fitting_year_to">to:</label>
-                                    <input type="number" min="1850" max="3000" step="1" class="form-control"
-                                        id="fitting_year_to" name="fitting_year_to">
+                                    <input type="number" min="1850" max="3000" step="1" class="form-control bg-dark text-light"
+                                        id="fitting_year_to" name="fitting_year_to" placeholder="2020" value="2021">
                                 </div>
                                 <div class="col-6 col-md-1 check-column">
                                     <label for="fitting_year_on">on:</label>
-                                    <input class="form-check-input checkmark" type="checkbox" value=""
+                                    <input class="form-check-input checkmark bg-dark text-light" type="checkbox" value=""
                                         id="fitting_year_on">
                                 </div>
                                 <div class="col-6 col-md-1 fitting_btn--container">
                                     <label for="fitting_add_btn">Add</label>
                                     <div class="add_fitting_btn">
-                                        <button id="add_fit" class="add_fitting" onclick="addRow(this)">+</button>
+                                        <button id="add_fit" class="add_fitting bg-dark text-light" onclick="addRow(this)">+</button>
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-1 fitting_btn--container">
                                     <label for="fitting_add_btn">Remove</label>
                                     <div class="remove_fitting_btn">
-                                        <button id="remove_fit" class="remove_fitting"
+                                        <button id="remove_fit" class="remove_fitting bg-dark text-light"
                                             onclick="deleteRow(this)">-</button>
                                     </div>
                                 </div>

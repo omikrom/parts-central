@@ -6,6 +6,7 @@ footerDate.innerHTML = new Date().getFullYear();
 let loginBtn = document.getElementById("login_btn");
 let registerBtn = document.getElementById("register_btn");
 let userDetailsBtn = document.getElementById("user_details_btn");
+console.log("userDetailsBtn", userDetailsBtn);
 let logoutBtn = document.getElementById("logout_btn");
 
 logoutBtn.addEventListener("click", function (e) {
@@ -18,7 +19,7 @@ let loggedIn = checkSession();
 if (loggedIn) {
   loginBtn.style.display = "none";
   registerBtn.style.display = "none";
-  userDetailsBtn.style.display = "block";
+  userDetailsBtn.style.display = "none";
   logoutBtn.style.display = "block";
 } else {
   loginBtn.style.display = "block";

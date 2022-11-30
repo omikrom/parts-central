@@ -477,7 +477,7 @@ footer {
     align-items: center;
     height: 100vh;
     width: 98vw;
-    background-color: #fff;
+    background-color: #666f78;
 }
 
 .fitment_details--container {
@@ -490,6 +490,23 @@ footer {
 .fitment_display--btns {
     margin-bottom: 1rem;
 }
+
+/* add fitting section  */
+
+.fitment_add_fitting {
+    height: 100vh;
+    width:100%;
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #90979e;
+}
+
+.fitment_add--container {
+    padding-top:100px;
+}
+
 
 
 /* ------------------ */

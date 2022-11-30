@@ -32,8 +32,8 @@ window.onload = function () {
       password: password.value,
       supplier: supplier.value,
     };
-    //axios.post("https://partscentral.online/api/register", body).then((res) => {
-    axios.post("http://localhost:3000/api/register", body).then((res) => {
+
+    axios.post("/api/register", body).then((res) => {
       console.log(res.data);
       if (res.data.message === "Registration successful") {
         if (res.data.token) {
@@ -44,7 +44,6 @@ window.onload = function () {
           registerResMessage.innerHTML = "Registered successfully.";
           setTimeout(() => {
             window.location.href = "/";
-            //window.location.href = "http://localhost:3000/";
           }, 3000);
         }
       } else {

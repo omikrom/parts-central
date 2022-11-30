@@ -15,13 +15,10 @@ function init() {
 
   console.log("body", body);
 
-  axios
-    .post("/user/user_parts", body)
-    .then((res) => {
-      //axios.post("http://localhost:3000/user/user_parts", body).then((res) => {
-      console.log("res.data", res.data);
-      createTable(res.data);
-    });
+  axios.post("/user/user_parts", body).then((res) => {
+    console.log("res.data", res.data);
+    createTable(res.data);
+  });
 
   async function createTable(data) {
     let tableHeadings = [
@@ -30,17 +27,16 @@ function init() {
       "sku",
       "alt_sku",
       "part_name",
-      "part #",
-      "vendor #",
+      "alt part #",
+      "alt vendor #",
       "Fitting",
       "Edit",
       "Delete",
     ];
 
-
     function createTableHeader(tr, heading) {
       let th = document.createElement("th");
-      th.scope = "col"
+      th.scope = "col";
       th.innerHTML = heading;
       tr.appendChild(th);
     }
@@ -49,6 +45,7 @@ function init() {
     table.classList.add("table");
     table.classList.add("table-dark");
     table.classList.add("table-bordered");
+    table.classList.add("table-hover");
     table.setAttribute("id", "part_table");
 
     let tr = document.createElement("tr");
@@ -95,14 +92,14 @@ function init() {
       tr.appendChild(td);
 
       td = document.createElement("td");
-      td.innerHTML = `<button class="fittingBtn" value="${data[i].id}">Fitting</button>`;
+      td.innerHTML = `<button class="fittingBtn text-light" value="${data[i].id}"><i class="fa-solid fa-gears"></i></button>`;
       tr.appendChild(td);
 
       td = document.createElement("td");
-      td.innerHTML = `<button class="updateBtn" value="${data[i].id}">Update</button>`;
+      td.innerHTML = `<button class="updateBtn text-light" value="${data[i].id}"><i class="fa-solid fa-floppy-disk"></i></button>`;
       tr.appendChild(td);
       td = document.createElement("td");
-      td.innerHTML = `<button class="deleteBtn" value="${data[i].id}">Delete</button>`;
+      td.innerHTML = `<button class="deleteBtn text-light" value="${data[i].id}"><i class="fa-solid fa-trash"></i></button>`;
       tr.appendChild(td);
 
       table.appendChild(tr);
@@ -124,55 +121,29 @@ function init() {
     createFittingListeners();
     closeFitment();
     addFitmentButton();
-
-
+    closeAddFitment();
   }
 
   function addFitmentButton() {
     let addFitment = document.getElementById("add_fitment_btn");
     addFitment.addEventListener("click", () => {
-      console.log('add row');
+      let sId = sessionStorage.getItem("supplierId");
+      let partId = sessionStorage.getItem("partId");
+      let addFittingContainer = document.getElementsByClassName(
+        "fitment_add_fitting"
+      );
+      console.log("addFittingContainer", addFittingContainer);
+      addFittingContainer[0].style.display = "block";
+    });
+  }
 
-      let table = document.getElementById("fitment_table");
-      let tr = document.createElement("tr");
-      let td = document.createElement("td");
-      td.contentEditable = true;
-      td.innerHTML = "";
-      tr.appendChild(td);
-      td = document.createElement("td");
-      td.contentEditable = true;
-      td.innerHTML = "";
-      tr.appendChild(td);
-      td = document.createElement("td");
-      td.contentEditable = true;
-      td.innerHTML = "";
-      tr.appendChild(td);
-      td = document.createElement("td");
-      td.contentEditable = true;
-      td.innerHTML = "";
-      tr.appendChild(td);
-      td = document.createElement("td");
-      td.contentEditable = true;
-      td.innerHTML = "";
-      tr.appendChild(td);
-      td = document.createElement("td");
-      td.contentEditable = true;
-      td.innerHTML = "";
-      tr.appendChild(td);
-      td = document.createElement("td");
-      td.contentEditable = true;
-      td.innerHTML = "";
-      tr.appendChild(td);
-      td = document.createElement("td");
-      td.innerHTML = `<button class="fitmentBtn" value="">Save</button>`;
-      tr.appendChild(td);
-      td = document.createElement("td");
-      td.innerHTML = `<button class="fitmentBtn" value="">Delete</button>`;
-      tr.appendChild(td);
-      table.appendChild(tr);
-
-
-
+  function closeAddFitment() {
+    let closeBtn = document.getElementById("addFitting--close_btn");
+    closeBtn.addEventListener("click", () => {
+      let addFittingContainer = document.getElementsByClassName(
+        "fitment_add_fitting"
+      );
+      addFittingContainer[0].style.display = "none";
     });
   }
 
@@ -182,8 +153,10 @@ function init() {
       console.log("button", button);
       button.addEventListener("click", (e) => {
         console.log("click");
-        let id = e.target.value;
-        let row = e.target.parentNode.parentNode;
+        let button = e.currentTarget;
+        let id = button.value;
+        sessionStorage.setItem("partId", id);
+        let row = e.currentTarget.parentNode.parentNode;
         let sku = row.children[2].innerHTML;
         let alt_sku = row.children[3].innerHTML;
         let part_name = row.children[4].innerHTML;
@@ -197,15 +170,12 @@ function init() {
           partName: part_name,
           partNo: partNo,
           vendorNo: vendorNo,
-          userId: sessionStorage.getItem("userId"),
           supplierId: sessionStorage.getItem("supplierId"),
           token: sessionStorage.getItem("token"),
         };
         axios.post("/user/update_part", data).then((res) => {
           console.log("res", res);
         });
-
-        console.log(data);
       });
     });
   }
@@ -214,12 +184,11 @@ function init() {
     let deleteButtons = document.querySelectorAll(".deleteBtn");
     deleteButtons.forEach((button) => {
       button.addEventListener("click", (e) => {
-        let id = e.target.value;
-        let displayBikeId =
-          e.target.parentNode.parentNode.children[4].innerHTML;
+        let button = e.target.parentNode;
+        let id = button.value;
         let data = {
           id: id,
-          displayBikeId: displayBikeId,
+          sId: sessionStorage.getItem("supplierId"),
         };
         axios
           .delete("/user/delete_part", {
@@ -229,8 +198,6 @@ function init() {
             },
           })
           .then((res) => {
-            // update form
-            console.log("res", res);
             init();
           });
       });
@@ -243,7 +210,10 @@ function init() {
       button.addEventListener("click", (e) => {
         let fitmentSection = document.getElementById("fitment_section");
         fitmentSection.style.display = "block";
-        let partId = e.target.value;
+        let id = e.target.parentNode.value;
+        sessionStorage.setItem("partId", id);
+        console.log("id", id);
+        let partId = id;
         let supplierId = sessionStorage.getItem("supplierId");
         let fitmentDisplay = document.getElementById("fitment_table");
         fitmentDisplay.innerHTML = "";
@@ -253,95 +223,129 @@ function init() {
           createTable(res.data, fitmentDisplay, partId);
         });
 
-
         function createTable(data, fitmentDisplay, partId) {
           console.log("data", data);
 
-          let fitment_part_display = document.getElementById("fitment_partNo");
-          fitment_part_display.innerHTML = partId
-          let fitment_sku_display = document.getElementById("fitment_part_sku");
-          fitment_sku_display.innerHTML = data[0].sku;
-
-          // create columns for fitment table
-          let table = fitmentDisplay;
-          table.classList.add("table");
-          table.classList.add("table-striped");
-          table.classList.add("table-bordered");
-          table.classList.add("table-hover");
-          table.classList.add("table-sm");
-          table.classList.add("table-responsive");
-          table.classList.add("table-fitment");
-          let tr = document.createElement("tr");
-          let th = document.createElement("th");
-          th.innerHTML = "Type";
-          tr.appendChild(th);
-          th = document.createElement("th");
-          th.innerHTML = "Make";
-          tr.appendChild(th);
-          th = document.createElement("th");
-          th.innerHTML = "Model";
-          tr.appendChild(th);
-          th = document.createElement("th");
-          th.innerHTML = "CC";
-          tr.appendChild(th);
-          th = document.createElement("th");
-          th.innerHTML = "Year From";
-          tr.appendChild(th);
-          th = document.createElement("th");
-          th.innerHTML = "Year To";
-          tr.appendChild(th);
-          th = document.createElement("th");
-          th.innerHTML = "Year On";
-          tr.appendChild(th);
-          th = document.createElement("th");
-          th.innerHTML = "Action";
-          tr.appendChild(th);
-          table.appendChild(tr);
-
-          // create rows for fitment table
-          for (let i = 0; i < data.length; i++) {
-            tr = document.createElement("tr");
+          if (data.length == 0) {
+            let tr = document.createElement("tr");
             let td = document.createElement("td");
-            td.contentEditable = true;
-            td.innerHTML = data[i].type;
+            td.innerHTML = "No Fitment Data";
             tr.appendChild(td);
-            td = document.createElement("td");
-            td.contentEditable = true;
-            td.innerHTML = data[i].manufacturer;
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.contentEditable = true;
-            td.innerHTML = data[i].model;
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.contentEditable = true;
-            td.innerHTML = data[i].cc;
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.contentEditable = true;
-            td.innerHTML = data[i].date_from;
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.contentEditable = true;
-            td.innerHTML = data[i].date_to;
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.contentEditable = true;
-            td.innerHTML = data[i].date_on;
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.innerHTML = `<button class="fitmentBtn" value="${data[i].id}">Update</button>`;
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.innerHTML = `<button class="fitmentBtn" value="${data[i].id}">Delete</button>`;
-            tr.appendChild(td);
+            fitmentDisplay.appendChild(tr);
+          }
+
+          if (data.length > 0 && data.length != 0) {
+            let fitment_part_display =
+              document.getElementById("fitment_partNo");
+            fitment_part_display.innerHTML = partId;
+            let fitment_sku_display =
+              document.getElementById("fitment_part_sku");
+            fitment_sku_display.innerHTML = data[0].sku;
+
+            // create columns for fitment table
+            let table = fitmentDisplay;
+            table.classList.add("table");
+            table.classList.add("table-striped");
+            table.classList.add("table-bordered");
+            table.classList.add("table-hover");
+            table.classList.add("table-sm");
+            table.classList.add("table-fitment");
+            table.classList.add("text-light");
+            let tr = document.createElement("tr");
+            let th = document.createElement("th");
+            th.innerHTML = "#";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "Type";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "Make";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "Model";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "Display name";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "CC";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "Year From";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "Year To";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "Year On";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "Update";
+            tr.appendChild(th);
+            th = document.createElement("th");
+            th.innerHTML = "Delete";
+            tr.appendChild(th);
             table.appendChild(tr);
+
+            // create rows for fitment table
+            for (let i = 0; i < data.length; i++) {
+              tr = document.createElement("tr");
+              let td = document.createElement("td");
+              td.contentEditable = false;
+              td.innerHTML = data[i].fitting_id;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.contentEditable = true;
+              td.innerHTML = data[i].type;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.contentEditable = true;
+              td.innerHTML = data[i].manufacturer;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.contentEditable = true;
+              td.innerHTML = data[i].model;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.contentEditable = true;
+              td.innerHTML = data[i].display_name;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.contentEditable = true;
+              td.innerHTML = data[i].cc;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.contentEditable = true;
+              td.innerHTML = data[i].date_from;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.contentEditable = true;
+              td.innerHTML = data[i].date_to;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.contentEditable = false;
+              td.innerHTML =
+                "<input type='checkbox' name='myTextEditBox' value='checked' />";
+              let child = td.childNodes;
+              if (data[i].date_on == 1) {
+                child[0].checked = true;
+              } else {
+                child[0].checked = false;
+              } //td.innerHTML = data[i].date_on;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.innerHTML = `<button class="fitmentBtnUpd" value="${data[i].fitting_id}"><i class="fa-solid fa-floppy-disk"></i></button>`;
+              tr.appendChild(td);
+              td = document.createElement("td");
+              td.innerHTML = `<button class="fitmentBtnDel" value="${data[i].fitting_id}"><i class="fa-solid fa-trash"></i></button>`;
+              tr.appendChild(td);
+              table.appendChild(tr);
+            }
+            fitmentUpdateBtns();
+            fitmentDeleteBtns();
           }
         }
-
-
       });
-
     });
   }
 
@@ -352,5 +356,208 @@ function init() {
       let fitment = document.getElementById("fitment_section");
       fitment.style.display = "none";
     });
+  }
+}
+
+function fitmentUpdateBtns() {
+  let fitmentBtns = document.querySelectorAll(".fitmentBtnUpd");
+  fitmentBtns.forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      let fitting_id = e.currentTarget.value;
+      let row = e.currentTarget.parentElement.parentElement;
+      let type = row.children[1].innerHTML;
+      let manufacturer = row.children[2].innerHTML;
+      let model = row.children[3].innerHTML;
+      let display_name = row.children[4].innerHTML;
+      let cc = row.children[5].innerHTML;
+      let date_from = row.children[6].innerHTML;
+      let date_to = row.children[7].innerHTML;
+      let date_on = row.children[8].children[0].checked;
+      let partId = sessionStorage.getItem("partId");
+
+      if (date_on == true) {
+        date_on = 1;
+      } else {
+        date_on = 0;
+      }
+
+      let data = {
+        fitting_id: fitting_id,
+        type: type,
+        manufacturer: manufacturer,
+        model: model,
+        display_name: display_name,
+        cc: cc,
+        date_from: date_from,
+        date_to: date_to,
+        date_on: date_on,
+        partId: partId,
+      };
+
+      axios.post("/user/update_fitment", data).then((res) => {
+        console.log(res.data);
+        if (res.data.message == "Fitment updated successfully") {
+          alert("Fitment updated successfully");
+        } else {
+          alert("Fitment update failed");
+        }
+      });
+    });
+  });
+}
+
+function fitmentDeleteBtns() {
+  let fitmentBtns = document.querySelectorAll(".fitmentBtnDel");
+  fitmentBtns.forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      let fitting_id = e.currentTarget.value;
+      let partId = sessionStorage.getItem("partId");
+
+      let data = {
+        fitting_id: fitting_id,
+        partId: partId,
+        sId: sessionStorage.getItem("supplierId"),
+      };
+
+      axios.post("/user/delete_fitment", data).then((res) => {
+        console.log(res.data);
+        if (res.data.message == "Fitment deleted successfully") {
+          alert("Fitment deleted successfully");
+          updateFitmentTable();
+        } else {
+          alert("Fitment delete failed");
+        }
+      });
+    });
+  });
+}
+
+function updateFitmentTable() {
+  let fitmentDisplay = document.getElementById("fitment_table");
+  fitmentDisplay.innerHTML = "";
+  let partId = sessionStorage.getItem("partId");
+  let supplierId = sessionStorage.getItem("supplierId");
+
+  axios.get(`/user/get_fitment/${supplierId}/${partId}`).then((res) => {
+    createFitmentTable(res.data, fitmentDisplay, partId);
+  });
+
+  function createFitmentTable(data, fitmentDisplay, partId) {
+    if (data.length == 0) {
+      let tr = document.createElement("tr");
+      let td = document.createElement("td");
+      td.innerHTML = "No Fitment Data";
+      tr.appendChild(td);
+      fitmentDisplay.appendChild(tr);
+    }
+
+    if (data.length > 0 && data.length != 0) {
+      let fitment_part_display = document.getElementById("fitment_partNo");
+      fitment_part_display.innerHTML = partId;
+      let fitment_sku_display = document.getElementById("fitment_part_sku");
+      fitment_sku_display.innerHTML = data[0].sku;
+
+      // create columns for fitment table
+      let table = fitmentDisplay;
+      table.classList.add("table");
+      table.classList.add("table-striped");
+      table.classList.add("table-bordered");
+      table.classList.add("table-hover");
+      table.classList.add("table-sm");
+      table.classList.add("table-fitment");
+      table.classList.add("text-light");
+      let tr = document.createElement("tr");
+      let th = document.createElement("th");
+      th.innerHTML = "#";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "Type";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "Make";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "Model";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "Display name";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "CC";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "Year From";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "Year To";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "Year On";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "Update";
+      tr.appendChild(th);
+      th = document.createElement("th");
+      th.innerHTML = "Delete";
+      tr.appendChild(th);
+      table.appendChild(tr);
+
+      // create rows for fitment table
+      for (let i = 0; i < data.length; i++) {
+        tr = document.createElement("tr");
+        let td = document.createElement("td");
+        td.contentEditable = false;
+        td.innerHTML = data[i].fitting_id;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.contentEditable = true;
+        td.innerHTML = data[i].type;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.contentEditable = true;
+        td.innerHTML = data[i].manufacturer;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.contentEditable = true;
+        td.innerHTML = data[i].model;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.contentEditable = true;
+        td.innerHTML = data[i].display_name;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.contentEditable = true;
+        td.innerHTML = data[i].cc;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.contentEditable = true;
+        td.innerHTML = data[i].date_from;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.contentEditable = true;
+        td.innerHTML = data[i].date_to;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.contentEditable = false;
+        td.innerHTML =
+          "<input type='checkbox' name='myTextEditBox' value='checked' />";
+        let child = td.childNodes;
+        if (data[i].date_on == 1) {
+          child[0].checked = true;
+        } else {
+          child[0].checked = false;
+        } //td.innerHTML = data[i].date_on;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.innerHTML = `<button class="fitmentBtnUpd" value="${data[i].fitting_id}"><i class="fa-solid fa-floppy-disk"></i></button>`;
+        tr.appendChild(td);
+        td = document.createElement("td");
+        td.innerHTML = `<button class="fitmentBtnDel" value="${data[i].fitting_id}"><i class="fa-solid fa-trash"></i></button>`;
+        tr.appendChild(td);
+        table.appendChild(tr);
+      }
+      fitmentUpdateBtns();
+      fitmentDeleteBtns();
+    }
   }
 }

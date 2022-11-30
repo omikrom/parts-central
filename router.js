@@ -13,20 +13,18 @@ router.post("/input", (req, res) => {
   res.end();
 });
 
-router.get("/test", (req, res) => {
-  res.send("test");
-});
-
 // register a new user
 router.post("/register", async (req, res) => {
   let task = req.body;
   let uname = task.username;
   let pword = task.password;
-  let email = task.email;
   let supplier = task.supplier;
   let supplierId = 0;
   let role = 0;
   let hashedPassword = {};
+  let email = task.email;
+
+  console.log(supplier);
 
   // hash password
   bcrypt.hashPassword(pword).then((hash) => {
@@ -56,47 +54,38 @@ router.post("/register", async (req, res) => {
         });
       }
 
-      var token = {};
+      console.log("supplierId: " + supplierId);
 
-      try {
-        const result = await db.pool.query(
-          "INSERT INTO `user` (username, password, email, supplier_id, role) VALUES (?, ?, ?, ?, ?)",
-          [uname, hashedPassword, email, supplierId, role]
-        );
-        let userId = parseInt(result.insertId);
+      const result = await db.pool.query(
+        "INSERT INTO `user` (username, password, email, supplier_id, role) VALUES (?, ?, ?, ?, ?)",
+        [uname, hashedPassword, email, supplierId, role]
+      );
+      let userId = parseInt(result.insertId);
 
-        token = jwt.sign(
-          {
-            user_id: userId,
-            email,
-          },
-          process.env.JWT_KEY || "SECRETKEY",
-          {
-            expiresIn: "2h",
-          }
-        );
-        //updateDBToken(userId, token);
-      } catch (err) {
-        res.status(500).send({
-          message: "Error registering user",
-        });
-      } finally {
-        res
-          .status(200)
-          .send({
-            message: "Registration successful",
-            token: token,
-            role: role,
-            userId: userId,
-            supplierId: supplierId,
-          })
-          .end();
-      }
+      const token = jwt.sign(
+        {
+          user_id: userId,
+          email,
+        },
+        process.env.JWT_KEY || "SECRETKEY",
+        {
+          expiresIn: "2h",
+        }
+      );
+      updateDBToken(userId, token);
+      res
+        .status(200)
+        .send({
+          message: "Registration successful",
+          token: token,
+          role: role,
+          userId: userId,
+          supplierId: supplierId,
+        })
+        .end();
     }
   } catch (err) {
-    res.status(500).send({
-      message: "Error registering user",
-    });
+    throw err;
   }
 });
 
@@ -158,7 +147,7 @@ router.post("/login", async (req, res) => {
     let supplierId = await db.pool.query(
       "SELECT supplier_id FROM `user` WHERE id = ?",
       [uId]
-    );
+    )
     sId = supplierId[0].supplier_id;
 
     await bcrypt.comparePassword(pword, check[0].password).then((result) => {
@@ -210,13 +199,14 @@ async function getSupplierId(id) {
   try {
     let result = await db.pool.query(
       "SELECT supplier_id FROM `user` WHERE id = ?",
-      [id]
-    );
+      [id]);
     console.log(result[0].supplier_id);
     return parseInt(result[0].supplier_id);
   } catch (err) {
     throw err;
   }
 }
+
+
 
 module.exports = router;

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/bootstrap.min.css">
   <script src="./js/dynamic_row.js"></script>
+  <script src="https://kit.fontawesome.com/83c0d8df0e.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -113,18 +114,98 @@
                 <p>Part ID: <span id="fitment_partNo">#</span></p>
               </div>
               <div class="fitment_display--btns">
-                <button id="add_fitment_btn" class="btn btn-primary">Add fitment</button>
+                <button id="add_fitment_btn" class="button--part">Add fitment</button>
               </div>
             </div>
             <div class="row">
               <div class="col-12">
-                <div class="fitment_display--table">
+                <div class="fitment_display--table table-responsive">
                   <table id="fitment_table" class="table table-striped table-bordered table-hover">
                   </table>
                 </div>
               </div>
             </div>
           </div>
+  </section>
+  <section class="fitment_add_fitting" style="display:none;">
+    <div class="container-fluid fitment_add--container">
+      <div class="row">
+        <div class="col-12 text-end">
+          <button class="add_fitting_close_btn" id="addFitting--close_btn">x</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="fitment_add--title">
+            <h1>Add fitment</h1>
+            <p>Part sku: <span id="fitment_add--sku">#</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <form id="add_fitment_form">
+            <div class="form-row">
+              <div class="form-group row">
+                <div class="col-12 col-md-3">
+                  <label for="add_fitting_type">Type</label>
+                                    <input type="text" class="form-control bg-dark text-light" id="add_fitting_type" name="add_fitting_type"
+                                        list="type_options" aria-required="true" required placeholder="Vehicle type">
+                                    <datalist id="type_options">
+                                        <option value="ATV"></option>
+                                        <option value="Motorcycle"></option>
+                                        <option value="Scooter"></option>
+                                        <option value="Snowmobile"></option>
+                                        <option value="UTV"></option>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="add_fitting_make">Make</label>
+                                    <input type="text" class="form-control bg-dark text-light" id="add_fitting_make" name="add_fitting_make"
+                                        list="make_options" aria-required="true" required placeholder="Vehicle manufacturer">
+                                    <datalist name="make_options" id="make_options">
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="add_fitting_model">Model</label>
+                  <input type="text" class="form-control bg-dark text-light" id="add_fitting_model" name="add_fitting_model" aria-required="true" required placeholder="Vehicle model">
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="add_fitting_model">Display name</label>
+                                    <input type="text" class="form-control bg-dark text-light" id="add_fitting_display_name" name="add_fitting_display_name" placeholder="Display name">
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="add_fitting_cc">CC:</label>
+                  <input type="number" min="0" max="100000" step="5" class="form-control bg-dark text-light"
+                      id="add_fitting_cc" name="add_fitting_cc" aria-required="true" required placeholder="Size">
+              
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="add_fitting_year_from">from:</label>
+                                    <input type="number" min="1850" max="3000" step="1" class="form-control bg-dark text-light"
+                                        id="add_fitting_year_from" name="add_fitting_year_from" aria-required="true" required placeholder="2020" value="2020">
+                                
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="add_fitting_year_to">to:</label>
+                                    <input type="number" min="1850" max="3000" step="1" class="form-control bg-dark text-light"
+                                        id="add_fitting_year_to" name="add_fitting_year_to" placeholder="2020" value="2021">
+                                
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="add_fitting_year_on">on:</label>
+                                    <input class="form-check-input checkmark bg-dark text-light" type="checkbox" value=""
+                                        id="add_fitting_year_on">
+                                
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
   </section>
 
 
