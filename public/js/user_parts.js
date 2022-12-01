@@ -3,9 +3,57 @@ window.onload = function () {
   init();
 };
 
+var offset = 0;
+var limit = 10;
+
+function calculateTotalPages() {
+  let entries = document.getElementById("show_entries");
+  let sId = sessionStorage.getItem("supplierId");
+  let count = 0;
+  let pages = 0;
+  axios.get(`/user/part_count/${sId}`).then((res) => {
+    count = parseInt(res.data);
+    pages = Math.ceil(count / entries.value);
+    let part_pages = document.getElementById("part_pages");
+    part_pages.innerHTML = "";
+    for (let i = 0; i < pages; i++) {
+      part_pages.innerHTML += `<a class="part_page">${i + 1}</a>`;
+    }
+  });
+}
+
+function entriesChange() {
+  let entries = document.getElementById("show_entries");
+  let sId = sessionStorage.getItem("supplierId");
+  entries.addEventListener("change", function (e) {
+    let count = 0;
+    let pages = 0;
+    offset = 0;
+    let limit = entries.value;
+    axios.get(`/user/part_count/${sId}`).then((res) => {
+      count = parseInt(res.data);
+      pages = Math.ceil(count / entries.value);
+      let part_pages = document.getElementById("part_pages");
+      part_pages.innerHTML = "";
+      for (let i = 0; i < pages; i++) {
+        let offset = i * entries.value;
+        part_pages.innerHTML += `<a href="/user_parts/${limit}/${offset}" class="part_page">${
+          i + 1
+        }</a>`;
+      }
+    });
+  });
+}
+
 function init() {
   let partsList = document.getElementById("part_list");
   partsList.innerHTML = "";
+
+  calculateTotalPages();
+  entriesChange();
+
+  let limit = 10;
+  let offset = 0;
 
   let body = {
     token: sessionStorage.getItem("token"),
@@ -15,8 +63,7 @@ function init() {
 
   console.log("body", body);
 
-  axios.post("/user/user_parts", body).then((res) => {
-    console.log("res.data", res.data);
+  axios.post(`/user/user_parts/${limit}/${offset}`, body).then((res) => {
     createTable(res.data);
   });
 
@@ -65,8 +112,6 @@ function init() {
 
     table.appendChild(tr);
     /*end of table header */
-
-    console.log("data", data);
 
     /* Create table body */
     for (let i = 0; i < data.length; i++) {
@@ -144,7 +189,6 @@ function init() {
       let addFittingContainer = document.getElementsByClassName(
         "fitment_add_fitting"
       );
-      console.log("addFittingContainer", addFittingContainer);
       addFittingContainer[0].style.display = "block";
       partSku.innerHTML = sessionStorage.getItem("sku");
       createNewFitmentListener(sId, partId);
@@ -181,8 +225,6 @@ function init() {
         date_to: year_to.value,
         date_on: year_on_value,
       };
-      console.log("body", body);
-      console.log("submit");
       axios.post("/user/add_fitment", body).then((res) => {
         console.log("res:", res);
       });
@@ -202,7 +244,6 @@ function init() {
   function createUpdateListeners() {
     let updateButtons = document.querySelectorAll(".updateBtn");
     updateButtons.forEach((button) => {
-      console.log("button", button);
       button.addEventListener("click", (e) => {
         console.log("click");
         let button = e.currentTarget;
@@ -265,22 +306,17 @@ function init() {
         let fitmentSection = document.getElementById("fitment_section");
         fitmentSection.style.display = "block";
         let id = e.currentTarget.value;
-        console.log("id", id);
         sessionStorage.setItem("partId", id);
-        console.log("id", id);
         let partId = id;
         let supplierId = sessionStorage.getItem("supplierId");
         let fitmentDisplay = document.getElementById("fitment_table");
         fitmentDisplay.innerHTML = "";
-        console.log("partId", partId);
-        console.log("supplierId", supplierId);
+
         axios.get(`/user/get_fitment/${supplierId}/${partId}`).then((res) => {
           createTable(res.data, fitmentDisplay, partId);
         });
 
         function createTable(data, fitmentDisplay, partId) {
-          console.log("data", data);
-
           if (data.length == 0) {
             let tr = document.createElement("tr");
             let td = document.createElement("td");
@@ -451,7 +487,6 @@ function fitmentUpdateBtns() {
       };
 
       axios.post("/user/update_fitment", data).then((res) => {
-        console.log(res.data);
         if (res.data.message == "Fitment updated successfully") {
           alert("Fitment updated successfully");
         } else {
@@ -476,7 +511,6 @@ function fitmentDeleteBtns() {
       };
 
       axios.post("/user/delete_fitment", data).then((res) => {
-        console.log(res.data);
         if (res.data.message == "Fitment deleted successfully") {
           alert("Fitment deleted successfully");
           updateFitmentTable();

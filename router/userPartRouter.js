@@ -82,14 +82,37 @@ router.post("/create_part_fitting", async (req, res) => {
   });
 });
 
-router.post("/user_parts", async (req, res) => {
+router.get("/part_count/:sId", (req, res) => {
+  let supplierId = req.params.sId;
+  let sId = parseInt(supplierId);
+  let count = "";
+
+  console.log(sId);
+
+  const query = db.pool.query(
+    "SELECT COUNT(*) AS count FROM `part` WHERE supplier_id = ?",
+    [sId]
+  );
+  query.then((result) => {
+    let num = result[0].count;
+    count = num.toString();
+    console.log(count);
+    res.send(count);
+  });
+});
+
+router.post("/user_parts/:limit/:offset", async (req, res) => {
   let task = req.body;
   let sId = task.supplierId;
+  let limit = parseInt(req.params.limit);
+  console.log(limit);
+  let offset = parseInt(req.params.offset);
+  console.log(offset);
 
   try {
     const result = await db.pool.query(
-      "SELECT `part`.id ,`part`.sku, `part`.part_name, `alt_skus`.partNo , `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM `part` INNER JOIN `alt_skus` ON `part`.id = `alt_skus`.part_id WHERE `part`.supplier_id = ?",
-      [sId]
+      "SELECT `part`.id ,`part`.sku, `part`.part_name, `alt_skus`.partNo , `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM `part` INNER JOIN `alt_skus` ON `part`.id = `alt_skus`.part_id WHERE `part`.supplier_id = ? ORDER BY `part`.id LIMIT ? OFFSET ?",
+      [sId, limit, offset]
     );
     res.send(result);
   } catch (err) {
