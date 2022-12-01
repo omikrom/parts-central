@@ -2,6 +2,14 @@ const express = require("express");
 const router = express.Router();
 
 const db = require("../db/db.js");
+const {
+  SelectAllFittingsForPart,
+  SelectAltSkuForPart,
+  DeleteAltSkus,
+  DeletePartHasFitting,
+  DeleteFitting,
+  DeletePart,
+} = require("../model/part_sql_actions.js");
 
 router.post("/create_part_fitting", async (req, res) => {
   let data = req.body;
@@ -47,7 +55,6 @@ router.post("/create_part_fitting", async (req, res) => {
 
   for (let i = 0; i < fitting_data.length; i++) {
     let element = fitting_data[i];
-    console.log(element);
     let fittingId = 0;
     try {
       const addNewPartFitting = await db.pool.query(
@@ -93,7 +100,6 @@ router.post("/user_parts", async (req, res) => {
       "SELECT `part`.id ,`part`.sku, `part`.part_name, `alt_skus`.partNo , `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM `part` INNER JOIN `alt_skus` ON `part`.id = `alt_skus`.part_id WHERE `part`.supplier_id = ?",
       [sId]
     );
-    console.log(result);
     res.send(result);
   } catch (err) {
     throw err;
@@ -105,7 +111,6 @@ router.get(`/get_fitment/:supplierId/:partId`, (req, res) => {
   let partId = req.params.partId;
 
   try {
-    console.log("get fitments for part: " + partId);
     const selectFitments = db.pool.query(
       "SELECT `fitting`.id AS fitting_id, `fitting`.type, `fitting`.manufacturer, `fitting`.model, `fitting`.display_name, `fitting`.cc, `fitting`.date_from, `fitting`.date_to, `fitting`.date_on, `part`.id, `part`.sku FROM `fitting` INNER JOIN `part_has_fitting` ON `fitting`.id = `part_has_fitting`.fitting_id INNER JOIN `part` ON `part_has_fitting`.part_id = `part`.id WHERE `part`.supplier_id = ? AND `part`.id = ?",
       [supplierId, partId]
@@ -190,14 +195,6 @@ router.post("/update_part", (req, res) => {
   let alt_part_no = task.partNo;
   let alt_vendor_no = task.vendorNo;
   let alt_sku_no = task.partAltSKU;
-
-  console.log("partId: " + partId);
-  console.log("partName: " + partName);
-  console.log("sku: " + sku);
-  console.log("supplierId: " + supplierId);
-  console.log("alt_part_no: " + alt_part_no);
-  console.log("alt_vendor_no: " + alt_vendor_no);
-  console.log("alt_sku_no: " + alt_sku_no);
 
   try {
     const updatePart = db.pool.query(
@@ -337,7 +334,6 @@ router.post("/update_fitment", (req, res) => {
 
 router.post("/delete_fitment", (req, res) => {
   let task = req.body;
-  console.log(task);
   let fitmentId = parseInt(task.fitting_id);
   let partId = parseInt(task.partId);
   let supplierId = parseInt(task.sId);
