@@ -38,6 +38,15 @@ function init() {
       let th = document.createElement("th");
       th.scope = "col";
       th.innerHTML = heading;
+      if (heading == "Fitting") {
+        th.classList.add("text-center");
+      }
+      if (heading == "Edit") {
+        th.classList.add("text-center");
+      }
+      if (heading == "Delete") {
+        th.classList.add("text-center");
+      }
       tr.appendChild(th);
     }
     let partList = document.getElementById("part_list");
@@ -81,7 +90,6 @@ function init() {
       td.contentEditable = true;
       td.innerHTML = data[i].part_name;
       tr.appendChild(td);
-
       td = document.createElement("td");
       td.contentEditable = true;
       td.innerHTML = data[i].partNo;
@@ -93,12 +101,15 @@ function init() {
 
       td = document.createElement("td");
       td.innerHTML = `<button class="fittingBtn text-dark" value="${data[i].id}"><i class="fa-solid fa-gears"></i></button>`;
+      td.classList.add("text-center");
       tr.appendChild(td);
 
       td = document.createElement("td");
       td.innerHTML = `<button class="updateBtn text-dark" value="${data[i].id}"><i class="fa-solid fa-floppy-disk"></i></button>`;
+      td.classList.add("text-center");
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("text-center");
       td.innerHTML = `<button class="deleteBtn text-dark" value="${data[i].id}"><i class="fa-solid fa-trash"></i></button>`;
       tr.appendChild(td);
 

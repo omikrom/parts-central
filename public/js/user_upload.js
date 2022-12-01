@@ -39,6 +39,9 @@ function init() {
         .post(`/upload/user_csv/${supplierId}`, formData, config, token)
         .then((res) => {
           message.innerHTML = res.data.message;
+          setTimeout(() => {
+            window.location.href = "/user_parts";
+          }, 1000);
         });
     } catch (error) {
       message.innerHTML = error.message;
