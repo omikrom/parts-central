@@ -39,7 +39,9 @@ router.post(
         console.log(err);
       })
       .on("end", () => {
-        populateDatabase(partsList, res);
+        console.log("CSV file successfully processed");
+        console.log("populating database");
+        populateDatabase(partsList, res, req.file.path);
       });
   }
 );
@@ -54,8 +56,100 @@ async function deleteFile(path) {
   });
 }
 
-async function populateDatabase(partsList, res) {
+async function populateDatabase(partsList, res, path) {
   for (let i = 0; i < partsList.length; i++) {
+    let fittingId = 0;
+    let partId = 0;
+
+    try {
+      const checkIfPartExists = await db.pool.query(
+        "SELECT * FROM `part` WHERE sku = ? AND supplier_id = ?",
+        [partsList[i].sku, parseInt(partsList[i].supplierId)]
+      );
+      if (checkIfPartExists.length > 0) {
+        // Part exists
+        console.log("Part exists");
+        partId = checkIfPartExists[0].id;
+
+        // check if fitting exists
+        const checkIfFittingExists = await db.pool.query(
+          "SELECT * FROM `fitting` WHERE manufacturer = ? AND model = ? AND cc = ? AND date_from = ? AND date_to = ?",
+          [
+            partsList[i].fitting.manufacturer,
+            partsList[i].fitting.model,
+            partsList[i].fitting.cc,
+            partsList[i].fitting.date_from,
+            partsList[i].fitting.date_to,
+          ]
+        );
+        if (checkIfFittingExists.length > 0) {
+          // Fitting exists
+          console.log("Fitting exists");
+          fittingId = checkIfFittingExists[0].id;
+        } else {
+          // Fitting does not exist
+          console.log("Fitting does not exist");
+          const insertFitting = await db.pool.query(
+            "INSERT INTO `fitting` (manufacturer, model, cc, date_from, date_to) VALUES (?, ?, ?, ?, ?)",
+            [
+              partsList[i].fitting.manufacturer,
+              partsList[i].fitting.model,
+              partsList[i].fitting.cc,
+              partsList[i].fitting.date_from,
+              partsList[i].fitting.date_to,
+            ]
+          );
+          fittingId = insertFitting.insertId;
+          // Create fitting join
+          const insertFittingJoin = await db.pool.query(
+            "INSERT INTO `part_has_fitting` (part_id, fitting_id, part_supplier_id) VALUES (?, ?, ?)",
+            [partId, fittingId, parseInt(partsList[i].supplierId)]
+          );
+        }
+      } else {
+        // Part does not exist
+        console.log("Part does not exist");
+        const addPart = await db.pool.query(
+          "INSERT INTO `part` (sku, part_name, supplier_id) VALUES (?, ?, ?)",
+          [
+            partsList[i].sku,
+            partsList[i].partName,
+            parseInt(partsList[i].supplierId),
+          ]
+        );
+        partId = parseInt(addPart.insertId);
+        const addAltSku = await db.pool.query(
+          "INSERT INTO `alt_skus` (part_id, part_supplier_id) VALUES (?, ?)",
+          [partId, parseInt(partsList[i].supplierId)]
+        );
+        // add fitting
+        const addFitting = await db.pool.query(
+          "INSERT INTO `fitting` (manufacturer, model, cc, date_from, date_to) VALUES (?, ?, ?, ?, ?)",
+          [
+            partsList[i].fitting.manufacturer,
+            partsList[i].fitting.model,
+            partsList[i].fitting.cc,
+            partsList[i].fitting.date_from,
+            partsList[i].fitting.date_to,
+          ]
+        );
+        fittingId = parseInt(addFitting.insertId);
+        // Create fitting join
+        const insertFittingJoin = await db.pool.query(
+          "INSERT INTO `part_has_fitting` (part_id, fitting_id, part_supplier_id) VALUES (?, ?, ?)",
+          [partId, fittingId, parseInt(partsList[i].supplierId)]
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  console.log("Done");
+  res.status(200).send({ message: "File uploaded successfully!" });
+  deleteFile(path);
+
+  /*for (let i = 0; i < partsList.length; i++) {
     let fittingId = 0;
     let partId = 0;
     try {
@@ -139,7 +233,7 @@ async function populateDatabase(partsList, res) {
       }
     }
   }
-  res.status(200).send({ message: "Uploaded the file successfully: " });
+  res.status(200).send({ message: "Uploaded the file successfully: " });*/
 }
 
 async function createFitting(data) {
@@ -228,6 +322,11 @@ function createPartFitment(data, sId) {
       part.fitting.date_on = data[key];
     }
   }
+
+  if (part.date_on == null || part.date_on == "" || part.date_on == undefined) {
+    part.date_on = 0;
+  }
+
   return part;
 }
 

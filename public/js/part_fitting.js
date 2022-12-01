@@ -5,6 +5,7 @@ window.onload = function () {
 
 function init() {
   let formSubmit = document.getElementById("create_part_submit");
+  let message = document.getElementById("message");
 
   formSubmit.addEventListener("click", function (e) {
     console.log("clicked");
@@ -64,7 +65,11 @@ function init() {
                 fits.year_from = grandChild[k].value;
               }
               if (grandChild[k].id === "fitting_year_to") {
-                fits.year_to = grandChild[k].value;
+                if (grandChild[k].value != "") {
+                  fits.year_to = grandChild[k].value;
+                } else {
+                  fits.year_to = new Date().getFullYear();
+                }
               }
               if (grandChild[k].checked) {
                 fits.year_on = 1;
@@ -81,6 +86,12 @@ function init() {
 
       axios.post("/user/create_part_fitting", body).then((res) => {
         console.log(res);
+        if (res.data.message == "Part created") {
+          message.innerHTML = "Part created";
+          setTimeout(() => {
+            window.location.href = "/create_part";
+          }, 2000);
+        }
       });
 
       function fitting(type, make, model, cc, year_from, year_to, year_on) {
@@ -100,7 +111,6 @@ function init() {
 
 function validateForm() {
   let message = document.getElementById("message");
-
   let partName = document.getElementById("part_name").value;
   let partSku = document.getElementById("part_number").value;
   let type = document.getElementsByName("fitting_type");
