@@ -65,7 +65,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <h1>Create a new part</h1>
+                    <h1 class="part--main-title">Create a new part</h1>
                 </div>
             </div>
 
@@ -73,42 +73,43 @@
                 <div class="col-12">
                     <form action="/create_part" method="POST" id="create_part_form">
                         <div class="form-group row">
-                            <div class="col-12 col-md-6">
-                                <h3>Part Details</h3>
+                            <div class="col-12 col-md-6 part_details--container">
+                                <h2>Part Details</h2>
                                 <div class="form-group">
-                                    <label for="part_name">Part Name:</label>
-                                    <input type="text" class="form-control text-light" id="part_name" name="part_name"
-                                        placeholder="Part Name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="part_number">Part (SKU):</label>
-                                    <input type="text" class="form-control text-light" id="part_number" name="part_number"
+                                    <label class="part--label" for="part_number">Part (SKU): <span class="label_req">*</span></label>
+                                    <input type="text" class="form-control text-dark" id="part_number" name="part_number"
                                         required placeholder="Enter the part SKU">
                                 </div>
+                                <div class="form-group">
+                                    <label class="part--label" for="part_name">Part Name:</label>
+                                    <input type="text" class="form-control text-dark" id="part_name" name="part_name"
+                                        placeholder="Part Name">
+                                </div>
                             </div>
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-6 alt_part_details--container">
                                 <h4>Alternate part details</h4>
                                 <div class="form-group">
-                                    <label for="alt_part_number">Alt Part Number:</label>
-                                    <input type="text" class="form-control text-light" id="alt_part_number" name="alt_part_number" placeholder="Alternate part number">
+                                    <label class="part--label" for="alt_part_number">Alt Part Number:</label>
+                                    <input type="text" class="form-control text-dark" id="alt_part_number" name="alt_part_number" placeholder="Alternate part number">
                                 </div>
                                 <div class="form-group">
-                                    <label for="alt_vendor_number">Alt Vendor Number:</label>
-                                    <input type="text" class="form-control text-light" id="alt_vendor_number"
+                                    <label class="part--label" for="alt_vendor_number">Alt Vendor Number:</label>
+                                    <input type="text" class="form-control text-dark" id="alt_vendor_number"
                                         name="alt_vendor_number" placeholder="alternate vendor number">
                                 </div>
                                 <div class="form-group">
-                                    <label for="alt_sku_number">Alt SKU:</label>
-                                    <input type="text" class="form-control text-light" id="alt_sku_number" name="alt_sku_number" placeholder="Alternate SKU">
+                                    <label class="part--label" for="alt_sku_number">Alt SKU:</label>
+                                    <input type="text" class="form-control text-dark" id="alt_sku_number" name="alt_sku_number" placeholder="Alternate SKU">
                                 </div>
                             </div>
                         </div>
-                        <h4>Part Fitting</h4>
+                        
                         <div class="form-group row part_fitment" id="part_fitment">
+                            <h4 class="part_fitment--title">Part Fitting</h4>
                             <div class="form-group row fitment_row" id="part_fitment--row">
-                                <div class="col-12 col-md-1">
-                                    <label for="fitting_type">Type</label>
-                                    <input type="text" class="form-control  text-light" id="fitting_type" name="fitting_type"
+                                <div class="col-12 col-md-2">
+                                    <label class="part--label" for="fitting_type">Type: <span class="label_req">*</span></label>
+                                    <input type="text" class="form-control  text-dark" id="fitting_type" name="fitting_type"
                                         list="type_options" aria-required="true" required placeholder="Vehicle type">
                                     <datalist id="type_options">
                                         <option value="ATV"></option>
@@ -117,48 +118,49 @@
                                         <option value="Snowmobile"></option>
                                         <option value="UTV"></option>
                                 </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="fitting_make">Make</label>
-                                    <input type="text" class="form-control text-light" id="fitting_make" name="fitting_make"
+                                <div class="col-12 col-md-3">
+                                    <label class="part--label" for="fitting_make">Make: <span class="label_req">*</span></label>
+                                    <input type="text" class="form-control text-dark" id="fitting_make" name="fitting_make"
                                         list="make_options" aria-required="true" required placeholder="Vehicle manufacturer">
                                     <datalist name="make_options" id="make_options">
                                 </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="fitting_model">Model</label>
-                                    <input type="text" class="form-control text-light" id="fitting_model" name="fitting_model" aria-required="true" required placeholder="Vehicle model">
+                                <div class="col-12 col-md-3">
+                                    <label class="part--label" for="fitting_model">Model: <span class="label_req">*</span></label>
+                                    <input type="text" class="form-control text-dark" id="fitting_model" name="fitting_model" aria-required="true" required placeholder="Vehicle model">
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <label for="fitting_model">Display name</label>
-                                    <input type="text" class="form-control text-light" id="fitting_display_name" name="fitting_display_name" placeholder="Display name">
-                                </div>
-                                <div class="col-12 col-md-1">
-                                    <label for="fitting_cc">CC:</label>
-                                    <input type="number" min="0" max="100000" step="5" class="form-control text-light"
+                                    <label class="part--label" for="fitting_cc">CC: <span class="label_req">*</span></label>
+                                    <input type="number" min="0" max="100000" step="5" class="form-control text-dark"
                                         id="fitting_cc" name="fitting_cc" aria-required="true" required placeholder="Size">
                                 </div>
-                                <div class="col-12 col-md-1">
-                                    <label for="fitting_year_from">from:</label>
-                                    <input type="number" min="1850" max="3000" step="1" class="form-control text-light"
+                                <div class="col-12 col-md-2">
+                                    <label class="part--label" for="fitting_model">Display name:</label>
+                                    <input type="text" class="form-control text-dark" id="fitting_display_name" name="fitting_display_name" placeholder="Display name">
+                                </div>
+                                <div class="col-12 col-md-2">
+                                    <label class="part--label" for="fitting_year_from">From: <span class="label_req">*</span></label>
+                                    <input type="number" min="1850" max="3000" step="1" class="form-control text-dark"
                                         id="fitting_year_from" name="fitting_year_from" aria-required="true" required placeholder="2020" value="2020">
                                 </div>
-                                <div class="col-12 col-md-1">
-                                    <label for="fitting_year_to">to:</label>
-                                    <input type="number" min="1850" max="3000" step="1" class="form-control text-light"
+                                <div class="col-12 col-md-2">
+                                    <label class="part--label" for="fitting_year_to">To:</label>
+                                    <input type="number" min="1850" max="3000" step="1" class="form-control text-dark"
                                         id="fitting_year_to" name="fitting_year_to" placeholder="2020" value="2021">
                                 </div>
-                                <div class="col-6 col-md-1 check-column">
-                                    <label for="fitting_year_on">on:</label>
-                                    <input class="form-check-input checkmark text-light" type="checkbox" value=""
+                                <div class="col-3 col-md-2 check-column">
+                                    <label class="part--label" for="fitting_year_on">on:</label>
+                                    <input class="form-check-input checkmark text-dark" type="checkbox" value=""
                                         id="fitting_year_on">
                                 </div>
-                                <div class="col-6 col-md-1 fitting_btn--container">
-                                    <label for="fitting_add_btn">Add</label>
+                                <div class="col col-md-5"></div>
+                                <div class="col-3 col-md-1 fitting_btn--container">
+                                    <label class="part--label" for="fitting_add_btn">Add</label>
                                     <div class="add_fitting_btn">
                                         <button id="add_fit" class="add_fitting bg-dark text-light" onclick="addRow(this)">+</button>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-1 fitting_btn--container">
-                                    <label for="fitting_add_btn">Remove</label>
+                                <div class="col-3 col-md-1 fitting_btn--container">
+                                    <label class="part--label" for="fitting_add_btn">Remove</label>
                                     <div class="remove_fitting_btn">
                                         <button id="remove_fit" class="remove_fitting bg-dark text-light"
                                             onclick="deleteRow(this)">-</button>
@@ -166,7 +168,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 text-end">
+                        <div class="col-12 text-end add_part_btn--container">
                             <button type="submit" class="button--part" id="create_part_submit">Submit</button>
                         </div>
                     </form>

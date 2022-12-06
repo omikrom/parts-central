@@ -87,8 +87,6 @@ router.get("/part_count/:sId", (req, res) => {
   let sId = parseInt(supplierId);
   let count = "";
 
-  console.log(sId);
-
   const query = db.pool.query(
     "SELECT COUNT(*) AS count FROM `part` WHERE supplier_id = ?",
     [sId]
@@ -96,7 +94,6 @@ router.get("/part_count/:sId", (req, res) => {
   query.then((result) => {
     let num = result[0].count;
     count = num.toString();
-    console.log(count);
     res.send(count);
   });
 });
@@ -105,9 +102,7 @@ router.post("/user_parts/:limit/:offset", async (req, res) => {
   let task = req.body;
   let sId = task.supplierId;
   let limit = parseInt(req.params.limit);
-  console.log(limit);
   let offset = parseInt(req.params.offset);
-  console.log(offset);
 
   try {
     const result = await db.pool.query(
@@ -140,12 +135,9 @@ router.get(`/get_fitment/:supplierId/:partId`, (req, res) => {
 //
 
 router.post("/add_fitment", async (req, res) => {
-  console.log("received");
   let task = req.body;
   let partId = parseInt(task.partId);
-  console.log("pId:", partId);
   let supplierId = parseInt(task.supplierId);
-  console.log("sId:", supplierId);
   let type = task.type;
   let manufacturer = task.manufacturer;
   let model = task.model;
@@ -230,7 +222,6 @@ router.post("/update_part", (req, res) => {
 
 router.delete("/delete_part", async (req, res) => {
   console.log("deleting part");
-  console.log(req.body);
   let task = req.body;
   let partId = parseInt(task.id);
   let sId = parseInt(task.sId);
@@ -251,12 +242,6 @@ router.delete("/delete_part", async (req, res) => {
     selectFitments.forEach((fitting) => {
       fittingIds.push(fitting.id);
     });
-    /*selectFitments.then((result) => {
-      console.log(result);
-      for (let i = 0; i < result.length; i++) {
-        fittingIds.push(result[i].id);
-      }
-    });*/
   } catch (err) {
     throw err;
   } finally {
@@ -310,7 +295,6 @@ router.delete("/delete_part", async (req, res) => {
         "DELETE FROM `part` WHERE id = ? AND supplier_id = ?",
         [partId, sId]
       );
-      console.log(deletePart);
     } catch (err) {
       throw err;
     } finally {

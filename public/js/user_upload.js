@@ -14,6 +14,8 @@ function init() {
   form.addEventListener("submit", (e) => {
     console.log("clicked");
     e.preventDefault();
+    let progress_bar = document.getElementsByClassName("progress-bar--div");
+    progress_bar[0].classList.remove("hidden");
     const file = document.getElementById("csv").files[0];
     let token = sessionStorage.getItem("token");
     let supplierId = sessionStorage.getItem("supplierId");

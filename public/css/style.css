@@ -1,5 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto+Condensed&display=swap');
+
+
+
+* {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+}
+
+
+
 body {
-    overflow-y: scroll;
+    overflow-y: scroll; 
+}
+
+h1 {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 3rem;
+}
+
+h2 {
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+h3 {
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+h4 {
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+h5 {
+    font-family: 'Roboto Condensed', sans-serif;
 }
 
 footer {
@@ -9,7 +41,15 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    
+}
 
+.toggler--custom {
+    border: none !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none !important;
 }
 
 
@@ -42,7 +82,7 @@ footer {
 
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .show {
@@ -194,6 +234,11 @@ footer {
     padding: 25px 40px 0 40px;
 }
 
+.part--main-title {
+    margin-top:1rem;
+    padding-left: 1rem;
+    margin-bottom: 0;
+}
 
 .add_part--section {
     min-height: 100vh;
@@ -215,7 +260,39 @@ footer {
     justify-content: center;
 }
 
+.part_details--container {
+    padding: 2rem;
+}
 
+.alt_part_details--container {
+    padding:2rem;
+}
+
+.form-group {
+    margin-bottom:0.6rem;
+}
+
+.part_fitment--title {
+    padding-left:2rem;
+}
+
+.part--label {
+    padding-top:0.4rem;
+    padding-bottom:0.25rem;
+}
+
+.fitment_row {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #ccc;
+}
+
+.add_part_btn--container {
+    padding-right:3rem;
+}
+
+.label_req {
+    color: rgb(255, 49, 49);
+}
 
 .button--add_part {
     width: 100%;
@@ -276,7 +353,6 @@ footer {
     align-items: center;
     align-content: stretch;
     flex-direction: column;
-    width: 5.2%;
 }
 
 .add_fitting {
@@ -312,24 +388,155 @@ footer {
     color: white;
 }
 
+
 .table-title {
     padding: 5px 25px 0 25px;
 }
+
+.tb_first {
+    padding-left:5px;
+}
+
+
+.tb_heading {
+    background-color: #212529;
+    color: #eeeeee;
+}
+
+.tb_heading th {
+    padding: 10px 10px 10px 10px;
+    text-transform: capitalize;
+}
+
+.tb_heading th:first-child {
+    padding-left: 1rem;
+    padding-right: 0px;
+}
+
+
+
+.tb_light {
+    background-color: #eee !important;
+}
+
+.tb_light td:first-child {
+    padding-left: 1rem;
+    padding-right: 0px;
+}
+
+.tb_dark {
+    background-color: #ddd !important;
+}
+
+.tb_dark td:first-child {
+    padding-left: 1rem;
+    padding-right: 0px
+}
+
+.fittingBtn {
+    border: none;
+}
+
+.fittingBtn i {
+    color: #69811a;
+}
+
+.fittingBtn:hover i {
+    color: #a4ce19;
+}
+
+.updateBtn {
+    border: none;
+}
+.updateBtn i {
+    color: #328beb;
+}
+
+.updateBtn:hover i {
+    color: #00c8ff;
+}
+
+.deleteBtn {
+    border: none;
+}
+
+.deleteBtn i {
+    color: #e74c3c;
+}
+
+.deleteBtn:hover i {
+    color: #ff0000;
+}
+
+
+td {
+    padding:5px;
+}
+
+.page-link {
+    color: #212529 !important;
+}
+
+.page-link.active {
+    color: #eee !important;
+    background-color: #212529 !important;
+    border-color: #212529 !important;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #212529;
+    border-radius: 7px;
+    transition: all 0.3s ease-in-out;
+    height: 20px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #0e2d4f;
+  }
+
+  #part_pages {
+    padding-top:20px;
+  }
+
+  .pagination {
+    margin-bottom: 0 !important;
+  }
 
 /*------------------*/
 /* CSV upload section  */
 /*------------------*/
 
-.full-page--container {
-    height: 100%;
+.csv_upload--section {
+    min-height: 100vh;
+    padding-top: 50px;
+    height: auto;
+    background-color: #eee;
+    color: rgb(0, 0, 0);
     display: flex;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
     flex-direction: column;
     flex-wrap: wrap;
-    overflow-x: hidden;
+    align-content: flex-start;
+    justify-content: center;
+    align-items: center;
 }
+
+.csv_upload--container {
+    padding:5rem;
+}
+
+
 
 .upload_progress--cont {
     display: flex;
@@ -448,7 +655,6 @@ footer {
 .table--archive {
     background-color: #eee;
     color: black;
-    padding: 15px 15px 0px 15px;
 }
 
 .search--container {
@@ -587,6 +793,10 @@ footer {
         justify-content: center;
     }
 
+    .csv_upload--container {
+        padding:1rem;
+    } 
+
 }
 
 
@@ -613,7 +823,7 @@ footer {
     }
 
     .check-column {
-        width: 50%;
+        width: 25%;
         justify-content: center;
     }
 
