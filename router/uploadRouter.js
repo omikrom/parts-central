@@ -8,7 +8,6 @@ const auth = require("../middleware/auth.js");
 
 const { parse } = require("csv-parse");
 
-
 router.post(
   "/user_csv/:supplierId",
   auth,
@@ -21,6 +20,11 @@ router.post(
     if (getFileExtension(req.file.originalname) != "csv") {
       return res.status(400).send({ message: "Please upload a CSV file!" });
     }
+
+    // added this to test if this will fix the issue
+    res.status(200).send({
+      message: "Uploaded the file successfully: " + req.file.originalname,
+    });
 
     const input = fs.createReadStream(req.file.path);
     const rl = readline.createInterface({ input });
@@ -145,7 +149,7 @@ async function populateDatabase(partsList, res, path) {
   }
 
   console.log("Upload & populate complete");
-  res.status(200).send({ message: "File uploaded successfully!" });
+  //res.status(200).send({ message: "File uploaded successfully!" });
   deleteFile(path);
 }
 
@@ -166,7 +170,8 @@ async function createFitting(data) {
     );
     fittingId = parseInt(addFitting.insertId);
   } catch (error) {
-    res.status(500).send({ message: err.message });
+    throw err;
+    //res.status(500).send({ message: err.message });
   } finally {
     return fittingId;
   }
@@ -206,7 +211,6 @@ function createPartFitment(data, sId) {
 
   // check through data and assign to part
   for (let key in data) {
-
     switch (key) {
       //---------------------//
       //------ part cases----//
@@ -514,11 +518,8 @@ function createPartFitment(data, sId) {
       case "DateOn":
         part.fitting.year_on = data[key];
         break;
-
     }
   }
-
-
 
   if (part.date_on == null || part.date_on == "" || part.date_on == undefined) {
     part.date_on = 0;
