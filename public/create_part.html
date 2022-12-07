@@ -14,52 +14,53 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <a class="navbar-brand brand-logo" href="/">Parts-central</a>
         <button class="navbar-toggler toggler--custom" type="button" data-toggle="collapse" data-target="#navbarText"
-          aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-        <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between" id="navbarText">
-          <ul class="navbar-nav mr-auto navbar-btns--left">
-            <li class="nav-item active">
-              <a class="nav-link nav-link--custom" href="/">Home</a>
-            </li>
-            <!--<li id="user_add_part_btn" class="nav-item">
+        <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between"
+            id="navbarText">
+            <ul class="navbar-nav mr-auto navbar-btns--left">
+                <li class="nav-item active">
+                    <a class="nav-link nav-link--custom" href="/">Home</a>
+                </li>
+                <!--<li id="user_add_part_btn" class="nav-item">
               <a class="nav-link nav-link--custom" href="/new_part">Add parts</a>
             </li>-->
-            <li id="user_create_part_btn" class="nav-item">
-              <a class="nav-link nav-link--custom" href="/create_part">Create new part</a>
-            </li>
-            <li id="user_view_part_btn" class="nav-item">
-              <a class="nav-link nav-link--custom" href="/user_parts">View parts</a>
-            </li>
-            <li id="user_mass_create_part_btn" class="nav-item">
-              <a class="nav-link nav-link--custom" href="/csv_upload">Upload part CSV</a>
-            </li>
-            <li id="user_search_part_btn" class="nav-item">
-              <a class="nav-link nav-link--custom" href="/part_search">Parts search</a>
-            </li>
-            <li id="admin_parts_list" class="nav-item">
-              <a class="nav-link nav-link--custom" href="#">Global Parts List</a>
-            </li>
-            <li id="admin_mass_upload_parts">
-              <a class="nav-link nav-link--custom" href="/upload.html">Global CSV upload</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto navbar-btns--right">
-            <li id="login_btn" class="nav-item">
-              <a class="nav-link nav-link--custom" href="/login">Login</a>
-            </li>
-            <li id="register_btn" class="nav-item">
-              <a class="nav-link nav-link--custom" href="/register">Register</a>
-            </li>
-            <li id="user_details_btn" class="nav-item">
-              <a class="nav-link nav-link--custom" href="/user_details">User Details</a>
-            </li>
-            <li id="logout_btn" class="nav-item">
-              <a class="nav-link nav-link--custom" href="/logout">Logout</a>
-            </li>
-          </ul>
+                <li id="user_create_part_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/create_part">Create new part</a>
+                </li>
+                <li id="user_view_part_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/user_parts">View parts</a>
+                </li>
+                <li id="user_mass_create_part_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/csv_upload">Upload part CSV</a>
+                </li>
+                <li id="user_search_part_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/part_search">Parts search</a>
+                </li>
+                <li id="admin_parts_list" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="#">Global Parts List</a>
+                </li>
+                <li id="admin_mass_upload_parts">
+                    <a class="nav-link nav-link--custom" href="/upload.html">Global CSV upload</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mr-auto navbar-btns--right">
+                <li id="login_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/login">Login</a>
+                </li>
+                <li id="register_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/register">Register</a>
+                </li>
+                <li id="user_details_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/user_details">User Details</a>
+                </li>
+                <li id="logout_btn" class="nav-item">
+                    <a class="nav-link nav-link--custom" href="/logout">Logout</a>
+                </li>
+            </ul>
         </div>
-      </nav>
+    </nav>
 
     <section class="add_part--section">
         <div class="container-fluid">
@@ -76,9 +77,10 @@
                             <div class="col-12 col-md-6 part_details--container">
                                 <h2>Part Details</h2>
                                 <div class="form-group">
-                                    <label class="part--label" for="part_number">Part (SKU): <span class="label_req">*</span></label>
-                                    <input type="text" class="form-control text-dark" id="part_number" name="part_number"
-                                        required placeholder="Enter the part SKU">
+                                    <label class="part--label" for="part_number">Part (SKU): <span
+                                            class="label_req">*</span></label>
+                                    <input type="text" class="form-control text-dark" id="part_number"
+                                        name="part_number" required placeholder="Enter the part SKU">
                                 </div>
                                 <div class="form-group">
                                     <label class="part--label" for="part_name">Part Name:</label>
@@ -90,7 +92,8 @@
                                 <h4>Alternate part details</h4>
                                 <div class="form-group">
                                     <label class="part--label" for="alt_part_number">Alt Part Number:</label>
-                                    <input type="text" class="form-control text-dark" id="alt_part_number" name="alt_part_number" placeholder="Alternate part number">
+                                    <input type="text" class="form-control text-dark" id="alt_part_number"
+                                        name="alt_part_number" placeholder="Alternate part number">
                                 </div>
                                 <div class="form-group">
                                     <label class="part--label" for="alt_vendor_number">Alt Vendor Number:</label>
@@ -99,48 +102,61 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="part--label" for="alt_sku_number">Alt SKU:</label>
-                                    <input type="text" class="form-control text-dark" id="alt_sku_number" name="alt_sku_number" placeholder="Alternate SKU">
+                                    <input type="text" class="form-control text-dark" id="alt_sku_number"
+                                        name="alt_sku_number" placeholder="Alternate SKU">
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row part_fitment" id="part_fitment">
                             <h4 class="part_fitment--title">Part Fitting</h4>
+                            <small class="form-text text-muted fitting-small">Please enter the vehicle type, make, model
+                                and year
+                                that this part fits.</small>
                             <div class="form-group row fitment_row" id="part_fitment--row">
                                 <div class="col-12 col-md-2">
-                                    <label class="part--label" for="fitting_type">Type: <span class="label_req">*</span></label>
-                                    <input type="text" class="form-control  text-dark" id="fitting_type" name="fitting_type"
-                                        list="type_options" aria-required="true" required placeholder="Vehicle type">
+                                    <label class="part--label" for="fitting_type">Type: <span
+                                            class="label_req">*</span></label>
+                                    <input type="text" class="form-control  text-dark" id="fitting_type"
+                                        name="fitting_type" list="type_options" aria-required="true" required
+                                        placeholder="Vehicle type">
                                     <datalist id="type_options">
-                                        <option value="ATV"></option>
-                                        <option value="Motorcycle"></option>
-                                        <option value="Scooter"></option>
-                                        <option value="Snowmobile"></option>
-                                        <option value="UTV"></option>
                                 </div>
                                 <div class="col-12 col-md-3">
-                                    <label class="part--label" for="fitting_make">Make: <span class="label_req">*</span></label>
-                                    <input type="text" class="form-control text-dark" id="fitting_make" name="fitting_make"
-                                        list="make_options" aria-required="true" required placeholder="Vehicle manufacturer">
+                                    <label class="part--label" for="fitting_make">Make: <span
+                                            class="label_req">*</span></label>
+                                    <input type="text" class="form-control text-dark" id="fitting_make"
+                                        name="fitting_make" list="make_options" aria-required="true" required
+                                        placeholder="Vehicle manufacturer">
                                     <datalist name="make_options" id="make_options">
                                 </div>
                                 <div class="col-12 col-md-3">
-                                    <label class="part--label" for="fitting_model">Model: <span class="label_req">*</span></label>
-                                    <input type="text" class="form-control text-dark" id="fitting_model" name="fitting_model" aria-required="true" required placeholder="Vehicle model">
+                                    <label class="part--label" for="fitting_model">Model: <span
+                                            class="label_req">*</span></label>
+                                    <input type="text" class="form-control text-dark" id="fitting_model"
+                                        name="fitting_model" list="model_options" aria-required="true" required
+                                        placeholder="Vehicle model">
+                                    <datalist name="model_options" id="model_options">
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <label class="part--label" for="fitting_cc">CC: <span class="label_req">*</span></label>
+                                    <label class="part--label" for="fitting_cc">CC: <span
+                                            class="label_req">*</span></label>
                                     <input type="number" min="0" max="100000" step="5" class="form-control text-dark"
-                                        id="fitting_cc" name="fitting_cc" aria-required="true" required placeholder="Size">
+                                        id="fitting_cc" name="fitting_cc" list="cc_options" aria-required="true"
+                                        required placeholder="Size">
+                                    <datalist name="cc_options" id="cc_options">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label class="part--label" for="fitting_model">Display name:</label>
-                                    <input type="text" class="form-control text-dark" id="fitting_display_name" name="fitting_display_name" placeholder="Display name">
+                                    <input type="text" class="form-control text-dark" id="fitting_display_name"
+                                        name="fitting_display_name" placeholder="Display name">
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <label class="part--label" for="fitting_year_from">From: <span class="label_req">*</span></label>
+                                    <label class="part--label" for="fitting_year_from">From: <span
+                                            class="label_req">*</span></label>
                                     <input type="number" min="1850" max="3000" step="1" class="form-control text-dark"
-                                        id="fitting_year_from" name="fitting_year_from" aria-required="true" required placeholder="2020" value="2020">
+                                        id="fitting_year_from" name="fitting_year_from" aria-required="true" required
+                                        placeholder="2020" value="2020">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label class="part--label" for="fitting_year_to">To:</label>
@@ -156,7 +172,8 @@
                                 <div class="col-3 col-md-1 fitting_btn--container">
                                     <label class="part--label" for="fitting_add_btn">Add</label>
                                     <div class="add_fitting_btn">
-                                        <button id="add_fit" class="add_fitting bg-dark text-light" onclick="addRow(this)">+</button>
+                                        <button id="add_fit" class="add_fitting bg-dark text-light"
+                                            onclick="addRow(this)">+</button>
                                     </div>
                                 </div>
                                 <div class="col-3 col-md-1 fitting_btn--container">

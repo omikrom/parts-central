@@ -19,14 +19,18 @@ router.get("/test", (req, res) => {
 
 // register a new user
 router.post("/register", async (req, res) => {
+  console.log('registering user');
   let task = req.body;
   let uname = task.username;
   let pword = task.password;
   let email = task.email;
+  let userId = 0;
   let supplier = task.supplier;
   let supplierId = 0;
   let role = 0;
   let hashedPassword = {};
+
+  let passedTests = true;
 
   // hash password
   bcrypt.hashPassword(pword).then((hash) => {
@@ -38,65 +42,98 @@ router.post("/register", async (req, res) => {
       [uname]
     );
     if (check.length > 0) {
+      console.log("username exists")
+      passedTests = false;
       res.status(403).send({
         message: "Username already exists",
       });
-    } else {
-      // get supplier id
-      const supplierQuery = await db.pool.query(
-        "SELECT id FROM `supplier` WHERE supplier_name = ?",
-        [supplier]
-      );
-      if (supplierQuery.length > 0) {
-        console.log("supplier exists");
-        supplierId = supplierQuery[0].id;
-      } else {
-        res.status(403).send({
-          message: "Supplier does not exist",
-        });
-      }
-
-      var token = {};
-
-      try {
-        const result = await db.pool.query(
-          "INSERT INTO `user` (username, password, email, supplier_id, role) VALUES (?, ?, ?, ?, ?)",
-          [uname, hashedPassword, email, supplierId, role]
-        );
-        let userId = parseInt(result.insertId);
-
-        token = jwt.sign(
-          {
-            user_id: userId,
-            email,
-          },
-          process.env.JWT_KEY || "SECRETKEY",
-          {
-            expiresIn: "2h",
-          }
-        );
-        //updateDBToken(userId, token);
-      } catch (err) {
-        res.status(500).send({
-          message: "Error registering user",
-        });
-      } finally {
-        res
-          .status(200)
-          .send({
-            message: "Registration successful",
-            token: token,
-            role: role,
-            userId: userId,
-            supplierId: supplierId,
-          })
-          .end();
-      }
     }
   } catch (err) {
+
     res.status(500).send({
       message: "Error registering user",
     });
+  }
+
+  // check if supplier exists
+  try {
+
+    const supplierQuery = await db.pool.query(
+      "SELECT id FROM `supplier` WHERE supplier_name = ?",
+      [supplier]
+    );
+    if (supplierQuery.length > 0) {
+      console.log("supplier exists");
+      supplierId = parseInt(supplierQuery[0].id);
+      console.log(supplierId);
+    } else {
+      console.log("supplier does not exist");
+      passedTests = false;
+      res.status(403).send({
+        message: "Supplier does not exist",
+      });
+    }
+  } catch (err) {
+    console.log('second catch:', err);
+    res.status(500).send({
+      message: "Error registering user",
+    });
+  }
+
+  console.log('passedTests:', passedTests);
+
+  if (passedTests) {
+    var token = {};
+
+    // create user
+    try {
+      console.log('trying to create user');
+      console.log('uname:', uname);
+      console.log('hashedPassword:',
+        hashedPassword);
+      console.log('email:', email);
+      console.log('supplierId:', supplierId);
+      console.log('role:', role);
+
+      const result = await db.pool.query(
+        "INSERT INTO `user` (username, password, email, supplier_id, role) VALUES (?, ?, ?, ?, ?)",
+        [uname, hashedPassword, email, supplierId, role]
+      );
+
+      userId = parseInt(result.insertId);
+
+      token = jwt.sign(
+        {
+          user_id: userId,
+          email,
+        },
+        process.env.JWT_KEY || "SECRETKEY",
+        {
+          expiresIn: "2h",
+        }
+      );
+
+      console.log('token');
+      console.log('uId:', userId);
+
+      //updateDBToken(userId, token);
+    } catch (err) {
+      console.log('third catch:', err);
+      res.status(500).send({
+        message: "Error registering user",
+      });
+    }
+    finally {
+      res
+        .status(200)
+        .send({
+          message: "Registration successful",
+          token: token,
+          role: role,
+          userId: userId,
+          supplierId: supplierId,
+        });
+    }
   }
 });
 
@@ -108,16 +145,14 @@ router.get("/users", async (req, res) => {
     result.forEach((element) => {
       responseBody.push(element);
     });
-    console.log(responseBody);
     res.send(responseBody);
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 });
 
 // get username by id
 router.get("/user/:id", async (req, res) => {
-  console.log(req.params.id);
   let id = req.params.id;
   let responseBody = {};
   try {
@@ -126,10 +161,9 @@ router.get("/user/:id", async (req, res) => {
       [id]
     );
     responseBody = result[0];
-    console.log(responseBody);
     res.send(responseBody);
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 });
 
@@ -137,13 +171,13 @@ router.get("/user/:id", async (req, res) => {
 router.post("/login", async (req, res) => {
   let task = req.body;
   let pword = task.password;
-  let hashedPassword = {};
+  var hashedPassword = {};
   try {
     await bcrypt.hashPassword(pword).then((hash) => {
       hashedPassword = hash;
     });
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 
   try {
@@ -151,47 +185,53 @@ router.post("/login", async (req, res) => {
       "SELECT password, id, role FROM `user` WHERE username = ?",
       [task.username]
     );
-    let uId = check[0].id;
-    let role = check[0].role;
-    let sId = await getSupplierId(uId);
+    if (check.length > 0) {
 
-    let supplierId = await db.pool.query(
-      "SELECT supplier_id FROM `user` WHERE id = ?",
-      [uId]
-    );
-    sId = supplierId[0].supplier_id;
+      let uId = check[0].id;
+      let role = check[0].role;
+      let sId = await getSupplierId(uId);
 
-    await bcrypt.comparePassword(pword, check[0].password).then((result) => {
-      if (result) {
-        const token = jwt.sign(
-          {
-            user_id: uId,
-            email: check[0].email,
-          },
-          "SECRETKEY",
-          {
-            expiresIn: "2h",
-          }
-        );
+      let supplierId = await db.pool.query(
+        "SELECT supplier_id FROM `user` WHERE id = ?",
+        [uId]
+      );
+      sId = supplierId[0].supplier_id;
 
-        console.log("sId: " + sId);
-        updateDBToken(uId, token);
-        //let supplierId = getSupplierId(uId);
-        res.status(200).send({
-          message: "Login successful",
-          token: token,
-          role: role,
-          userId: uId,
-          supplierId: sId,
-        });
-      } else {
-        res.status(403).send({
-          message: "Login failed",
-        });
-      }
-    });
+      await bcrypt.comparePassword(pword, check[0].password).then((result) => {
+        if (result) {
+          const token = jwt.sign(
+            {
+              user_id: uId,
+              email: check[0].email,
+            },
+            "SECRETKEY",
+            {
+              expiresIn: "2h",
+            }
+          );
+
+          updateDBToken(uId, token);
+          //let supplierId = getSupplierId(uId);
+          res.status(200).send({
+            message: "Login successful",
+            token: token,
+            role: role,
+            userId: uId,
+            supplierId: sId,
+          });
+        } else {
+          res.status(403).send({
+            message: "Login failed",
+          });
+        }
+      });
+    } else {
+      res.status(403).send({
+        message: "Username or password was incorrect",
+      });
+    }
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 });
 
@@ -212,7 +252,6 @@ async function getSupplierId(id) {
       "SELECT supplier_id FROM `user` WHERE id = ?",
       [id]
     );
-    console.log(result[0].supplier_id);
     return parseInt(result[0].supplier_id);
   } catch (err) {
     throw err;

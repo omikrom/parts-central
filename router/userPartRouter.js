@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const db = require("../db/db.js");
+const auth = require("../middleware/auth.js");
 
-router.post("/create_part_fitting", async (req, res) => {
+router.post("/create_part_fitting", auth, async (req, res) => {
   let data = req.body;
   let part = data.part;
   let supplierId = data.supplierId;
@@ -98,22 +99,40 @@ router.get("/part_count/:sId", (req, res) => {
   });
 });
 
-router.post("/user_parts/:limit/:offset", async (req, res) => {
+router.post("/user_parts/:limit/:offset", auth, async (req, res) => {
   let task = req.body;
   let sId = task.supplierId;
   let limit = parseInt(req.params.limit);
   let offset = parseInt(req.params.offset);
+  let body = req.body;
 
-  try {
-    const result = await db.pool.query(
-      "SELECT `part`.id ,`part`.sku, `part`.part_name, `alt_skus`.partNo , `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM `part` INNER JOIN `alt_skus` ON `part`.id = `alt_skus`.part_id WHERE `part`.supplier_id = ? ORDER BY `part`.id LIMIT ? OFFSET ?",
-      [sId, limit, offset]
-    );
-    res.send(result);
-  } catch (err) {
-    throw err;
+  if (body.search == undefined || body.search == "") {
+    try {
+      const result = await db.pool.query(
+        "SELECT `part`.id ,`part`.sku, `part`.part_name, `alt_skus`.partNo , `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM `part` INNER JOIN `alt_skus` ON `part`.id = `alt_skus`.part_id WHERE `part`.supplier_id = ? ORDER BY `part`.id LIMIT ? OFFSET ?",
+        [sId, limit, offset]
+      );
+      res.send(result);
+    } catch (err) {
+      throw err;
+    }
+  } else {
+    let query = '%' + body.search + '%';
+    try {
+      const result = await db.pool.query(
+        "SELECT `part`.id, `part`.sku, `part`.part_name, `alt_skus`.partNo, `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM`part` INNER JOIN`alt_skus` ON`part`.id = `alt_skus`.part_id WHERE `part`.supplier_id = ? AND ( `part`.sku LIKE ? OR `part`.part_name LIKE ? OR `alt_skus`.alt_sku LIKE ? OR `alt_skus`.partNo LIKE ? OR `alt_skus`.vendorNo LIKE ?) ORDER BY `part`.id LIMIT ? OFFSET ?",
+        [sId, query, query, query, query, query, limit, offset]
+        //"SELECT `part`.id ,`part`.sku, `part`.part_name, `alt_skus`.partNo , `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM `part` INNER JOIN `alt_skus` ON `part`.id = `alt_skus`.part_id WHERE (`part`.supplier_id = ? AND `part`.sku LIKE ?) OR (`part`.supplier_id = ? AND `alt_skus`.alt_sku LIKE ?) OR (`part`.supplier_id = ? AND `alt_skus`.partNo LIKE ?) OR (`part`.supplier_id = ? AND `alt_skus`.vendorNo LIKE ?) OR (`part`.supplier_id = ? AND `part`.part_name LIKE ?) ORDER BY `part`.id LIMIT ? OFFSET ?",
+        //[sId, query, sId, query, sId, query, sId, query, sId, query, limit, offset]
+      );
+      res.send(result);
+    } catch (err) {
+      throw err;
+    }
   }
+
 });
+
 
 router.get(`/get_fitment/:supplierId/:partId`, (req, res) => {
   let supplierId = req.params.supplierId;
@@ -134,7 +153,7 @@ router.get(`/get_fitment/:supplierId/:partId`, (req, res) => {
 
 //
 
-router.post("/add_fitment", async (req, res) => {
+router.post("/add_fitment", auth, async (req, res) => {
   let task = req.body;
   let partId = parseInt(task.partId);
   let supplierId = parseInt(task.supplierId);
@@ -167,7 +186,6 @@ router.post("/add_fitment", async (req, res) => {
       [type, manufacturer, model, display_name, cc, date_from, date_to, date_on]
     );
     fitmentId = parseInt(result.insertId);
-    console.log("added fitting to fitting table:", fitmentId);
   } catch (err) {
     throw err;
   }
@@ -177,7 +195,6 @@ router.post("/add_fitment", async (req, res) => {
       "INSERT INTO `part_has_fitting` (part_id, part_supplier_id, fitting_id) VALUES (?, ?, ?)",
       [partId, supplierId, fitmentId]
     );
-    console.log("added fitting to join table");
   } catch (err) {
     throw err;
   } finally {
@@ -187,7 +204,7 @@ router.post("/add_fitment", async (req, res) => {
   }
 });
 
-router.post("/update_part", (req, res) => {
+router.post("/update_part", auth, (req, res) => {
   let task = req.body;
   let partId = parseInt(task.id);
   let partName = task.partName;
@@ -220,8 +237,7 @@ router.post("/update_part", (req, res) => {
   }
 });
 
-router.delete("/delete_part", async (req, res) => {
-  console.log("deleting part");
+router.delete("/delete_part", auth, async (req, res) => {
   let task = req.body;
   let partId = parseInt(task.id);
   let sId = parseInt(task.sId);
@@ -283,8 +299,6 @@ router.delete("/delete_part", async (req, res) => {
       });
     } catch (err) {
       throw err;
-    } finally {
-      console.log("deleted alt skus: " + deletedAltSkus);
     }
   } catch (err) {
     throw err;
@@ -305,7 +319,7 @@ router.delete("/delete_part", async (req, res) => {
   }
 });
 
-router.post("/update_fitment", (req, res) => {
+router.post("/update_fitment", auth, (req, res) => {
   let task = req.body;
   let fitmentId = parseInt(task.fitting_id);
   let type = task.type;
@@ -345,7 +359,7 @@ router.post("/update_fitment", (req, res) => {
   }
 });
 
-router.post("/delete_fitment", (req, res) => {
+router.post("/delete_fitment", auth, (req, res) => {
   let task = req.body;
   let fitmentId = parseInt(task.fitting_id);
   let partId = parseInt(task.partId);

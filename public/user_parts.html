@@ -18,7 +18,8 @@
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between" id="navbarText">
+    <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between"
+      id="navbarText">
       <ul class="navbar-nav mr-auto navbar-btns--left">
         <li class="nav-item active">
           <a class="nav-link nav-link--custom" href="/">Home</a>
@@ -70,7 +71,12 @@
         </div>
       </div>
       <div class="row table_ui--row">
-        <div class="col">
+        <div class="col-12 col-sm-9">
+          <div class="search">
+            <input class="search--bar" type="text" id="search" placeholder="Search by SKU / alt #'s">
+          </div>
+        </div>
+        <div class="col-12 col-sm-3 text-end">
           <div class="show_entries">
             <label for="show_entries">Show entries</label>
             <select id="show_entries" name="show_entries">
@@ -79,11 +85,6 @@
               <option value="50">50</option>
               <option value="100">100</option>
             </select>
-          </div>
-        </div>
-        <div class="col text-end">
-          <div class="search">
-            <input type="text" id="search" placeholder="Search">
           </div>
         </div>
       </div>
@@ -157,52 +158,56 @@
               <div class="form-group row">
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_type">Type</label>
-                                    <input type="text" class="form-control text-dark" id="add_fitting_type" name="add_fitting_type"
-                                        list="type_options" aria-required="true" required placeholder="Vehicle type">
-                                    <datalist id="type_options">
-                                        <option value="ATV"></option>
-                                        <option value="Motorcycle"></option>
-                                        <option value="Scooter"></option>
-                                        <option value="Snowmobile"></option>
-                                        <option value="UTV"></option>
+                  <input type="text" class="form-control text-dark" id="add_fitting_type" name="add_fitting_type"
+                    list="type_options" aria-required="true" required placeholder="Vehicle type">
+                  <datalist id="type_options">
+                    <option value="ATV"></option>
+                    <option value="Motorcycle"></option>
+                    <option value="Scooter"></option>
+                    <option value="Snowmobile"></option>
+                    <option value="UTV"></option>
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_make">Make</label>
-                                    <input type="text" class="form-control bg-light text-dark" id="add_fitting_make" name="add_fitting_make"
-                                        list="make_options" aria-required="true" required placeholder="Vehicle manufacturer">
-                                    <datalist name="make_options" id="make_options">
+                  <input type="text" class="form-control bg-light text-dark" id="add_fitting_make"
+                    name="add_fitting_make" list="make_options" aria-required="true" required
+                    placeholder="Vehicle manufacturer">
+                  <datalist name="make_options" id="make_options">
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_model">Model</label>
-                  <input type="text" class="form-control bg-light text-dark" id="add_fitting_model" name="add_fitting_model" aria-required="true" required placeholder="Vehicle model">
+                  <input type="text" class="form-control bg-light text-dark" id="add_fitting_model"
+                    name="add_fitting_model" aria-required="true" required placeholder="Vehicle model">
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_model">Display name</label>
-                                    <input type="text" class="form-control bg-light text-dark" id="add_fitting_display_name" name="add_fitting_display_name" placeholder="Display name">
+                  <input type="text" class="form-control bg-light text-dark" id="add_fitting_display_name"
+                    name="add_fitting_display_name" placeholder="Display name">
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_cc">CC:</label>
                   <input type="number" min="0" max="100000" step="5" class="form-control bg-light text-dark"
-                      id="add_fitting_cc" name="add_fitting_cc" aria-required="true" required placeholder="Size">
-              
+                    id="add_fitting_cc" name="add_fitting_cc" aria-required="true" required placeholder="Size">
+
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_year_from">from:</label>
-                                    <input type="number" min="1850" max="3000" step="1" class="form-control bg-light text-dark"
-                                        id="add_fitting_year_from" name="add_fitting_year_from" aria-required="true" required placeholder="2020" value="2020">
-                                
+                  <input type="number" min="1850" max="3000" step="1" class="form-control bg-light text-dark"
+                    id="add_fitting_year_from" name="add_fitting_year_from" aria-required="true" required
+                    placeholder="2020" value="2020">
+
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_year_to">to:</label>
-                                    <input type="number" min="1850" max="3000" step="1" class="form-control bg-light text-dark"
-                                        id="add_fitting_year_to" name="add_fitting_year_to" placeholder="2020" value="2021">
-                                
+                  <input type="number" min="1850" max="3000" step="1" class="form-control bg-light text-dark"
+                    id="add_fitting_year_to" name="add_fitting_year_to" placeholder="2020" value="2021">
+
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_year_on">on:</label>
-                                    <input class="form-check-input checkmark bg-light text-dark" type="checkbox" value=""
-                                        id="add_fitting_year_on">
-                                
+                  <input class="form-check-input checkmark bg-light text-dark" type="checkbox" value=""
+                    id="add_fitting_year_on">
+
                 </div>
               </div>
             </div>

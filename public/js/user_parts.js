@@ -1,23 +1,58 @@
 window.onload = function () {
-  console.log("window.onload");
+  let token = sessionStorage.getItem("token");
+  if (token === null) {
+    window.location.href = "/login";
+  } else {
+    axios.defaults.headers.common["x-access-token"] = token;
+  }
   init();
 };
 
+
+//global pagination properties
 var offset = 0;
 var limit = 10;
 var updated = 0;
 var created = false;
+let currentPage = 1;
+let totalPages = 0;
+let minPage = 0;
+let maxPage = 0;
+
+
+
 
 function calculateTotalPages() {
   let entries = document.getElementById("show_entries");
   let sId = sessionStorage.getItem("supplierId");
   let count = 0;
   let pages = 0;
+
+
   axios.get(`/user/part_count/${sId}`).then((res) => {
     count = parseInt(res.data);
     pages = Math.ceil(count / entries.value);
+    totalPages = pages;
     let part_pages = document.getElementById("part_pages");
     part_pages.innerHTML = "";
+
+    console.log('current page:', currentPage);
+    console.log('total pages:', totalPages);
+    console.log('min page:', minPage);
+    console.log('max page:', maxPage);
+    minPage = currentPage - 2;
+    maxPage = currentPage + 2;
+
+    if (minPage < 1) {
+      minPage = 1;
+      maxPage = 5;
+    }
+
+    if (maxPage > totalPages) {
+      maxPage = totalPages;
+      minPage = totalPages - 4;
+    }
+
 
     let pageList = document.createElement("ul");
     pageList.classList.add("pagination");
@@ -25,7 +60,60 @@ function calculateTotalPages() {
     pageList.setAttribute("id", "page_list");
     part_pages.appendChild(pageList);
 
-    for (let i = 0; i < pages; i++) {
+    // first page button
+    let liFirst = document.createElement("li");
+    liFirst.classList.add("page-item");
+    let aFirst = document.createElement("a");
+    aFirst.classList.add("page-link");
+    aFirst.setAttribute("id", "page_first");
+    aFirst.innerHTML = `<i class="fa fa-fast-backward"></i>`;
+    liFirst.appendChild(aFirst);
+    pageList.appendChild(liFirst);
+
+    // first page button event listener
+    aFirst.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (currentPage > 1) {
+        offset = 0;
+        currentPage = 1;
+        console.log("offset", offset);
+        init();
+      }
+    });
+
+
+    // Previous button
+    let liPrev = document.createElement("li");
+    liPrev.classList.add("page-item");
+    let aPrev = document.createElement("a");
+    aPrev.classList.add("page-link");
+    aPrev.setAttribute("id", "page_prev");
+    aPrev.innerHTML = `<i class="fa fa-angle-double-left"></i>`;
+    liPrev.appendChild(aPrev);
+    pageList.appendChild(liPrev);
+
+
+    if (currentPage == 1) {
+      aPrev.classList.add("disabled");
+    } else {
+      aPrev.classList.remove("disabled");
+    }
+
+    // prev button event listener
+
+    aPrev.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (currentPage > 1) {
+        offset = (currentPage - 2) * entries.value;
+        currentPage = currentPage - 1;
+        console.log("offset", offset);
+        init();
+      }
+    });
+
+    // Page numbers
+
+    for (let i = minPage; i <= maxPage; i++) {
       let li = document.createElement("li");
       li.classList.add("page-item");
 
@@ -34,12 +122,12 @@ function calculateTotalPages() {
 
       a.setAttribute("id", `page_${i}`);
 
-      a.innerHTML = i + 1;
+      a.innerHTML = i;
 
       li.appendChild(a);
       pageList.appendChild(li);
 
-      if (offset == i * entries.value) {
+      if (currentPage == i) {
         a.classList.add("active");
       } else {
         a.classList.remove("active");
@@ -47,35 +135,138 @@ function calculateTotalPages() {
 
       a.addEventListener("click", (e) => {
         e.preventDefault();
-        offset = i * entries.value;
+        offset = (i - 1) * entries.value;
+        currentPage = i;
         console.log("offset", offset);
         init();
       });
     }
+
+    // Next button
+    let liNext = document.createElement("li");
+    liNext.classList.add("page-item");
+    let aNext = document.createElement("a");
+    aNext.classList.add("page-link");
+    aNext.setAttribute("id", "page_next");
+    aNext.innerHTML = `<i class="fa fa-angle-double-right" aria-hidden="false"></i>`;
+    liNext.appendChild(aNext);
+    pageList.appendChild(liNext);
+
+    if (currentPage == totalPages) {
+      aNext.classList.add("disabled");
+    } else {
+      aNext.classList.remove("disabled");
+    }
+
+    aNext.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (currentPage < totalPages) {
+        offset = currentPage * entries.value;
+        currentPage = currentPage + 1;
+        console.log("offset", offset);
+        init();
+      }
+    });
+
+    // Last page button
+    let liLast = document.createElement("li");
+    liLast.classList.add("page-item");
+    let aLast = document.createElement("a");
+    aLast.classList.add("page-link");
+    aLast.setAttribute("id", "page_last");
+    aLast.innerHTML = `<i class="fa fa-fast-forward" aria-hidden="true"></i>`;
+    liLast.appendChild(aLast);
+    pageList.appendChild(liLast);
+
+    aLast.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (currentPage < totalPages) {
+        offset = (totalPages - 1) * entries.value;
+        currentPage = totalPages;
+        console.log("offset", offset);
+        init();
+      }
+    });
+
+    if (currentPage == minPage) {
+      aFirst.classList.add("disabled");
+    } else {
+      aFirst.classList.remove("disabled");
+    }
+
+    if (currentPage == maxPage) {
+      aLast.classList.add("disabled");
+    } else {
+      aLast.classList.remove("disabled");
+    }
+
+    // goto page
+
+    // create ul
+    let gotoUl = document.createElement("ul");
+    gotoUl.classList.add("pagination");
+    gotoUl.classList.add("justify-content-center");
+    gotoUl.setAttribute("id", "goto_ul");
+    part_pages.appendChild(gotoUl);
+
+    let liGoToInput = document.createElement("li");
+    liGoToInput.classList.add("page-item");
+    let aGoToInput = document.createElement("input");
+    aGoToInput.classList.add("page-link");
+    aGoToInput.classList.add("goto-page");
+    aGoToInput.setAttribute("id", "page_goto_input");
+    aGoToInput.setAttribute("type", "number");
+    aGoToInput.setAttribute("min", "1");
+    aGoToInput.setAttribute("max", totalPages);
+    aGoToInput.setAttribute("value", currentPage);
+    liGoToInput.appendChild(aGoToInput);
+    gotoUl.appendChild(liGoToInput);
+
+    // goto page button
+    let liGoto = document.createElement("li");
+    liGoto.classList.add("page-item");
+    let aGoto = document.createElement("a");
+    aGoto.classList.add("page-link");
+    aGoto.setAttribute("id", "page_goto");
+    aGoto.innerHTML = "Go to page";
+    liGoto.appendChild(aGoto);
+    gotoUl.appendChild(liGoto);
+    // of total pages
+    let liOf = document.createElement("li");
+    liOf.classList.add("page-item");
+    let aOf = document.createElement("a");
+    aOf.classList.add("page-link");
+    aOf.setAttribute("id", "page_of");
+    aOf.innerHTML = `of ${totalPages}`;
+    liOf.appendChild(aOf);
+    gotoUl.appendChild(liOf);
+
+
+    aGoto.addEventListener("click", (e) => {
+      e.preventDefault();
+      let gotoPage = parseInt(document.getElementById("page_goto_input").value);
+      if (gotoPage >= 1 && gotoPage <= totalPages) {
+        offset = (gotoPage - 1) * entries.value;
+        currentPage = gotoPage;
+        console.log("offset", offset);
+        init();
+      }
+    });
+
   });
+
 }
+
 
 function entriesChange() {
   console.log("offset", offset);
   let entries = document.getElementById("show_entries");
   let sId = sessionStorage.getItem("supplierId");
   entries.addEventListener("change", function (e) {
-    let count = 0;
-    let pages = 0;
     offset = 0;
     limit = entries.value;
-    axios.get(`/user/part_count/${sId}`).then((res) => {
-      count = parseInt(res.data);
-      pages = Math.ceil(count / entries.value);
-      let part_pages = document.getElementById("part_pages");
-      part_pages.innerHTML = "";
-      for (let i = 0; i < pages; i++) {
-        offset = i * entries.value;
-        part_pages.innerHTML += `<a href="/user_parts/${limit}/${offset}" class="part_page">${
-          i + 1
-        }</a>`;
-      }
-    });
+    currentPage = 1;
+    calculateTotalPages();
     init();
   });
 }
@@ -95,11 +286,6 @@ function init() {
     supplierId: parseInt(sessionStorage.getItem("supplierId")),
   };
 
-  console.log("body", body);
-
-  console.log("offset", offset);
-  console.log("limit", limit);
-
   axios.post(`/user/user_parts/${limit}/${offset}`, body).then((res) => {
     createTableMain(res.data);
   });
@@ -109,6 +295,26 @@ function init() {
     created = true;
     updated = 1;
   }
+
+  let search = document.getElementById("search");
+  search.value = "";
+
+  search.addEventListener("change", (e) => {
+    e.preventDefault();
+    let searchValue = search.value;
+    let body = {
+      token: sessionStorage.getItem("token"),
+      userId: parseInt(sessionStorage.getItem("userId")),
+      supplierId: parseInt(sessionStorage.getItem("supplierId")),
+      search: searchValue,
+    };
+
+    axios.post(`/user/user_parts/${limit}/${offset}`, body).then((res) => {
+      created = true;
+      createTableMain(res.data);
+    });
+  });
+
 }
 
 async function createTableMain(data) {
@@ -229,6 +435,7 @@ async function createTableMain(data) {
   closeFitment();
   addFitmentButton();
   closeAddFitment();
+  checkAllCheckboxes();
 }
 
 function stripedBtnBackgrounds(className) {
@@ -426,13 +633,14 @@ function createTable(data, fitmentDisplay, partId) {
     // create columns for fitment table
     let table = fitmentDisplay;
     table.classList.add("table");
-    table.classList.add("table-striped");
+    table.classList.add("table-light");
     table.classList.add("table-bordered");
     table.classList.add("table-hover");
     table.classList.add("table-sm");
     table.classList.add("table-fitment");
     table.classList.add("text-dark");
     let tr = document.createElement("tr");
+    tr.classList.add("tb_heading");
     let th = document.createElement("th");
     th.innerHTML = "#";
     tr.appendChild(th);
@@ -462,48 +670,60 @@ function createTable(data, fitmentDisplay, partId) {
     tr.appendChild(th);
     th = document.createElement("th");
     th.innerHTML = "Update";
+    th.classList.add("text-center");
     tr.appendChild(th);
     th = document.createElement("th");
     th.innerHTML = "Delete";
+    th.classList.add("text-center");
     tr.appendChild(th);
     table.appendChild(tr);
 
     // create rows for fitment table
     for (let i = 0; i < data.length; i++) {
       tr = document.createElement("tr");
+      tr.classList.add("table-light");
       let td = document.createElement("td");
+      td.classList.add("table_row--element");
       td.contentEditable = false;
       td.innerHTML = data[i].fitting_id;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("table_row--element");
       td.contentEditable = true;
       td.innerHTML = data[i].type;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("table_row--element");
       td.contentEditable = true;
       td.innerHTML = data[i].manufacturer;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("table_row--element");
       td.contentEditable = true;
       td.innerHTML = data[i].model;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("table_row--element");
       td.contentEditable = true;
       td.innerHTML = data[i].display_name;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("table_row--element");
       td.contentEditable = true;
       td.innerHTML = data[i].cc;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("table_row--element");
       td.contentEditable = true;
       td.innerHTML = data[i].date_from;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("table_row--element");
       td.contentEditable = true;
       td.innerHTML = data[i].date_to;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("table_row--element");
       td.contentEditable = false;
       td.innerHTML =
         "<input type='checkbox' name='myTextEditBox' value='checked' />";
@@ -515,9 +735,11 @@ function createTable(data, fitmentDisplay, partId) {
       } //td.innerHTML = data[i].date_on;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("text-center");
       td.innerHTML = `<button class="fitmentBtnUpd" value="${data[i].fitting_id}"><i class="fa-solid fa-floppy-disk"></i></button>`;
       tr.appendChild(td);
       td = document.createElement("td");
+      td.classList.add("text-center");
       td.innerHTML = `<button class="fitmentBtnDel" value="${data[i].fitting_id}"><i class="fa-solid fa-trash"></i></button>`;
       tr.appendChild(td);
       table.appendChild(tr);
@@ -726,4 +948,16 @@ function updateFitmentTable() {
       fitmentDeleteBtns();
     }
   }
+}
+
+function checkAllCheckboxes() {
+  let topCheckbox = document.getElementById("check_all");
+  topCheckbox.addEventListener("change", function (e) {
+    e.preventDefault();
+    console.log(e.currentTarget.checked);
+    let checkboxes = document.getElementsByClassName("form-check");
+    for (let i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = e.currentTarget.checked;
+    }
+  })
 }

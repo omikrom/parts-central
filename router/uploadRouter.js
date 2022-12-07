@@ -4,11 +4,14 @@ const upload = require("../middleware/multer.js");
 const fs = require("fs");
 const readline = require("readline");
 const db = require("../db/db.js");
+const auth = require("../middleware/auth.js");
 
 const { parse } = require("csv-parse");
 
+
 router.post(
   "/user_csv/:supplierId",
+  auth,
   upload.single("file"),
   async function (req, res) {
     let sId = req.params.supplierId;
@@ -36,7 +39,7 @@ router.post(
         partsList.push(createPartFitment(data, sId));
       })
       .on("error", (err) => {
-        console.log(err);
+        throw err;
       })
       .on("end", () => {
         console.log("CSV file successfully processed");
@@ -49,7 +52,7 @@ router.post(
 async function deleteFile(path) {
   fs.unlink(path, (err) => {
     if (err) {
-      console.log(err);
+      throw err;
     } else {
       console.log("File deleted successfully");
     }
@@ -68,7 +71,6 @@ async function populateDatabase(partsList, res, path) {
       );
       if (checkIfPartExists.length > 0) {
         // Part exists
-        console.log("Part exists");
         partId = checkIfPartExists[0].id;
 
         // check if fitting exists
@@ -84,11 +86,9 @@ async function populateDatabase(partsList, res, path) {
         );
         if (checkIfFittingExists.length > 0) {
           // Fitting exists
-          console.log("Fitting exists");
           fittingId = checkIfFittingExists[0].id;
         } else {
           // Fitting does not exist
-          console.log("Fitting does not exist");
           const insertFitting = await db.pool.query(
             "INSERT INTO `fitting` (manufacturer, model, cc, date_from, date_to) VALUES (?, ?, ?, ?, ?)",
             [
@@ -108,7 +108,6 @@ async function populateDatabase(partsList, res, path) {
         }
       } else {
         // Part does not exist
-        console.log("Part does not exist");
         const addPart = await db.pool.query(
           "INSERT INTO `part` (sku, part_name, supplier_id) VALUES (?, ?, ?)",
           [
@@ -141,99 +140,13 @@ async function populateDatabase(partsList, res, path) {
         );
       }
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   }
 
-  console.log("Done");
+  console.log("Upload & populate complete");
   res.status(200).send({ message: "File uploaded successfully!" });
   deleteFile(path);
-
-  /*for (let i = 0; i < partsList.length; i++) {
-    let fittingId = 0;
-    let partId = 0;
-    try {
-      const checkIfPartExists = await db.pool.query(
-        "SELECT * FROM `part` WHERE `sku` = ?",
-        [partsList[i].sku]
-      );
-      if (checkIfPartExists.length == 0) {
-        const addNewPart = await db.pool.query(
-          "INSERT INTO `part` (sku, part_name, supplier_id) VALUES (?, ?, ?)",
-          [partsList[i].sku, partsList[i].partName, partsList[i].supplierId]
-        );
-        partId = parseInt(addNewPart.insertId);
-        try {
-          // add alt_skus to part
-          const addAltSkus = await db.pool.query(
-            "INSERT INTO `alt_skus` (partNo, vendorNo, alt_sku, part_id, part_supplier_id) VALUES (?, ?, ?, ?, ?)",
-            [
-              partsList[i].alt_partNo,
-              partsList[i].alt_vendorNo,
-              partsList[i].alt_sku,
-              partId,
-              partsList[i].supplierId,
-            ]
-          );
-        } catch (err) {
-          res.status(500).send({ message: err.message });
-        }
-      } else {
-        partId = parseInt(checkIfPartExists[0].id);
-        console.log("Part already exists", partId);
-      }
-    } catch (error) {
-      res.status(500).send({ message: err.message });
-    } finally {
-      // add part fitment
-      try {
-        let createFitments = false;
-        const checkIfFittingAlreadyExists = await db.pool.query(
-          "SELECT * FROM `fitting` WHERE `manufacturer` = ? AND `model` = ? AND `cc` = ? AND `date_from` = ? AND `date_to` = ?",
-          [
-            partsList[i].fitting.manufacturer,
-            partsList[i].fitting.model,
-            partsList[i].fitting.cc,
-            partsList[i].fitting.date_from,
-            partsList[i].fitting.date_to,
-          ]
-        );
-        if (checkIfFittingAlreadyExists.length == 0) {
-          createFitments = true;
-        } else {
-          fittingId = checkIfFittingAlreadyExists[0].id;
-          console.log("Fitting already exists", fittingId);
-          const checkIfFittingHasPart = await db.pool.query(
-            "SELECT * FROM `part_has_fitting` WHERE `fitting_id` = ? AND `part_id` = ? AND `part_supplier_id` = ?",
-            [fittingId, partId, partsList[i].supplierId]
-          );
-          if (checkIfFittingHasPart.length == 0) {
-            createFitments = true;
-            console.log("fitting has no part join.");
-          } else {
-            createFitments = false;
-            console.log("fitting has part do not create.");
-          }
-        }
-
-        console.log("create fitments", createFitments);
-
-        if (createFitments) {
-          let fId = await createFitting(partsList[i]);
-          let sId = parseInt(partsList[i].supplierId);
-          console.log("fitting id", fId);
-          console.log("part id", partId);
-          console.log("supplier id", sId);
-          createFittingJoin(fId, partId, sId);
-        } else {
-          console.log("fitting already exists");
-        }
-      } catch (error) {
-        res.status(500).send({ message: err.message });
-      }
-    }
-  }
-  res.status(200).send({ message: "Uploaded the file successfully: " });*/
 }
 
 async function createFitting(data) {
@@ -271,7 +184,6 @@ async function createFittingJoin(fittingId, partId, sId) {
 }
 
 function createPartFitment(data, sId) {
-  //console.log(data);
   // Structure part object
   let part = {
     sku: "",
@@ -294,34 +206,319 @@ function createPartFitment(data, sId) {
 
   // check through data and assign to part
   for (let key in data) {
-    if (key == "sku") {
-      part.sku = data[key];
-    } else if (key == "part_name") {
-      part.partName = data[key];
-    } else if (key == "alt_part_no") {
-      part.alt_partNo = data[key];
-    } else if (key == "alt_vendor_no") {
-      part.alt_vendorNo = data[key];
-    } else if (key == "alt_sku") {
-      part.alt_sku = data[key];
-    } else if (key == "type") {
-      part.fitting.type = data[key];
-    } else if (key == "make") {
-      part.fitting.manufacturer = data[key];
-    } else if (key == "model") {
-      part.fitting.model = data[key];
-    } else if (key == "cc") {
-      part.fitting.cc = data[key];
-    } else if (key == "display_name") {
-      part.fitting.display_name = data[key];
-    } else if (key == "date_from") {
-      part.fitting.date_from = data[key];
-    } else if (key == "date_to") {
-      part.fitting.date_to = data[key];
-    } else if (key == "date_on") {
-      part.fitting.date_on = data[key];
+
+    switch (key) {
+      //---------------------//
+      //------ part cases----//
+      //---------------------//
+
+      //-- sku cases
+      case "sku":
+        part.sku = data[key];
+        break;
+      case "SKU":
+        part.sku = data[key];
+        break;
+      case "Sku":
+        part.sku = data[key];
+        break;
+
+      //-- part name cases
+      case "part_name":
+        part.partName = data[key];
+        break;
+      case "Part_name":
+        part.partName = data[key];
+        break;
+      case "Part_Name":
+        part.partName = data[key];
+        break;
+      case "part_Name":
+        part.partName = data[key];
+        break;
+      case "part name":
+        part.partName = data[key];
+        break;
+      case "Part name":
+        part.partName = data[key];
+        break;
+      case "Part Name":
+        part.partName = data[key];
+        break;
+      case "part Name":
+        part.partName = data[key];
+        break;
+      // alt sku cases
+      case "alt_part_no":
+        part.alt_partNo = data[key];
+        break;
+      case "alt_vendor_no":
+        part.alt_vendorNo = data[key];
+        break;
+      case "alt_sku":
+        part.alt_sku = data[key];
+        break;
+      //--------------------------------//
+      //           fitment cases        //
+      //--------------------------------//
+
+      //-- type cases
+      case "type":
+        part.fitting.type = data[key];
+        break;
+      case "Type":
+        part.fitting.type = data[key];
+        break;
+      case "TYPE":
+        part.fitting.type = data[key];
+        break;
+
+      //-- manufacturer cases
+      case "make":
+        part.fitting.manufacturer = data[key];
+        break;
+      case "manufacturer":
+        part.fitting.manufacturer = data[key];
+        break;
+      case "Make":
+        part.fitting.manufacturer = data[key];
+        break;
+      case "Manufacturer":
+        part.fitting.manufacturer = data[key];
+        break;
+      case "Manufacturer Name":
+        part.fitting.manufacturer = data[key];
+        break;
+      case "MAKE":
+        part.fitting.manufacturer = data[key];
+        break;
+      case "MANUFACTURER":
+        part.fitting.manufacturer = data[key];
+        break;
+      case "MANUFACTURER NAME":
+        part.fitting.manufacturer = data[key];
+        break;
+
+      //-- model cases
+      case "model":
+        part.fitting.model = data[key];
+        break;
+      case "Model":
+        part.fitting.model = data[key];
+        break;
+      case "MODEL":
+        part.fitting.model = data[key];
+        break;
+
+      //-- cc cases
+      case "cc":
+        part.fitting.cc = data[key];
+        break;
+      case "Cc":
+        part.fitting.cc = data[key];
+        break;
+      case "CC":
+        part.fitting.cc = data[key];
+        break;
+
+      //-- display name cases
+      case "display_name":
+        part.fitting.display_name = data[key];
+        break;
+      case "Display Name":
+        part.fitting.display_name = data[key];
+        break;
+      case "DISPLAY NAME":
+        part.fitting.display_name = data[key];
+        break;
+      case "displayname":
+        part.fitting.display_name = data[key];
+        break;
+      case "Displayname":
+        part.fitting.display_name = data[key];
+        break;
+      case "DISPLAYNAME":
+        part.fitting.display_name = data[key];
+        break;
+      case "displayName":
+        part.fitting.display_name = data[key];
+        break;
+      case "DisplayName":
+        part.fitting.display_name = data[key];
+        break;
+
+      //-- date from cases
+      case "date_from":
+        part.fitting.date_from = data[key];
+        break;
+      case "Date From":
+        part.fitting.date_from = data[key];
+        break;
+      case "DATE FROM":
+        part.fitting.date_from = data[key];
+        break;
+      case "datefrom":
+        part.fitting.date_from = data[key];
+        break;
+      case "Datefrom":
+        part.fitting.date_from = data[key];
+        break;
+      case "DATEFROM":
+        part.fitting.date_from = data[key];
+        break;
+      case "dateFrom":
+        part.fitting.date_from = data[key];
+        break;
+      case "DateFrom":
+        part.fitting.date_from = data[key];
+        break;
+      case "year_from":
+        part.fitting.date_from = data[key];
+        break;
+      case "Year From":
+        part.fitting.date_from = data[key];
+        break;
+      case "YEAR FROM":
+        part.fitting.date_from = data[key];
+        break;
+      case "yearfrom":
+        part.fitting.date_from = data[key];
+        break;
+      case "Yearfrom":
+        part.fitting.date_from = data[key];
+        break;
+      case "YEARFROM":
+        part.fitting.date_from = data[key];
+        break;
+      case "yearFrom":
+        part.fitting.date_from = data[key];
+        break;
+      case "YearFrom":
+        part.fitting.date_from = data[key];
+        break;
+
+      //-- date to cases
+      case "date_to":
+        part.fitting.date_to = data[key];
+        break;
+      case "Date To":
+        part.fitting.date_to = data[key];
+        break;
+      case "DATE TO":
+        part.fitting.date_to = data[key];
+        break;
+      case "dateto":
+        part.fitting.date_to = data[key];
+        break;
+      case "Dateto":
+        part.fitting.date_to = data[key];
+        break;
+      case "DATETO":
+        part.fitting.date_to = data[key];
+        break;
+      case "dateTo":
+        part.fitting.date_to = data[key];
+        break;
+      case "DateTo":
+        part.fitting.date_to = data[key];
+        break;
+      case "date_to":
+        part.fitting.date_to = data[key];
+        break;
+      case "Date To":
+        part.fitting.date_to = data[key];
+        break;
+      case "DATE TO":
+        part.fitting.date_to = data[key];
+        break;
+      case "dateto":
+        part.fitting.date_to = data[key];
+        break;
+      case "Dateto":
+        part.fitting.date_to = data[key];
+        break;
+      case "DATETO":
+        part.fitting.date_to = data[key];
+        break;
+      case "year_to":
+        part.fitting.date_to = data[key];
+        break;
+      case "Year To":
+        part.fitting.date_to = data[key];
+        break;
+      case "YEAR TO":
+        part.fitting.date_to = data[key];
+        break;
+      case "yearto":
+        part.fitting.date_to = data[key];
+        break;
+      case "Yearto":
+        part.fitting.date_to = data[key];
+        break;
+      case "YEARTO":
+        part.fitting.date_to = data[key];
+        break;
+      case "yearTo":
+        part.fitting.date_to = data[key];
+        break;
+      case "YearTo":
+        part.fitting.date_to = data[key];
+        break;
+
+      // -- year on cases
+      case "year_on":
+        part.fitting.year_on = data[key];
+        break;
+      case "Year On":
+        part.fitting.year_on = data[key];
+        break;
+      case "YEAR ON":
+        part.fitting.year_on = data[key];
+        break;
+      case "yearon":
+        part.fitting.year_on = data[key];
+        break;
+      case "Yearon":
+        part.fitting.year_on = data[key];
+        break;
+      case "YEARON":
+        part.fitting.year_on = data[key];
+        break;
+      case "yearOn":
+        part.fitting.year_on = data[key];
+        break;
+      case "YearOn":
+        part.fitting.year_on = data[key];
+        break;
+      case "date_on":
+        part.fitting.year_on = data[key];
+        break;
+      case "Date On":
+        part.fitting.year_on = data[key];
+        break;
+      case "DATE ON":
+        part.fitting.year_on = data[key];
+        break;
+      case "dateon":
+        part.fitting.year_on = data[key];
+        break;
+      case "Dateon":
+        part.fitting.year_on = data[key];
+        break;
+      case "DATEON":
+        part.fitting.year_on = data[key];
+        break;
+      case "dateOn":
+        part.fitting.year_on = data[key];
+        break;
+      case "DateOn":
+        part.fitting.year_on = data[key];
+        break;
+
     }
   }
+
+
 
   if (part.date_on == null || part.date_on == "" || part.date_on == undefined) {
     part.date_on = 0;

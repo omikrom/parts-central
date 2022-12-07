@@ -1,15 +1,21 @@
 window.onload = function () {
-  console.log("window.onload");
+  let token = sessionStorage.getItem("token");
+  if (token === null) {
+    window.location.href = "/login";
+  } else {
+    axios.defaults.headers.common["x-access-token"] = token;
+  }
   init();
 };
 
 function init() {
-  console.log("init");
   const form = document.getElementById("upload_csv_form");
   const message = document.getElementById("message");
   let bar = document.getElementById("progress_bar");
   console.log(bar);
   let barLabel = document.getElementById("progress_bar_label");
+
+
 
   form.addEventListener("submit", (e) => {
     console.log("clicked");
@@ -32,6 +38,9 @@ function init() {
         barLabel.innerHTML = percentComplete + "%";
         if (percentComplete === 100) {
           message.innerHTML = "File uploaded successfully";
+          setTimeout(() => {
+            message.innerHTML = "Processing file please wait..."
+          }, 2000);
         }
       },
     };

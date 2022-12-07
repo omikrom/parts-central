@@ -1,14 +1,94 @@
 window.onload = function () {
+  let token = sessionStorage.getItem("token");
+  if (token === null) {
+    window.location.href = "/login";
+  } else {
+    axios.defaults.headers.common["x-access-token"] = token;
+  }
   init();
-  console.log(sessionStorage.getItem("supplierId"));
 };
+
+function getOptions(type) {
+  let url
+  switch (type) {
+    case "type":
+      url = 'type_options';
+      break;
+    case "make":
+      url = 'make_options';
+      break;
+    case "model":
+      url = 'model_options';
+      break;
+    case "cc":
+      url = 'cc_options';
+      break;
+  }
+
+  let typeOptions = [];
+  let sId = sessionStorage.getItem("supplierId");
+  let datalist = document.getElementById(url);
+
+  axios.get(`/parts/${url}/${sId}`).then((res) => {
+    console.log('getting types');
+    res.data.forEach((Type) => {
+      switch (type) {
+        case "type":
+          Type = Type.type;
+          break;
+        case "make":
+          Type = Type.manufacturer;
+          break;
+        case "model":
+          Type = Type.model;
+          break;
+        case "cc":
+          Type = Type.cc;
+          break;
+      }
+      typeOptions.push(Type);
+    });
+  }).finally(() => {
+    typeOptions.forEach((type) => {
+      let option = document.createElement('option');
+      option.value = type;
+      datalist.appendChild(option);
+    });
+  });
+}
+
 
 function init() {
   let formSubmit = document.getElementById("create_part_submit");
   let message = document.getElementById("message");
 
+  let typeOptions = getOptions("type");
+
+  let manufacturerInput = document.getElementById("fitting_make");
+
+  manufacturerInput.addEventListener("click", function (e) {
+    let makeOptions = getOptions("make");
+  }, { once: true });
+
+
+  manufacturerInput.addEventListener("change", function (e) {
+    e.preventDefault();
+    let make = manufacturerInput.value;
+    let sId = sessionStorage.getItem("supplierId");
+    let modelInput = document.getElementById("fitting_model");
+    let modelOptions = document.getElementById("model_options");
+    modelOptions.innerHTML = "";
+
+    axios.get(`/parts/${make}/model_options/${sId}`).then((res) => {
+      res.data.forEach((model) => {
+        let option = document.createElement('option');
+        option.value = model.model;
+        modelOptions.appendChild(option);
+      });
+    });
+  });
+
   formSubmit.addEventListener("click", function (e) {
-    console.log("clicked");
     e.preventDefault();
     let isValid = validateForm();
     if (isValid) {

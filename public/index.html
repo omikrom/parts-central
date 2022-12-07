@@ -16,7 +16,8 @@
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between" id="navbarText">
+    <div style="justify-content: space-between" class="collapse navbar-collapse justify-content-between"
+      id="navbarText">
       <ul class="navbar-nav mr-auto navbar-btns--left">
         <li class="nav-item active">
           <a class="nav-link nav-link--custom" href="/">Home</a>
@@ -87,7 +88,7 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid index--welcome-ui" id="index--logged_in_user">
+    <div class="container-fluid index--welcome-ui hidden" id="index--logged_in_user">
       <div class="index--get_started_container">
         <div class="row">
           <div class="col-12 text-center">
@@ -97,10 +98,16 @@
         </div>
         <div class="row text-center">
           <div class="col-12 col-md-6">
-            <button id="index_add_part--btn" class="button--part">Add a new part</button>
+            <button id="index_add_part--btn" class="button--part">Create a new part</button>
           </div>
           <div class="col-12 col-md-6">
             <button id="index_view_all--btn" class="button--part_alt">View all parts</button>
+          </div>
+          <div class="col-12 col-md-6">
+            <button id="index_upload_csv--btn" class="button--part_alt">Upload CSV</button>
+          </div>
+          <div class="col-12 col-md-6">
+            <button id="index_search--btn" class="button--part">Search for part</button>
           </div>
         </div>
       </div>

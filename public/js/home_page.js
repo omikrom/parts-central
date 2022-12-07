@@ -10,10 +10,13 @@ let loginBtn = document.getElementById("index_login_btn");
 let registerBtn = document.getElementById("index_register_btn");
 let addPartBtn = document.getElementById("index_add_part--btn");
 let viewPartsBtn = document.getElementById("index_view_all--btn");
+let uploadCSVBtn = document.getElementById("index_upload_csv--btn");
+let searchPartBtn = document.getElementById("index_search--btn");
 
 if (loggedIn) {
   newUserContent.style.display = "none";
   existingUserContent.style.display = "flex";
+  existingUserContent.classList.remove("hidden");
   addPartBtn.addEventListener("click", function (e) {
     e.preventDefault();
     window.location.href = "/create_part";
@@ -22,8 +25,17 @@ if (loggedIn) {
     e.preventDefault();
     window.location.href = "/user_parts";
   });
+  uploadCSVBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    window.location.href = "/csv_upload";
+  });
+  searchPartBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    window.location.href = "/part_search";
+  });
 } else {
   newUserContent.style.display = "flex";
+  newUserContent.classList.remove("hidden");
   existingUserContent.style.display = "none";
   loginBtn.addEventListener("click", function (e) {
     e.preventDefault();

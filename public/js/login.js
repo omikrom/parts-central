@@ -30,6 +30,7 @@ window.onload = function () {
 
     axios.post("/api/login", body).then((res) => {
       console.log(res.data);
+      console.log('message', res.data.message);
       if (res.data.message === "Login successful") {
         if (res.data.token) {
           sessionStorage.setItem("token", res.data.token);
@@ -46,6 +47,10 @@ window.onload = function () {
         loginResMessage.style.display = "block";
         loginResMessage.innerHTML = res.data.message;
       }
+    }).catch((err) => {
+      console.log(err);
+      loginResMessage.style.display = "block";
+      loginResMessage.innerHTML = err.response.data.message;
     });
   });
 };

@@ -88,8 +88,6 @@ router.get(
     let year_to = req.params.year_to;
     let sId = req.params.sId;
 
-    console.log(manufacturer, model, cc, year_from, year_to, sId);
-
     let pIds = [];
 
     const result = db.pool
@@ -103,7 +101,6 @@ router.get(
         });
       })
       .finally(() => {
-        console.log(pIds);
         const result = db.pool
           .query(
             "SELECT part.sku, part.part_name, alt_skus.partNo, alt_skus.vendorNo, alt_skus.alt_sku FROM part LEFT JOIN alt_skus ON part.id = alt_skus.part_id WHERE part.id IN (?)",
@@ -195,7 +192,6 @@ router.get("/part/:manufacturer/:model/:sId", (req, res) => {
       });
     })
     .finally(() => {
-      console.log(pIds);
       // find all parts from parts table where part id is in the array of part id's
       const result = db.pool
         // select part.sku, part.part_name, alt_skus.partNo, alt_skus.alt_partNo

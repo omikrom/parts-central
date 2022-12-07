@@ -46,6 +46,9 @@ app.use("/css", express.static(path.join(__dirname, "public/css")));
 // include images
 app.use("/img", express.static(path.join(__dirname, "public/img")));
 
+
+//include download folder
+app.use("/downloads", express.static(path.join(__dirname, "public/downloads")));
 // include html files
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
@@ -98,6 +101,8 @@ app.use("/new_supplier", (req, res) => {
 app.post("/welcome", auth, (req, res) => {
   res.status(200).send("Welcome to the API");
 });
+
+
 
 app.use("/api", router);
 app.use("/parts", partRouter);
