@@ -35,44 +35,50 @@ window.onload = function () {
 
     let isValid = false;
 
-    validatePasswordInput(body.password)
-      ? (isValid = true) : (isValid = false);
+    validatePasswordInput(body.password) ? (isValid = true) : (isValid = false);
 
     if (!isValid) {
       registerResMessage.style.display = "block";
-      registerResMessage.innerHTML = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter and one number.";
+      registerResMessage.innerHTML =
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter and one number.";
       return;
     } else {
-
-      axios.post("/api/register", body).then((res) => {
-        if (res.data.message === "Registration successful") {
-          if (res.data.token) {
-            console.log('res.data', res.data);
-            sessionStorage.setItem("token", res.data.token);
-            sessionStorage.setItem("role", res.data.role);
-            sessionStorage.setItem("userId", res.data.userId);
-            sessionStorage.setItem("supplierId", res.data.supplierId);
-            registerResMessage.innerHTML = "Registered successfully.";
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 10000);
+      axios
+        .post("/api/register", body)
+        .then((res) => {
+          if (res.data.message === "Registration successful") {
+            if (res.data.token) {
+              console.log("res.data", res.data);
+              sessionStorage.setItem("token", res.data.token);
+              sessionStorage.setItem("role", res.data.role);
+              sessionStorage.setItem("userId", res.data.userId);
+              sessionStorage.setItem("supplierId", res.data.supplierId);
+              registerResMessage.innerHTML = "Registered successfully.";
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 2000);
+            }
+          } else {
+            registerResMessage.style.display = "block";
+            registerResMessage.innerHTML = res.data.message;
           }
-        } else {
+        })
+        .catch((err) => {
+          console.log(err);
           registerResMessage.style.display = "block";
-          registerResMessage.innerHTML = res.data.message;
-        }
-      }).catch((err) => {
-        console.log(err);
-        registerResMessage.style.display = "block";
-        registerResMessage.innerHTML = err.response.data.message;
-      });
+          registerResMessage.innerHTML = err.response.data.message;
+        });
     }
   });
 };
 
 function validatePasswordInput(value) {
-  if (value.length < 8) { return false; }
-  if (value.length > 50) { return false; }
+  if (value.length < 8) {
+    return false;
+  }
+  if (value.length > 50) {
+    return false;
+  }
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
   return regex.test(value);
 }
