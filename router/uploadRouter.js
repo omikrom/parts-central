@@ -22,9 +22,9 @@ router.post(
     }
 
     // added this to test if this will fix the issue
-    res.status(200).send({
-      message: "Uploaded the file successfully: " + req.file.originalname,
-    });
+    //res.status(200).send({
+    //  message: "Uploaded the file successfully: " + req.file.originalname,
+    //});
 
     const input = fs.createReadStream(req.file.path);
     const rl = readline.createInterface({ input });
