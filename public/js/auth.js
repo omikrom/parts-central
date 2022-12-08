@@ -6,7 +6,6 @@ footerDate.innerHTML = new Date().getFullYear();
 let loginBtn = document.getElementById("login_btn");
 let registerBtn = document.getElementById("register_btn");
 let userDetailsBtn = document.getElementById("user_details_btn");
-console.log("userDetailsBtn", userDetailsBtn);
 let logoutBtn = document.getElementById("logout_btn");
 
 logoutBtn.addEventListener("click", function (e) {
@@ -45,8 +44,6 @@ let userMassUploadBtn = document.getElementById("user_mass_create_part_btn");
 let userPartSearchBtn = document.getElementById("user_search_part_btn");
 
 if (loggedIn) {
-  let supplier_id = sessionStorage.getItem("supplierId");
-  console.log(supplier_id);
   addPartBtn.style.display = "block";
   viewPartBtn.style.display = "block";
   userMassUploadBtn.style.display = "block";
