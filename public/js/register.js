@@ -40,7 +40,7 @@ window.onload = function () {
     if (!isValid) {
       registerResMessage.style.display = "block";
       registerResMessage.innerHTML =
-        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter and one number.";
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter , one number and a special character.";
       return;
     } else {
       axios
@@ -79,6 +79,7 @@ function validatePasswordInput(value) {
   if (value.length > 50) {
     return false;
   }
-  let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  // Minimum eight characters, at least one uppercase letter, one lowercase letter and one number and special character
+  let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/;
   return regex.test(value);
 }
