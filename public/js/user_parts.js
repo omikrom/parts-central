@@ -36,10 +36,10 @@ function calculateTotalPages() {
     let part_pages = document.getElementById("part_pages");
     part_pages.innerHTML = "";
 
-    console.log('current page:', currentPage);
-    console.log('total pages:', totalPages);
-    console.log('min page:', minPage);
-    console.log('max page:', maxPage);
+    if (pages <= 1) {
+      return;
+    }
+
     minPage = currentPage - 2;
     maxPage = currentPage + 2;
 
