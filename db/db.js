@@ -9,8 +9,8 @@ var pool = mariadb.createPool({
   user: "app_user", // <- dev user
   //password: "8~vlb632S",
   // -- rich home
-  //password: "P4ssw0rd##",
-  password: "p4ssw0rd##", // <-- local machine
+  password: "P4ssw0rd##",
+  //password: "p4ssw0rd##", // <-- local machine
   database: "parts_central_db",
   connectionLimit: 5,
   allowPublicKeyRetrieval: true,

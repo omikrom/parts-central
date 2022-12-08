@@ -6,6 +6,10 @@ window.onload = function () {
     axios.defaults.headers.common["x-access-token"] = token;
   }
   init();
+  checkJobs();
+  setInterval(() => {
+    checkJobs();
+  }, 10000);
 };
 
 function init() {
@@ -50,13 +54,82 @@ function init() {
         .post(`/upload/user_csv/${supplierId}`, formData, config, token)
         .then((res) => {
           message.innerHTML = res.data.message;
-          setTimeout(() => {
-            window.location.href = "/user_parts";
-          }, 1000);
         });
     } catch (error) {
       message.innerHTML = error.message;
       console.log(error);
     }
   });
+}
+
+
+function checkJobs() {
+  let currentJobsElement = document.getElementById("current_jobs");
+  let currentJobs = [];
+  let supplierId = sessionStorage.getItem("supplierId");
+  console.log("supplierId:", supplierId);
+
+  axios.get(`/jobs/${supplierId}`).then((res) => {
+    res.data.forEach((job) => {
+      currentJobs.push(job);
+    });
+  }).catch(() => {
+
+  }).finally(() => {
+    createJobElements(currentJobs);
+  });;
+}
+
+function createJobElements(jobs) {
+  let div = document.getElementById("current_jobs");
+  div.innerHTML = "";
+  let header = document.createElement("div");
+  header.classList.add("job");
+  header.classList.add("job--header");
+  header.innerHTML = `
+    <div class="job--id job--item">
+      Job ID
+    </div>
+    <div class="job--file_name job--item">
+      File Name
+    </div>
+    <div class="job--progress job--item">
+      Progress
+    </div>
+    <div class="job__status job--item">
+      Status
+    </div>
+  `;
+  div.appendChild(header);
+  if (jobs.length === 0) {
+    let noJobs = document.createElement("div");
+    noJobs.classList.add("job");
+    noJobs.innerHTML = `
+      <div class="job--id">
+        <p>No current Jobs</p>
+      </div>
+    `;
+    div.appendChild(noJobs);
+  }
+  jobs.forEach((job) => {
+    console.log(job);
+    let jobDiv = document.createElement("div");
+    jobDiv.classList.add("job");
+    jobDiv.innerHTML = `
+      <div class="job--id job--item">
+        ${job.jobId}
+      </div>
+      <div class="job--file_name job--item">
+        ${job.fileName}
+      </div>
+      <div class="job--progress job--item">
+        ${job.progress}%
+      </div>
+      <div class="job__status job--item">
+        ${job.status}
+      </div>
+    `;
+    div.appendChild(jobDiv);
+  });
+
 }

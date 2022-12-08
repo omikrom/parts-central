@@ -8,6 +8,8 @@ const auth = require("../middleware/auth.js");
 
 const { parse } = require("csv-parse");
 
+const jobList = require("../jobs/job_list.js");
+
 router.post(
   "/user_csv/:supplierId",
   auth,
@@ -20,10 +22,19 @@ router.post(
     if (getFileExtension(req.file.originalname) != "csv") {
       return res.status(400).send({ message: "Please upload a CSV file!" });
     }
+    // 
+    // create job
+    //
+    let newJob = {
+      jobId: jobList.length + 1,
+      supplierId: sId,
+      fileName: req.file.originalname,
+      status: "pending",
+      progress: 0,
+      date: new Date(),
+    };
 
-    res.status(200).send({
-      message: "Uploaded the file successfully:" + req.file.originalname + "CSV will now be processed",
-    });
+    jobList.push(newJob);
 
     const input = fs.createReadStream(req.file.path);
     //const rl = readline.createInterface({ input });
@@ -47,7 +58,18 @@ router.post(
       .on("end", () => {
         console.log("CSV file successfully processed");
         console.log("populating database");
-        populateDatabase(partsList, req.file.path);
+        res.status(200).send({
+          message: "Uploaded the file successfully:" + req.file.originalname + "CSV will now be processed",
+        });
+        // update job
+        let jobId = newJob.jobId;
+        for (let i = 0; i < jobList.length; i++) {
+          if (jobList[i].jobId == jobId) {
+            jobList[i].status = "processing";
+            break;
+          }
+        }
+        populateDatabase(partsList, req.file.path, jobId);
       });
   }
 );
@@ -62,8 +84,33 @@ async function deleteFile(path) {
   });
 }
 
-async function populateDatabase(partsList, path) {
+
+async function populateDatabase(partsList, path, jobId) {
+
+  let percentage = parseInt(partsList.length / 100);
+  let progressLimits = [];
+  for (let i = 0; i < 90; i++) {
+    progressLimits.push(percentage * i);
+  }
+
   for (let i = 0; i < partsList.length; i++) {
+
+    for (let j = 0; j < progressLimits.length; j++) {
+      if (i == progressLimits[j]) {
+        let progress = parseInt((i / partsList.length) * 100) + 10;
+        for (let k = 0; k < jobList.length; k++) {
+          if (jobList[k].jobId == jobId) {
+            jobList[k].progress = progress;
+            break;
+          }
+        }
+      } else {
+        continue;
+      }
+    }
+
+
+
     let fittingId = 0;
     let partId = 0;
 
@@ -146,8 +193,28 @@ async function populateDatabase(partsList, path) {
       throw err;
     }
   }
-
+  // job complete
+  for (let i = 0; i < jobList.length; i++) {
+    if (jobList[i].jobId == jobId) {
+      jobList[i].progress = 100;
+      jobList[i].status = "complete";
+      break;
+    }
+  }
+  deleteJob(jobId);
   deleteFile(path);
+}
+
+async function deleteJob(jobId) {
+  // wait 1 hour before deleting job
+  setTimeout(async () => {
+    for (let i = 0; i < jobList.length; i++) {
+      if (jobList[i].jobId == jobId) {
+        jobList.splice(i, 1);
+        break;
+      }
+    }
+  }, 3600000);
 }
 
 async function createFitting(data) {

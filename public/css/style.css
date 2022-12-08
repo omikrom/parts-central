@@ -626,6 +626,28 @@ td {
     width: 100% !important;
 }
 
+.csv_upload--progress {
+    padding: 5rem;
+}
+
+.job--header {
+    background-color: #212529;
+    color: #eee;
+}
+
+.job {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.job--item {
+    padding: 10px;
+}
+
 
 /*------------------*/
 /* Accordion styles */
@@ -897,6 +919,10 @@ td {
         padding: 1rem;
     }
 
+    .csv_upload--progress {
+        padding: 1rem;
+    }
+
 }
 
 
@@ -929,6 +955,14 @@ td {
 
     .fitting_btn--container {
         width: 25%;
+    }
+
+    .csv_upload--container {
+        padding: 1rem;
+    }
+
+    .csv_upload--progress {
+        padding: 1rem;
     }
 }
 

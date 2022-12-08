@@ -8,6 +8,7 @@ const partRouter = require("./router/partRouter.js");
 const uploadRouter = require("./router/uploadRouter.js");
 const userPartRouter = require("./router/userPartRouter.js");
 const partSearchRouter = require("./router/partSearchRouter.js");
+const jobList = require("./jobs/job_list.js");
 
 const path = require("path");
 
@@ -102,6 +103,28 @@ app.post("/welcome", auth, (req, res) => {
   res.status(200).send("Welcome to the API");
 });
 
+app.get("/jobs/:sId", (req, res) => {
+  let supplierId = parseInt(req.params.sId);
+  let currentJobs = [];
+  let allJobs = jobList;
+  for (let i = 0; i < allJobs.length; i++) {
+    if (allJobs[i].supplierId == supplierId) {
+      currentJobs.push(allJobs[i]);
+    }
+  }
+  res.send(currentJobs);
+})
+
+app.post("/jobs", (req, res) => {
+  console.log("POST /jobs");
+  let newJob = {
+    supplierId: 2,
+    path: "C:\\Users\\james\\Desktop\\test\\test.csv",
+    processed: false,
+  }
+  jobList.push(newJob);
+  res.send(jobList);
+})
 
 
 app.use("/api", router);
