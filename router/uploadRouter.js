@@ -123,6 +123,52 @@ async function populateDatabase(partsList, path, jobId) {
         // Part exists
         partId = checkIfPartExists[0].id;
 
+        if (partsList[i].partName != checkIfPartExists[0].part_name) {
+          // update part name
+          const updatePartName = await db.pool.query(
+            "UPDATE `part` SET part_name = ? WHERE id = ?",
+            [partsList[i].partName, partId]
+          );
+        }
+
+        if (partsList[i].alt_sku || partsList[i].alt_partNo || partsList[i].alt_vendorNo) {
+          // check if alt sku exists
+          const checkIfAltSkuExists = await db.pool.query(
+            "SELECT id FROM `alt_sku` WHERE part_id = ? AND part_supplier_id = ? AND alt_sku = ?",
+            [partId, partsList[i].alt_sku]
+          );
+          if (checkIfAltSkuExists.length > 0) {
+            // Alt sku exists
+            if (partsList[i].alt_sku) {
+              // update alt sku
+              const updateAltSku = await db.pool.query(
+                "UPDATE `alt_skus` SET alt_sku = ? WHERE id = ?",
+                [partsList[i].alt_sku, checkIfAltSkuExists[0].id]
+              );
+            }
+            if (partsList[i].alt_partNo) {
+              // update alt part no
+              const updateAltPartNo = await db.pool.query(
+                "UPDATE `alt_skus` SET alt_part_no = ? WHERE id = ?",
+                [partsList[i].alt_partNo, checkIfAltSkuExists[0].id]
+              );
+            }
+            if (partsList[i].alt_vendorNo) {
+              // update alt vendor no
+              const updateAltVendorNo = await db.pool.query(
+                "UPDATE `alt_skus` SET alt_vendor_no = ? WHERE id = ?",
+                [partsList[i].alt_vendorNo, checkIfAltSkuExists[0].id]
+              );
+            }
+          } else {
+            // Alt sku does not exist
+            const insertAltSku = await db.pool.query(
+              "INSERT INTO `alt_skus` (part_id, part_supplier_id, alt_sku, alt_part_no, alt_vendor_no) VALUES (?, ?, ?, ?, ?)",
+              [partId, partsList[i].alt_sku, partsList[i].alt_partNo, partsList[i].alt_vendorNo]
+            );
+          }
+        }
+
         // check if fitting exists
         const checkIfFittingExists = await db.pool.query(
           "SELECT * FROM `fitting` WHERE manufacturer = ? AND model = ? AND cc = ? AND date_from = ? AND date_to = ?",
@@ -137,6 +183,49 @@ async function populateDatabase(partsList, path, jobId) {
         if (checkIfFittingExists.length > 0) {
           // Fitting exists
           fittingId = checkIfFittingExists[0].id;
+          // update fitting
+          if (partsList[i].fitting.manufacturer) {
+            const updateFittingManufacturer = await db.pool.query(
+              "UPDATE `fitting` SET manufacturer = ? WHERE id = ?",
+              [partsList[i].fitting.manufacturer, fittingId]
+            );
+          }
+          if (partsList[i].fitting.model) {
+            const updateFittingModel = await db.pool.query(
+              "UPDATE `fitting` SET model = ? WHERE id = ?",
+              [partsList[i].fitting.model, fittingId]
+            );
+          }
+          if (partsList[i].fitting.cc) {
+            const updateFittingCc = await db.pool.query(
+              "UPDATE `fitting` SET cc = ? WHERE id = ?",
+              [partsList[i].fitting.cc, fittingId]
+            );
+          }
+          if (partsList[i].fitting.date_from) {
+            const updateFittingDateFrom = await db.pool.query(
+              "UPDATE `fitting` SET date_from = ? WHERE id = ?",
+              [partsList[i].fitting.date_from, fittingId]
+            );
+          }
+          if (partsList[i].fitting.date_to) {
+            const updateFittingDateTo = await db.pool.query(
+              "UPDATE `fitting` SET date_to = ? WHERE id = ?",
+              [partsList[i].fitting.date_to, fittingId]
+            );
+          }
+          if (partsList[i].fitting.date_to) {
+            const updateFittingDateTo = await db.pool.query(
+              "UPDATE `fitting` SET date_to = ? WHERE id = ?",
+              [partsList[i].fitting.date_to, fittingId]
+            );
+          }
+          if (partsList[i].fitting.display_name) {
+            const updateFittingDisplayName = await db.pool.query(
+              "UPDATE `fitting` SET display_name = ? WHERE id = ?",
+              [partsList[i].fitting.display_name, fittingId]
+            );
+          }
         } else {
           // Fitting does not exist
           const insertFitting = await db.pool.query(
@@ -226,6 +315,7 @@ async function createFitting(data) {
         data.fitting.type,
         data.fitting.manufacturer,
         data.fitting.model,
+        data.fitting.display_name,
         data.fitting.cc,
         data.fitting.date_from,
         data.fitting.date_to,
