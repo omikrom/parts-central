@@ -105,6 +105,7 @@ footer {
     flex-wrap: nowrap;
     align-content: space-between;
     justify-content: center;
+    padding-bottom: 100px;
 }
 
 .index--section div {
@@ -446,8 +447,36 @@ footer {
 
 
 .tb_light {
-    background-color: #eee !important;
+    background-color: #eee;
 }
+
+
+tr.row_editted {
+    background-color: rgb(230, 242, 248) !important;
+}
+
+tr.row_saved {
+    background-color: rgb(231, 253, 201) !important;
+}
+
+.cell_edittable {
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #212529;
+    border-radius: 2px;
+}
+
+.action {
+    padding: 0;
+    width: 10px;
+}
+
+
+/*td.table_row--element:hover {
+    background-color: #fff;
+    text-decoration: underline;
+    outline: 1px solid black;
+    border-radius: 2px;
+}*/
 
 .tb_light td:first-child {
     padding-left: 1rem;
@@ -465,6 +494,7 @@ footer {
 
 .fittingBtn {
     border: none;
+    background: none !important;
 }
 
 .fittingBtn i {
@@ -475,8 +505,22 @@ footer {
     color: #a4ce19;
 }
 
+.editBtn {
+    border: none;
+    background: none !important;
+}
+
+.editBtn i {
+    color: rgb(255, 158, 48);
+}
+
+.editBtn:hover i {
+    color: rgb(255, 204, 0);
+}
+
 .updateBtn {
     border: none;
+    background: none !important;
 }
 
 .updateBtn i {
@@ -489,6 +533,7 @@ footer {
 
 .deleteBtn {
     border: none;
+    background: none !important;
 }
 
 .deleteBtn i {
@@ -515,18 +560,18 @@ td {
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 15px;
     transition: all 0.3s ease-in-out;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #212529;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #212529;
+    background: #6f747a;
     border-radius: 7px;
     transition: all 0.3s ease-in-out;
     height: 20px;
@@ -767,6 +812,7 @@ td {
     z-index: 8;
 }
 
+
 .fitment_details--container {
     display: flex;
     justify-content: space-between;
@@ -778,14 +824,19 @@ td {
     margin-bottom: 1rem;
 }
 
+.fitment_display--table-slide {
+    padding-top: 100px;
+}
+
 .fitment_display--table {
     overflow-y: scroll;
     max-height: 50vh;
 }
 
+
+
 .fitmentBtnUpd {
     border: 0;
-    background-color: none !important;
 }
 
 .fitmentBtnUpd i {
@@ -825,19 +876,40 @@ td {
 /* add fitting section  */
 
 .fitment_add_fitting {
-    height: 100vh;
+    height: fit-content;
     width: 100%;
     z-index: 10;
     position: fixed;
     top: 0;
     left: 0;
     background-color: #eee;
+    padding-bottom: 25px;
 }
 
 .fitment_add--container {
     padding-top: 100px;
 }
 
+/* ----------------- */
+/* Edit parts & fitment section */
+/* ----------------- */
+
+.edit_section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 98vw;
+    background-color: #eee;
+    z-index: 8;
+    padding-top: 100px;
+}
 
 
 /* ------------------ */

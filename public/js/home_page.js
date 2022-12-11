@@ -49,10 +49,115 @@ if (loggedIn) {
 
 if (loggedIn) {
   axios.get(`/api/user/${userId}`).then((res) => {
-    //axios.get(`http://localhost:3000/api/user/${userId}`).then((res) => {
     console.log("res.data", res.data);
     let user = res.data;
     let usernameField = document.getElementById("index--username");
     usernameField.innerHTML = user.username;
   });
+
+  // create a new div and row to hold the data 
+  let dbStatsContainer = document.createElement("div");
+  dbStatsContainer.classList.add("container-fluid");
+  let newRow = document.createElement("div");
+  newRow.classList.add("row");
+  let indexContainer = document.getElementsByClassName("index--section")[0];
+
+  axios.get(`/parts/totalParts/${supplierId}`).then((res) => {
+    console.log("res.data", res.data);
+    let totalParts = res.data;
+    let newCol = document.createElement("div");
+    newCol.classList.add("col-12");
+    newCol.classList.add("col-md-3");
+    let newCard = document.createElement("div");
+    newCard.classList.add("card");
+    let newCardBody = document.createElement("div");
+    newCardBody.classList.add("card-body");
+    let newCardTitle = document.createElement("h5");
+    newCardTitle.classList.add("card-title");
+    newCardTitle.innerHTML = "Total Parts";
+    let newCardText = document.createElement("p");
+    newCardText.classList.add("card-text");
+    newCardText.innerHTML = totalParts;
+    newCardBody.appendChild(newCardTitle);
+    newCardBody.appendChild(newCardText);
+    newCard.appendChild(newCardBody);
+    newCol.appendChild(newCard);
+    newRow.appendChild(newCol);
+    dbStatsContainer.appendChild(newRow);
+  });
+
+  axios.get(`/parts/totalFittings/${supplierId}`).then((res) => {
+    console.log("res.data", res.data);
+    let totalFittings = res.data;
+    let newCol = document.createElement("div");
+    newCol.classList.add("col-12");
+    newCol.classList.add("col-md-3");
+    let newCard = document.createElement("div");
+    newCard.classList.add("card");
+    let newCardBody = document.createElement("div");
+    newCardBody.classList.add("card-body");
+    let newCardTitle = document.createElement("h5");
+    newCardTitle.classList.add("card-title");
+    newCardTitle.innerHTML = "Total Fittings";
+    let newCardText = document.createElement("p");
+    newCardText.classList.add("card-text");
+    newCardText.innerHTML = totalFittings;
+    newCardBody.appendChild(newCardTitle);
+    newCardBody.appendChild(newCardText);
+    newCard.appendChild(newCardBody);
+    newCol.appendChild(newCard);
+    newRow.appendChild(newCol);
+    dbStatsContainer.appendChild(newRow);
+  });
+
+  axios.get(`/parts/avgFittings/${supplierId}`).then((res) => {
+    console.log("res.data", res.data);
+    let averageFittings = res.data;
+    let newCol = document.createElement("div");
+    newCol.classList.add("col-12");
+    newCol.classList.add("col-md-3");
+    let newCard = document.createElement("div");
+    newCard.classList.add("card");
+    let newCardBody = document.createElement("div");
+    newCardBody.classList.add("card-body");
+    let newCardTitle = document.createElement("h5");
+    newCardTitle.classList.add("card-title");
+    newCardTitle.innerHTML = "Average amount fittings per part";
+    let newCardText = document.createElement("p");
+    newCardText.classList.add("card-text");
+    newCardText.innerHTML = averageFittings;
+    newCardBody.appendChild(newCardTitle);
+    newCardBody.appendChild(newCardText);
+    newCard.appendChild(newCardBody);
+    newCol.appendChild(newCard);
+    newRow.appendChild(newCol);
+    dbStatsContainer.appendChild(newRow);
+  });
+
+  axios.get(`/parts/commonCC/${supplierId}`).then((res) => {
+    console.log("res.data", res.data);
+    let commonCC = res.data;
+    let newCol = document.createElement("div");
+    newCol.classList.add("col-12");
+    newCol.classList.add("col-md-3");
+    let newCard = document.createElement("div");
+    newCard.classList.add("card");
+    let newCardBody = document.createElement("div");
+    newCardBody.classList.add("card-body");
+    let newCardTitle = document.createElement("h5");
+    newCardTitle.classList.add("card-title");
+    newCardTitle.innerHTML = "Most common engine size";
+    let newCardText = document.createElement("p");
+    newCardText.classList.add("card-text");
+    newCardText.innerHTML = commonCC + `<small class="text-muted">cc</small>`;
+    newCardBody.appendChild(newCardTitle);
+    newCardBody.appendChild(newCardText);
+    newCard.appendChild(newCardBody);
+    newCol.appendChild(newCard);
+    newRow.appendChild(newCol);
+    dbStatsContainer.appendChild(newRow);
+  }).finally(() => {
+    indexContainer.appendChild(dbStatsContainer);
+  })
+
 }

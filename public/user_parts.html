@@ -113,9 +113,9 @@
         </div>
         <div class="row">
           <div class="col-12 fitment_details">
-            <div class="fitment_details--container">
+            <div class="row fitment_details--container">
               <div class="fitment_display--title">
-                <h1>Fitment Display</h1>
+                <h1>Fitment Archive</h1>
                 <p>SKU: <span id="fitment_part_sku">#</span></p>
                 <p>Part ID: <span id="fitment_partNo">#</span></p>
               </div>
@@ -131,6 +131,17 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="edit_section" id="edit_section" style="display:none;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div id="close_part_details" class="close_part_details text-end">
+            <button id="close_edit">x</button>
           </div>
         </div>
       </div>
@@ -177,7 +188,9 @@
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_model">Model</label>
                   <input type="text" class="form-control bg-light text-dark" id="add_fitting_model"
-                    name="add_fitting_model" aria-required="true" required placeholder="Vehicle model">
+                    name="add_fitting_model" list="model_options" aria-required="true" required
+                    placeholder="Vehicle model">
+                  <datalist name="model_options" id="model_options">
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_model">Display name</label>
@@ -187,8 +200,9 @@
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_cc">CC:</label>
                   <input type="number" min="0" max="100000" step="5" class="form-control bg-light text-dark"
-                    id="add_fitting_cc" name="add_fitting_cc" aria-required="true" required placeholder="Size">
-
+                    id="add_fitting_cc" name="add_fitting_cc" list="cc_options" aria-required="true" required
+                    placeholder="Size">
+                  <datalist name="cc_options" id="cc_options">
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="add_fitting_year_from">from:</label>

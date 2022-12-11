@@ -1,3 +1,5 @@
+import optionsListData from "./option_list.js";
+
 window.onload = function () {
   let token = sessionStorage.getItem("token");
   if (token === null) {
@@ -5,6 +7,7 @@ window.onload = function () {
   } else {
     axios.defaults.headers.common["x-access-token"] = token;
   }
+  getAllOptions();
   init();
 };
 
@@ -18,7 +21,8 @@ let currentPage = 1;
 let totalPages = 0;
 let minPage = 0;
 let maxPage = 0;
-
+var fitmentUpdated = 0;
+var fitmentCreated = false;
 
 
 
@@ -76,7 +80,6 @@ function calculateTotalPages() {
       if (currentPage > 1) {
         offset = 0;
         currentPage = 1;
-        console.log("offset", offset);
         init();
       }
     });
@@ -106,7 +109,6 @@ function calculateTotalPages() {
       if (currentPage > 1) {
         offset = (currentPage - 2) * entries.value;
         currentPage = currentPage - 1;
-        console.log("offset", offset);
         init();
       }
     });
@@ -137,7 +139,6 @@ function calculateTotalPages() {
         e.preventDefault();
         offset = (i - 1) * entries.value;
         currentPage = i;
-        console.log("offset", offset);
         init();
       });
     }
@@ -163,7 +164,6 @@ function calculateTotalPages() {
       if (currentPage < totalPages) {
         offset = currentPage * entries.value;
         currentPage = currentPage + 1;
-        console.log("offset", offset);
         init();
       }
     });
@@ -183,7 +183,6 @@ function calculateTotalPages() {
       if (currentPage < totalPages) {
         offset = (totalPages - 1) * entries.value;
         currentPage = totalPages;
-        console.log("offset", offset);
         init();
       }
     });
@@ -259,7 +258,6 @@ function calculateTotalPages() {
 
 
 function entriesChange() {
-  console.log("offset", offset);
   let entries = document.getElementById("show_entries");
   let sId = sessionStorage.getItem("supplierId");
   entries.addEventListener("change", function (e) {
@@ -275,7 +273,6 @@ function init() {
   let partsList = document.getElementById("part_list");
   partsList.innerHTML = "";
 
-  console.log("limit", limit);
 
   calculateTotalPages();
   entriesChange();
@@ -284,10 +281,23 @@ function init() {
     token: sessionStorage.getItem("token"),
     userId: parseInt(sessionStorage.getItem("userId")),
     supplierId: parseInt(sessionStorage.getItem("supplierId")),
+    orderBy: {
+      column: "part_number",
+      direction: 'ASC'
+    }
   };
 
   axios.post(`/user/user_parts/${limit}/${offset}`, body).then((res) => {
     createTableMain(res.data);
+  }).catch((err) => {
+    if (err.response.status == 401) {
+      partsList.innerHTML = `<div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">Unauthorized</h4>
+      <p>You are not authorized to view this page.</p>
+      <hr>
+      <p class="mb-0">Relogin to continue.</p>
+    </div>`;
+    }
   });
 
   updated += 1;
@@ -317,8 +327,8 @@ function init() {
 
 }
 
+
 async function createTableMain(data) {
-  console.log("created", created);
   if (created) {
     var partList = document.getElementById("part_list");
     partList.innerHTML = "";
@@ -333,6 +343,7 @@ async function createTableMain(data) {
     "alt vendor #",
     "Fitting",
     "Edit",
+    "Save",
     "Delete",
   ];
 
@@ -353,15 +364,19 @@ async function createTableMain(data) {
   table.appendChild(tr);
   /*end of table header */
 
+
   /* Create table body */
   for (let i = 0; i < data.length; i++) {
     tr = document.createElement("tr");
     let td = document.createElement("td");
     td.scope = "row";
+    td.contentEditable = false;
     td.innerHTML = "<input type='checkbox' class='form-check'></input>";
     tr.appendChild(td);
     td = document.createElement("td");
+    td.contentEditable = false;
     td.innerHTML = data[i].id;
+    console.log('edit:', td.contentEditable);
     tr.appendChild(td);
     td = document.createElement("td");
     td.contentEditable = true;
@@ -390,6 +405,11 @@ async function createTableMain(data) {
     tr.appendChild(td);
 
     td = document.createElement("td");
+    td.innerHTML = `<button class="editBtn text-dark" value="${data[i].id}"><i class="fa-solid fa-edit"></i></button>`;
+    td.classList.add("text-center");
+    tr.appendChild(td);
+
+    td = document.createElement("td");
     td.innerHTML = `<button class="updateBtn text-dark" value="${data[i].id}"><i class="fa-solid fa-floppy-disk"></i></button>`;
     td.classList.add("text-center");
     tr.appendChild(td);
@@ -410,6 +430,9 @@ async function createTableMain(data) {
   let theading = document.getElementsByTagName("th");
   for (let i = 0; i < theading.length; i++) {
     theading[i].classList.add("table_row--headings");
+    if (i >= 7) {
+      theading[i].classList.add("action");
+    }
   }
 
   // style table rows
@@ -425,29 +448,53 @@ async function createTableMain(data) {
     }
   }
 
-  stripedBtnBackgrounds("fittingBtn");
-  stripedBtnBackgrounds("updateBtn");
-  stripedBtnBackgrounds("deleteBtn");
-
   createUpdateListeners();
+  createEditListeners();
   createDeleteListeners();
   createFittingListeners();
   closeFitment();
+  closeEdit();
   addFitmentButton();
   closeAddFitment();
   checkAllCheckboxes();
+  rowEditted();
+  rowEdittable();
 }
 
-function stripedBtnBackgrounds(className) {
-  let btns = document.getElementsByClassName(className);
-  for (let i = 0; i < btns.length; i++) {
-    if (i % 2 == 0) {
-      btns[i].classList.add("tb_light");
-    } else {
-      btns[i].classList.add("tb_dark");
+
+function rowEditted() {
+  let rows = document.getElementsByTagName("tr");
+  // if the row and child of the row is editted, add a class to the row
+  for (let i = 0; i < rows.length; i++) {
+
+    let td = rows[i].getElementsByTagName("td");
+    for (let j = 0; j < td.length; j++) {
+      td[j].addEventListener("input", () => {
+        rows[i].classList.add("row_editted");
+      });
     }
   }
 }
+
+function rowEdittable() {
+  let rows = document.getElementsByTagName("tr");
+  for (let i = 0; i < rows.length; i++) {
+    let td = rows[i].getElementsByTagName("td");
+    for (let j = 0; j < td.length; j++) {
+      if (td[j].contentEditable == "true") {
+        td[j].addEventListener("mouseover", (req, res) => {
+          td[j].style.cursor = "text";
+          td[j].classList.add("cell_edittable");
+        })
+
+        td[j].addEventListener("mouseout", (req, res) => {
+          td[j].classList.remove("cell_edittable");
+        })
+      }
+    }
+  }
+}
+
 
 function createTableHeader(tr, heading) {
   let th = document.createElement("th");
@@ -468,7 +515,9 @@ function createTableHeader(tr, heading) {
 
 function addFitmentButton() {
   let addFitment = document.getElementById("add_fitment_btn");
-  addFitment.addEventListener("click", () => {
+  let fitmentTable = document.getElementsByClassName("fitment_display--table");
+  addFitment.addEventListener("click", (e) => {
+    e.preventDefault();
     let sId = sessionStorage.getItem("supplierId");
     let partId = sessionStorage.getItem("partId");
     let partSku = document.getElementById("fitment_add--sku");
@@ -476,6 +525,7 @@ function addFitmentButton() {
       "fitment_add_fitting"
     );
     addFittingContainer[0].style.display = "block";
+    fitmentTable[0].classList.add("fitment_display--table-slide");
     partSku.innerHTML = sessionStorage.getItem("sku");
     createNewFitmentListener(sId, partId);
   });
@@ -512,7 +562,7 @@ function createNewFitmentListener(sId, partId) {
       date_on: year_on_value,
     };
     axios.post("/user/add_fitment", body).then((res) => {
-      console.log("res:", res);
+      updateFitmentTable();
     });
   });
 }
@@ -521,17 +571,21 @@ function createUpdateListeners() {
   let updateButtons = document.querySelectorAll(".updateBtn");
   updateButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
-      console.log("click");
+
       let button = e.currentTarget;
       let id = button.value;
       sessionStorage.setItem("partId", id);
+
       let row = e.currentTarget.parentNode.parentNode;
       let sku = row.children[2].innerHTML;
       sessionStorage.setItem("sku", sku);
+
       let alt_sku = row.children[3].innerHTML;
       let part_name = row.children[4].innerHTML;
       let partNo = row.children[5].innerHTML;
       let vendorNo = row.children[6].innerHTML;
+      row.classList.remove("row_editted");
+      row.classList.add("row_saved");
 
       let data = {
         id: id,
@@ -544,33 +598,51 @@ function createUpdateListeners() {
         token: sessionStorage.getItem("token"),
       };
       axios.post("/user/update_part", data).then((res) => {
-        console.log("res", res);
       });
+      setTimeout(() => {
+        row.classList.remove("row_editted");
+        row.classList.remove("row_saved");
+      }, 2000);
     });
   });
+}
+
+function findRowWithId(id) {
+  let rows = document.getElementsByTagName("tr");
+  for (let i = 0; i < rows.length; i++) {
+    let tr = rows[i];
+    let rowId = tr.children[1].innerHTML;
+    if (rowId == id) {
+      return tr;
+    }
+  }
 }
 
 function createDeleteListeners() {
   let deleteButtons = document.querySelectorAll(".deleteBtn");
   deleteButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
-      let button = e.currentTarget;
-      let id = button.value;
-      let data = {
-        id: id,
-        sId: sessionStorage.getItem("supplierId"),
-      };
-      axios
-        .delete("/user/delete_part", {
-          data: data,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((res) => {
-          console.log("res", res);
-          init();
-        });
+      let choice = confirm("Are you sure you want to delete this part?");
+      if (choice == false) {
+        return;
+      } else {
+        let button = e.currentTarget;
+        let id = button.value;
+        let data = {
+          id: id,
+          sId: sessionStorage.getItem("supplierId"),
+        };
+        axios
+          .delete("/user/delete_part", {
+            data: data,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+          .then((res) => {
+            init();
+          });
+      }
     });
   });
 }
@@ -587,9 +659,34 @@ function createFittingListeners() {
       let supplierId = sessionStorage.getItem("supplierId");
       let fitmentDisplay = document.getElementById("fitment_table");
       fitmentDisplay.innerHTML = "";
-
       axios.get(`/user/get_fitment/${supplierId}/${partId}`).then((res) => {
         createTable(res.data, fitmentDisplay, partId);
+      });
+
+      fitmentUpdated += 1;
+      if (fitmentUpdated == 1) {
+        fitmentCreated = true;
+        fitmentUpdated = 1;
+      }
+    });
+  });
+}
+
+function createEditListeners() {
+  let editButtons = document.querySelectorAll(".editBtn");
+  editButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      let editSection = document.getElementById("edit_section");
+      editSection.style.display = "block";
+      let id = e.currentTarget.value;
+      sessionStorage.setItem("partId", id);
+      let partId = id;
+      let supplierId = sessionStorage.getItem("supplierId");
+      let editDisplay = document.getElementById("edit_table");
+      editDisplay.innerHTML = "";
+
+      axios.get(`/user/get_fitment/${supplierId}/${partId}`).then((res) => {
+        createEditTable(res.data, editDisplay, partId);
       });
     });
   });
@@ -597,11 +694,13 @@ function createFittingListeners() {
 
 function closeAddFitment() {
   let closeBtn = document.getElementById("addFitting--close_btn");
+  let fitmentTable = document.getElementsByClassName("fitment_display--table");
   closeBtn.addEventListener("click", () => {
     let addFittingContainer = document.getElementsByClassName(
       "fitment_add_fitting"
     );
     addFittingContainer[0].style.display = "none";
+    fitmentTable[0].classList.remove("fitment_display--table-slide");
   });
 }
 
@@ -611,6 +710,15 @@ function closeFitment() {
     e.preventDefault();
     let fitment = document.getElementById("fitment_section");
     fitment.style.display = "none";
+  });
+}
+
+function closeEdit() {
+  let close = document.getElementById("close_edit");
+  close.addEventListener("click", function (e) {
+    e.preventDefault();
+    let edit = document.getElementById("edit_section");
+    edit.style.display = "none";
   });
 }
 
@@ -637,8 +745,8 @@ function createTable(data, fitmentDisplay, partId) {
     table.classList.add("table-bordered");
     table.classList.add("table-hover");
     table.classList.add("table-sm");
-    table.classList.add("table-fitment");
-    table.classList.add("text-dark");
+    //table.classList.add("table-fitment");
+    //table.classList.add("text-dark");
     let tr = document.createElement("tr");
     tr.classList.add("tb_heading");
     let th = document.createElement("th");
@@ -681,7 +789,12 @@ function createTable(data, fitmentDisplay, partId) {
     // create rows for fitment table
     for (let i = 0; i < data.length; i++) {
       tr = document.createElement("tr");
-      tr.classList.add("table-light");
+      if (i % 2 == 0) {
+        tr.classList.add("tb_light");
+      } else {
+        tr.classList.add("tb_dark");
+      }
+
       let td = document.createElement("td");
       td.classList.add("table_row--element");
       td.contentEditable = false;
@@ -736,6 +849,7 @@ function createTable(data, fitmentDisplay, partId) {
       tr.appendChild(td);
       td = document.createElement("td");
       td.classList.add("text-center");
+      td.classList.add("table_row--element");
       td.innerHTML = `<button class="fitmentBtnUpd" value="${data[i].fitting_id}"><i class="fa-solid fa-floppy-disk"></i></button>`;
       tr.appendChild(td);
       td = document.createElement("td");
@@ -744,10 +858,17 @@ function createTable(data, fitmentDisplay, partId) {
       tr.appendChild(td);
       table.appendChild(tr);
     }
+
+
+
+
     fitmentUpdateBtns();
     fitmentDeleteBtns();
+    rowEdittable();
+    rowEditted();
   }
 }
+
 
 function fitmentUpdateBtns() {
   let fitmentBtns = document.querySelectorAll(".fitmentBtnUpd");
@@ -764,6 +885,8 @@ function fitmentUpdateBtns() {
       let date_to = row.children[7].innerHTML;
       let date_on = row.children[8].children[0].checked;
       let partId = sessionStorage.getItem("partId");
+      row.classList.remove("row_editted");
+      row.classList.add("row_saved");
 
       if (date_on == true) {
         date_on = 1;
@@ -785,168 +908,183 @@ function fitmentUpdateBtns() {
       };
 
       axios.post("/user/update_fitment", data).then((res) => {
-        if (res.data.message == "Fitment updated successfully") {
-          alert("Fitment updated successfully");
-        } else {
-          alert("Fitment update failed");
-        }
       });
+      setTimeout(() => {
+        row.classList.remove("row_editted");
+        row.classList.remove("row_saved");
+      }, 2000);
+
     });
   });
 }
+
 
 function fitmentDeleteBtns() {
   let fitmentBtns = document.querySelectorAll(".fitmentBtnDel");
   fitmentBtns.forEach((btn) => {
     btn.addEventListener("click", function (e) {
-      let fitting_id = e.currentTarget.value;
-      let partId = sessionStorage.getItem("partId");
+      e.preventDefault();
+      let choice = confirm("Are you sure you want to delete this fitment?");
+      if (choice == false) {
+        return;
+      } else {
+        let fitting_id = e.currentTarget.value;
+        let partId = sessionStorage.getItem("partId");
 
-      let data = {
-        fitting_id: fitting_id,
-        partId: partId,
-        sId: sessionStorage.getItem("supplierId"),
-      };
+        let data = {
+          fitting_id: fitting_id,
+          partId: partId,
+          sId: sessionStorage.getItem("supplierId"),
+        };
 
-      axios.post("/user/delete_fitment", data).then((res) => {
-        if (res.data.message == "Fitment deleted successfully") {
-          alert("Fitment deleted successfully");
-          updateFitmentTable();
-        } else {
-          alert("Fitment delete failed");
-        }
-      });
+        axios.post("/user/delete_fitment", data).then((res) => {
+          if (res.data.message == "Fitment deleted successfully") {
+            alert("Fitment deleted successfully");
+            updateFitmentTable();
+          } else {
+            alert("Fitment delete failed");
+          }
+        });
+      }
     });
   });
 }
 
 function updateFitmentTable() {
   let fitmentDisplay = document.getElementById("fitment_table");
+  let table = document.getElementsByClassName("fitment_display--table");
+  let currentScrollTop = table[0].scrollTop;
+  sessionStorage.setItem("currentScrollTop", currentScrollTop);
   fitmentDisplay.innerHTML = "";
   let partId = sessionStorage.getItem("partId");
   let supplierId = sessionStorage.getItem("supplierId");
-
   axios.get(`/user/get_fitment/${supplierId}/${partId}`).then((res) => {
-    createFitmentTable(res.data, fitmentDisplay, partId);
+    createFitmentTable(res.data, fitmentDisplay, table, partId,);
   });
+}
 
-  function createFitmentTable(data, fitmentDisplay, partId) {
-    if (data.length == 0) {
-      let tr = document.createElement("tr");
+function createFitmentTable(data, fitmentDisplay, tableContainer, partId) {
+  if (fitmentCreated) {
+    fitmentDisplay.innerHTML = "";
+  }
+  let currentScrollTop = parseInt(sessionStorage.getItem("currentScrollTop"));
+  if (data.length == 0) {
+    let tr = document.createElement("tr");
+    let td = document.createElement("td");
+    td.innerHTML = "No Fitment Data";
+    tr.appendChild(td);
+    fitmentDisplay.appendChild(tr);
+  }
+
+  if (data.length > 0 && data.length != 0) {
+    let fitment_part_display = document.getElementById("fitment_partNo");
+    fitment_part_display.innerHTML = partId;
+    let fitment_sku_display = document.getElementById("fitment_part_sku");
+    fitment_sku_display.innerHTML = data[0].sku;
+
+    // create columns for fitment table
+    let table = fitmentDisplay;
+    table.classList.add("table");
+    table.classList.add("table-striped");
+    table.classList.add("table-bordered");
+    table.classList.add("table-hover");
+    table.classList.add("table-sm");
+    table.classList.add("table-fitment");
+    table.classList.add("text-dark");
+    let tr = document.createElement("tr");
+    tr.classList.add("tb_heading");
+    let th = document.createElement("th");
+    th.innerHTML = "#";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "Type";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "Make";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "Model";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "Display name";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "CC";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "Year From";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "Year To";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "Year On";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "Update";
+    tr.appendChild(th);
+    th = document.createElement("th");
+    th.innerHTML = "Delete";
+    tr.appendChild(th);
+    table.appendChild(tr);
+
+    // create rows for fitment table
+    for (let i = 0; i < data.length; i++) {
+      tr = document.createElement("tr");
       let td = document.createElement("td");
-      td.innerHTML = "No Fitment Data";
+      td.contentEditable = false;
+      td.innerHTML = data[i].fitting_id;
       tr.appendChild(td);
-      fitmentDisplay.appendChild(tr);
-    }
-
-    if (data.length > 0 && data.length != 0) {
-      let fitment_part_display = document.getElementById("fitment_partNo");
-      fitment_part_display.innerHTML = partId;
-      let fitment_sku_display = document.getElementById("fitment_part_sku");
-      fitment_sku_display.innerHTML = data[0].sku;
-
-      // create columns for fitment table
-      let table = fitmentDisplay;
-      table.classList.add("table");
-      table.classList.add("table-striped");
-      table.classList.add("table-bordered");
-      table.classList.add("table-hover");
-      table.classList.add("table-sm");
-      table.classList.add("table-fitment");
-      table.classList.add("text-dark");
-      let tr = document.createElement("tr");
-      let th = document.createElement("th");
-      th.innerHTML = "#";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "Type";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "Make";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "Model";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "Display name";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "CC";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "Year From";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "Year To";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "Year On";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "Update";
-      tr.appendChild(th);
-      th = document.createElement("th");
-      th.innerHTML = "Delete";
-      tr.appendChild(th);
+      td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerHTML = data[i].type;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerHTML = data[i].manufacturer;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerHTML = data[i].model;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerHTML = data[i].display_name;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerHTML = data[i].cc;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerHTML = data[i].date_from;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerHTML = data[i].date_to;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.contentEditable = false;
+      td.innerHTML =
+        "<input type='checkbox' name='myTextEditBox' value='checked' />";
+      let child = td.childNodes;
+      if (data[i].date_on == 1) {
+        child[0].checked = true;
+      } else {
+        child[0].checked = false;
+      } //td.innerHTML = data[i].date_on;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.innerHTML = `<button class="fitmentBtnUpd" value="${data[i].fitting_id}"><i class="fa-solid fa-floppy-disk"></i></button>`;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.innerHTML = `<button class="fitmentBtnDel" value="${data[i].fitting_id}"><i class="fa-solid fa-trash"></i></button>`;
+      tr.appendChild(td);
       table.appendChild(tr);
-
-      // create rows for fitment table
-      for (let i = 0; i < data.length; i++) {
-        tr = document.createElement("tr");
-        let td = document.createElement("td");
-        td.contentEditable = false;
-        td.innerHTML = data[i].fitting_id;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.contentEditable = true;
-        td.innerHTML = data[i].type;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.contentEditable = true;
-        td.innerHTML = data[i].manufacturer;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.contentEditable = true;
-        td.innerHTML = data[i].model;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.contentEditable = true;
-        td.innerHTML = data[i].display_name;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.contentEditable = true;
-        td.innerHTML = data[i].cc;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.contentEditable = true;
-        td.innerHTML = data[i].date_from;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.contentEditable = true;
-        td.innerHTML = data[i].date_to;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.contentEditable = false;
-        td.innerHTML =
-          "<input type='checkbox' name='myTextEditBox' value='checked' />";
-        let child = td.childNodes;
-        if (data[i].date_on == 1) {
-          child[0].checked = true;
-        } else {
-          child[0].checked = false;
-        } //td.innerHTML = data[i].date_on;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.innerHTML = `<button class="fitmentBtnUpd" value="${data[i].fitting_id}"><i class="fa-solid fa-floppy-disk"></i></button>`;
-        tr.appendChild(td);
-        td = document.createElement("td");
-        td.innerHTML = `<button class="fitmentBtnDel" value="${data[i].fitting_id}"><i class="fa-solid fa-trash"></i></button>`;
-        tr.appendChild(td);
-        table.appendChild(tr);
-      }
-      fitmentUpdateBtns();
-      fitmentDeleteBtns();
     }
+    tableContainer[0].scrollTop = currentScrollTop;
+    fitmentUpdateBtns();
+    fitmentDeleteBtns();
   }
 }
 
@@ -961,3 +1099,60 @@ function checkAllCheckboxes() {
     }
   })
 }
+
+function getAllOptions() {
+  let options = optionsListData;
+  let typeInput = document.getElementById("add_fitting_type");
+  let typeList = document.getElementById("type_options");
+  let makeInput = document.getElementById("add_fitting_make");
+  let makeList = document.getElementById("make_options");
+  let modelInput = document.getElementById("add_fitting_model");
+  let modelList = document.getElementById("model_options");
+  let ccInput = document.getElementById("add_fitting_cc");
+  let sId = sessionStorage.getItem("supplierId");
+
+  let typeData = [];
+  axios.get(`/parts/type_options/${sId}`).then((res) => {
+    for (let i in res.data) {
+      typeData.push(res.data[i].type);
+    }
+    typeData.forEach((type) => {
+      let newOptions = document.createElement("option");
+      newOptions.value = type;
+      typeList.appendChild(newOptions);
+    })
+  });
+
+
+  let makeData = [];
+  axios.get(`/parts/make_options/${sId}`).then((res) => {
+    for (let i in res.data) {
+      makeData.push(res.data[i].manufacturer);
+    }
+    makeData.forEach((make) => {
+      let newOptions = document.createElement("option");
+      newOptions.value = make;
+      makeList.appendChild(newOptions);
+    })
+  });
+
+  makeInput.addEventListener("change", function (e) {
+    e.preventDefault();
+    console.log('manufacturer changed');
+    let make = e.currentTarget.value;
+    axios.get(`/parts/${make}/model_options/${sId}`).then((res) => {
+      let modelData = [];
+      let modelList = document.getElementById("model_options");
+      modelList.innerHTML = "";
+      for (let i in res.data) {
+        modelData.push(res.data[i].model);
+      }
+      modelData.forEach((model) => {
+        let newOptions = document.createElement("option");
+        newOptions.value = model;
+        modelList.appendChild(newOptions);
+      });
+    })
+  })
+}
+

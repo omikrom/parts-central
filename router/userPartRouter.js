@@ -105,17 +105,36 @@ router.post("/user_parts/:limit/:offset", auth, async (req, res) => {
   let limit = parseInt(req.params.limit);
   let offset = parseInt(req.params.offset);
   let body = req.body;
+  let column = body.orderBy.column;
+  let direction = body.orderBy.direction;
+
 
   if (body.search == undefined || body.search == "") {
-    try {
-      const result = await db.pool.query(
-        "SELECT `part`.id ,`part`.sku, `part`.part_name, `alt_skus`.partNo , `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM `part` INNER JOIN `alt_skus` ON `part`.id = `alt_skus`.part_id WHERE `part`.supplier_id = ? ORDER BY `part`.id LIMIT ? OFFSET ?",
-        [sId, limit, offset]
-      );
-      res.send(result);
-    } catch (err) {
-      throw err;
+    switch (direction) {
+      case 'ASC':
+        try {
+          const result = await db.pool.query(
+            "SELECT `part`.id ,`part`.sku, `part`.part_name, `alt_skus`.partNo , `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM `part` INNER JOIN `alt_skus` ON `part`.id = `alt_skus`.part_id WHERE `part`.supplier_id = ? ORDER BY `part`.id ASC LIMIT ? OFFSET ?",
+            [sId, limit, offset]
+          );
+          res.send(result);
+        } catch (err) {
+          throw err;
+        }
+        break;
+      case 'DESC':
+        try {
+          const result = await db.pool.query(
+            "SELECT `part`.id ,`part`.sku, `part`.part_name, `alt_skus`.partNo , `alt_skus`.vendorNo, `alt_skus`.alt_sku FROM `part` INNER JOIN `alt_skus` ON `part`.id = `alt_skus`.part_id WHERE `part`.supplier_id = ? ORDER BY `part`.id DESC LIMIT ? OFFSET ?",
+            [sId, limit, offset]
+          );
+          res.send(result);
+        } catch (err) {
+          throw err;
+        }
+        break;
     }
+
   } else {
     let query = '%' + body.search + '%';
     try {
@@ -205,6 +224,7 @@ router.post("/add_fitment", auth, async (req, res) => {
 });
 
 router.post("/update_part", auth, (req, res) => {
+  console.log('update part');
   let task = req.body;
   let partId = parseInt(task.id);
   let partName = task.partName;
